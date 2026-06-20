@@ -1,0 +1,131 @@
+@use '../../styles/tokens' as *;
+@use '../../styles/mixins' as *;
+
+.footer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xl);
+  max-width: $content-max-width;
+  margin: var(--space-2xl) var(--space-md) var(--space-md);
+  padding: var(--space-2xl) var(--space-md) 0;
+  overflow: hidden;
+  border: 1px solid rgba(47, 33, 15, 0.3);
+  border-radius: var(--radius-base);
+
+  @include breakpoint($bp-md) {
+    padding: var(--space-3xl) var(--space-3xl) 0;
+  }
+
+  @include breakpoint($bp-2xl) {
+    width: 100%;
+    margin-inline: auto;
+  }
+}
+
+.footer__main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xl);
+
+  @include breakpoint($bp-lg) {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.footer__identity {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  max-width: 508px;
+}
+
+.footer__logo-row {
+  display: flex;
+  align-items: center;
+  gap: 21px;
+}
+
+.footer__logo {
+  width: 110px;
+  height: auto;
+
+  @include breakpoint($bp-md) {
+    width: 190px;
+  }
+}
+
+.footer__name {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+.footer__name-small {
+  @include label-lg;
+  font-size: 12px;
+
+  @include breakpoint($bp-md) {
+    font-size: 16px;
+  }
+}
+
+.footer__name-large {
+  @include display-lg;
+  text-transform: uppercase;
+}
+
+.footer__summary {
+  @include body-base-italic;
+  color: var(--text-primary);
+}
+
+.footer__link-groups {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xl);
+  justify-content: space-between;
+
+  @include breakpoint($bp-lg) {
+    width: 600px;
+    flex-wrap: nowrap;
+  }
+}
+
+.footer__link-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 150px;
+
+  @include breakpoint($bp-md) {
+    width: 170px;
+  }
+}
+
+.footer__group-heading {
+  @include label-xl;
+  color: var(--text-primary);
+}
+
+.footer__link {
+  @include body-base-italic;
+  color: var(--text-primary);
+
+  &:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+}
+
+.footer__wordmark {
+  margin-top: var(--space-lg);
+}
+
+.footer__wordmark-image {
+  width: 100%;
+  height: auto;
+}

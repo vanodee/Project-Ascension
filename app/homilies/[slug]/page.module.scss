@@ -1,0 +1,59 @@
+@use '../../../styles/tokens' as *;
+@use '../../../styles/mixins' as *;
+
+.homily {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+  width: 100%;
+  max-width: 900px;
+  margin-inline: auto;
+}
+
+.homily__header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+  padding-top: var(--space-2xl);
+  text-align: center;
+}
+
+.homily__meta {
+  @include body-sm-italic;
+  color: var(--border-medium);
+}
+
+.homily__title {
+  @include display-lg;
+  color: var(--text-primary);
+}
+
+.homily__author {
+  @include body-md-italic;
+  color: var(--text-primary);
+}
+
+.homily__author-link {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+
+  &:hover {
+    color: var(--border-medium);
+  }
+}
+
+.homily__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.homily__paragraph {
+  @include body-base;
+  color: var(--text-primary);
+}
+
+.homily__footer {
+  padding-bottom: var(--space-xl);
+}

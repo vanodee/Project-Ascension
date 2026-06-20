@@ -1,0 +1,119 @@
+@use '../../styles/tokens' as *;
+@use '../../styles/mixins' as *;
+
+.about {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xl);
+  width: 100%;
+
+  @include breakpoint($bp-md) {
+    gap: var(--space-3xl);
+  }
+}
+
+.about__hero {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 7;
+  min-height: 280px;
+  overflow: hidden;
+  border-radius: var(--radius-base);
+  background-color: var(--background-inverse);
+}
+
+.about__hero-image {
+  object-fit: cover;
+}
+
+.about__narrative {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  max-width: 800px;
+  margin-inline: auto;
+}
+
+.about__eyebrow {
+  @include label-md;
+  color: var(--text-primary);
+}
+
+.about__paragraph {
+  @include body-base;
+  color: var(--text-primary);
+}
+
+.about__mission {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-2xl) var(--space-lg);
+  border-top: 1px solid var(--border-default);
+  border-bottom: 1px solid var(--border-default);
+  text-align: center;
+}
+
+.about__quote {
+  @include heading-xl;
+  font-style: italic;
+  max-width: 900px;
+  color: var(--text-primary);
+}
+
+.about__quote-attribution {
+  @include label-md;
+  color: var(--border-medium);
+}
+
+.about__milestones {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+  max-width: 800px;
+  width: 100%;
+  margin-inline: auto;
+  padding-bottom: var(--space-2xl);
+}
+
+.about__timeline {
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid var(--border-subtle);
+}
+
+.about__timeline-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding: var(--space-lg);
+
+  @include breakpoint($bp-md) {
+    flex-direction: row;
+    gap: var(--space-xl);
+  }
+}
+
+.about__timeline-year {
+  @include display-lg;
+  flex-shrink: 0;
+  width: 120px;
+  color: var(--border-medium);
+}
+
+.about__timeline-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.about__timeline-title {
+  @include heading-md;
+  color: var(--text-primary);
+}
+
+.about__timeline-text {
+  @include body-base-italic;
+  color: var(--text-primary);
+}

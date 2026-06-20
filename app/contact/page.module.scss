@@ -1,0 +1,90 @@
+@use '../../styles/tokens' as *;
+@use '../../styles/mixins' as *;
+
+.contact {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xl);
+  width: 100%;
+}
+
+.contact__columns {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-2xl);
+
+  @include breakpoint($bp-lg) {
+    grid-template-columns: 1fr 1.4fr;
+    gap: var(--space-3xl);
+  }
+}
+
+.contact__details {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+.contact__block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding-bottom: var(--space-lg);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.contact__block-label {
+  @include label-md;
+  color: var(--border-medium);
+}
+
+.contact__block-value {
+  @include body-base;
+  color: var(--text-primary);
+
+  a:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+}
+
+.contact__mass-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  padding-top: var(--space-sm);
+}
+
+.contact__mass-heading {
+  @include heading-md;
+  color: var(--text-primary);
+}
+
+.contact__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.contact__form-title {
+  @include heading-2xl;
+  color: var(--text-primary);
+}
+
+.contact__map {
+  width: 100%;
+  overflow: hidden;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-base);
+}
+
+.contact__map-frame {
+  display: block;
+  width: 100%;
+  height: 380px;
+  border: none;
+
+  @include breakpoint($bp-md) {
+    height: 480px;
+  }
+}

@@ -1,0 +1,73 @@
+@use '../../styles/tokens' as *;
+@use '../../styles/mixins' as *;
+
+.gallery {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xl);
+  width: 100%;
+}
+
+.gallery__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-lg);
+
+  @include breakpoint($bp-md) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include breakpoint($bp-lg) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.gallery__card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-base);
+
+  &:hover {
+    border-color: var(--border-medium);
+  }
+}
+
+.gallery__card-image {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background-color: var(--background-inverse);
+}
+
+.gallery__card-photo {
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.gallery__card:hover .gallery__card-photo {
+  transform: scale(1.03);
+}
+
+.gallery__card-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding: var(--space-lg);
+  color: var(--text-primary);
+}
+
+.gallery__card-meta {
+  @include body-sm-italic;
+  color: var(--border-medium);
+}
+
+.gallery__card-title {
+  @include heading-md;
+}
+
+.gallery__card-description {
+  @include body-base-italic;
+}

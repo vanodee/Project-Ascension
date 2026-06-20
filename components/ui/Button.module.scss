@@ -1,0 +1,65 @@
+@use '../../styles/tokens' as *;
+@use '../../styles/mixins' as *;
+
+.button {
+  @include label-md;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  border-radius: var(--radius-base);
+  white-space: nowrap;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease,
+    opacity 0.2s ease;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.button--lg {
+  padding: var(--space-md) var(--space-xl);
+}
+
+.button--sm {
+  padding: var(--space-2xs) var(--space-md);
+}
+
+.button--primary {
+  background-color: var(--button-primary-background);
+  color: var(--button-primary-text);
+  border: 1px solid rgba(47, 33, 15, 0.5);
+
+  &:hover:not(:disabled) {
+    background-color: var(--background-inverse);
+    color: var(--text-inverse);
+  }
+}
+
+.button--ghost-inverse {
+  background-color: rgba(255, 255, 255, 0.01);
+  backdrop-filter: blur(16px);
+  color: var(--button-ghost-inverse-text);
+  border: 1px solid var(--button-ghost-inverse-border);
+
+  &:hover:not(:disabled) {
+    background-color: var(--button-primary-background);
+    color: var(--button-primary-text);
+  }
+}
+
+.button--outline {
+  background-color: transparent;
+  color: var(--button-ghost-text);
+  border: 1px solid var(--button-ghost-inverse-border);
+
+  &:hover:not(:disabled) {
+    background-color: var(--background-inverse);
+    color: var(--text-inverse);
+    border-color: var(--background-inverse);
+  }
+}

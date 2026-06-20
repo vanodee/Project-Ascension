@@ -1,0 +1,366 @@
+@use '../../styles/tokens' as *;
+@use '../../styles/mixins' as *;
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  width: 100%;
+  max-width: calc($content-max-width + var(--space-md) * 2);
+  margin-inline: auto;
+  padding: 0 var(--space-md);
+  background-color: var(--background-page);
+}
+
+// ─── Top bar ──────────────────────────────────────────────────────────────────
+
+.header__top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding: var(--space-2xs) 10px;
+  border-bottom: 2px solid var(--border-default);
+}
+
+.header__top-side {
+  display: flex;
+  align-items: center;
+  width: 260px;
+  color: var(--text-primary);
+}
+
+.header__top-side--right {
+  justify-content: flex-end;
+}
+
+// Logos shown only on mobile in the top bar
+.header__top-logo {
+  display: block;
+  flex-shrink: 0;
+
+  @include breakpoint($bp-lg) {
+    display: none;
+  }
+}
+
+// Text shown only on desktop in the top bar
+.header__top-side-text {
+  @include label-base;
+  display: none;
+  color: var(--text-primary);
+
+  @include breakpoint($bp-lg) {
+    display: block;
+  }
+}
+
+.header__wordmark {
+  font-family: var(--font-cinzel), serif;
+  // fluid scale: 18px at 320px → 28px at ~510px, then fixed at 32px on desktop
+  font-size: clamp(18px, 5.5vw, 28px);
+  font-weight: 400;
+  letter-spacing: clamp(0.12em, 1.2vw, 0.3em);
+  text-transform: uppercase;
+  color: var(--text-primary);
+  // optically compensate tracked-out capitals so the wordmark sits centred
+  margin-right: calc(-1 * clamp(0.12em, 1.2vw, 0.3em));
+
+  @include breakpoint($bp-lg) {
+    font-size: 32px;
+    letter-spacing: 0.3em;
+    margin-right: -0.3em;
+  }
+}
+
+// ─── Nav bar ──────────────────────────────────────────────────────────────────
+
+.header__nav-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-2xs) 20px;
+  border-bottom: 2px solid var(--border-default);
+
+  @include breakpoint($bp-lg) {
+    justify-content: space-between;
+  }
+}
+
+.header__links-left,
+.header__links-right {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  width: 40%;
+  max-width: 800px;
+
+  @include breakpoint($bp-lg) {
+    display: flex;
+
+  }
+}
+
+.header__links-right {
+  // justify-content: flex-end;
+  justify-content: space-between;
+}
+
+// ─── Desktop nav items & links ────────────────────────────────────────────────
+
+.header__nav-item {
+  position: relative;
+}
+
+.header__link {
+  @include label-md;
+  color: var(--text-primary);
+  white-space: nowrap;
+  transition: color 0.15s ease;
+
+  &:hover {
+    color: var(--border-medium);
+  }
+}
+
+// Applied alongside header__link on <button> elements
+.header__link--btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.header__link--active {
+  text-decoration: underline;
+  text-underline-offset: 6px;
+}
+
+// ─── Chevron ──────────────────────────────────────────────────────────────────
+
+.header__chevron {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(45deg) translate(-1px, -1px);
+  transition: transform 0.15s ease;
+  flex-shrink: 0;
+}
+
+.header__chevron--open {
+  transform: rotate(225deg) translate(-1px, -1px);
+}
+
+// ─── Dropdown panel ───────────────────────────────────────────────────────────
+
+.header__dropdown {
+  position: absolute;
+  top: calc(100% + var(--space-lg));
+  left: 0;
+  z-index: 100;
+  min-width: 210px;
+  padding: var(--space-xs) 0;
+  background: var(--background-page);
+  border: 1px solid var(--border-default);
+  border-top: 2px solid var(--border-default);
+  border-radius: var(--radius-sm);
+
+  // hidden state — slides up slightly and fades out
+  opacity: 0;
+  transform: translateY(-6px);
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.header__dropdown--open {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.header__dropdown--right {
+  left: auto;
+  right: 0;
+}
+
+// Sacraments: 2-column grid to contain all 8 entries compactly
+.header__dropdown--wide {
+  min-width: 380px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.header__dropdown-link {
+  @include label-base;
+  display: block;
+  padding: var(--space-xs) var(--space-md);
+  color: var(--text-primary);
+
+  &:hover {
+    background-color: var(--border-subtle);
+  }
+}
+
+.header__dropdown-link--active {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+// ─── Logo ─────────────────────────────────────────────────────────────────────
+
+.header__logo {
+  display: inline-flex;
+  flex-shrink: 0;
+}
+
+// Nav-bar logo: only visible on desktop where it sits between the nav link groups
+.header__logo--nav {
+  display: none;
+
+  @include breakpoint($bp-lg) {
+    display: inline-flex;
+  }
+}
+
+// ─── Mobile menu toggle ───────────────────────────────────────────────────────
+
+.header__menu-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: none;
+  border: none;
+  cursor: pointer;
+
+  @include breakpoint($bp-lg) {
+    display: none;
+  }
+}
+
+.header__hamburger {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 18px;
+  height: 13px;
+
+  span {
+    display: block;
+    width: 100%;
+    height: 1.5px;
+    background-color: var(--text-primary);
+    border-radius: 1px;
+    transform-origin: center;
+    transition: transform 0.25s ease, opacity 0.2s ease;
+  }
+}
+
+// top bar rotates down, middle fades, bottom bar rotates up → forms an ×
+.header__hamburger--open {
+  span:nth-child(1) {
+    // (13px container − 1.5px bar) / 2 = 5.75px to reach centre
+    transform: translateY(5.75px) rotate(45deg);
+  }
+
+  span:nth-child(2) {
+    opacity: 0;
+    transform: scaleX(0);
+  }
+
+  span:nth-child(3) {
+    transform: translateY(-5.75px) rotate(-45deg);
+  }
+}
+
+// ─── Mobile menu (accordion) ──────────────────────────────────────────────────
+
+.header__menu {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  pointer-events: none;
+  background-color: var(--background-page);
+  transition: max-height 0.35s ease, opacity 0.25s ease;
+
+  @include breakpoint($bp-lg) {
+    display: none !important;
+  }
+}
+
+.header__menu--open {
+  max-height: 75vh;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.header__mobile-group {
+  border-bottom: 1px solid var(--border-subtle);
+
+  &:first-child {
+    border-top: 1px solid var(--border-subtle);
+  }
+
+  &:last-child {
+    border-bottom: 2px solid var(--border-default);
+  }
+}
+
+.header__mobile-link {
+  @include label-md;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: var(--space-md) var(--space-md);
+  color: var(--text-primary);
+  text-align: left;
+}
+
+.header__mobile-link--btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.header__mobile-link--active {
+  text-decoration: underline;
+  text-underline-offset: 6px;
+}
+
+.header__mobile-children {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 0.3s ease, opacity 0.2s ease;
+}
+
+.header__mobile-children--open {
+  max-height: 400px;
+  opacity: 1;
+  padding: 0 var(--space-md) var(--space-sm) var(--space-xl);
+}
+
+.header__mobile-child-link {
+  @include label-base;
+  display: block;
+  padding: var(--space-xs) 0;
+  color: var(--text-primary);
+}
+
+.header__mobile-child-link--active {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}

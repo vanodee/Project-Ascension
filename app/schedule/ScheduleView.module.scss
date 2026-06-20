@@ -1,0 +1,275 @@
+@use '../../styles/tokens' as *;
+@use '../../styles/mixins' as *;
+
+.schedule {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+  width: 100%;
+}
+
+.schedule__toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+
+  @include breakpoint($bp-lg) {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.schedule__filters,
+.schedule__view-toggle {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+}
+
+.schedule__view-toggle {
+  display: none;
+
+  @include breakpoint($bp-md) {
+    display: flex;
+  }
+}
+
+.schedule__filter {
+  @include label-md;
+  padding: var(--space-2xs) var(--space-md);
+  border: 1px solid var(--button-ghost-inverse-border);
+  border-radius: var(--radius-base);
+  color: var(--text-primary);
+  transition: background-color 0.2s ease, color 0.2s ease;
+
+  &:hover {
+    border-color: var(--border-medium);
+  }
+}
+
+.schedule__filter--active {
+  background-color: var(--background-inverse);
+  border-color: var(--background-inverse);
+  color: var(--text-inverse);
+}
+
+// ---------- List view ----------
+
+.schedule__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+.schedule__day {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.schedule__day-heading {
+  @include heading-md;
+  padding-bottom: var(--space-xs);
+  border-bottom: 1px solid var(--border-default);
+  color: var(--text-primary);
+}
+
+.schedule__event {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  width: 100%;
+  padding: var(--space-md);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-base);
+  text-align: left;
+
+  &:hover {
+    border-color: var(--border-medium);
+    background-color: rgba(213, 186, 148, 0.15);
+  }
+}
+
+.schedule__event-time {
+  @include label-md;
+  flex-shrink: 0;
+  width: 84px;
+  color: var(--border-medium);
+}
+
+.schedule__event-main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  flex: 1 1 auto;
+  min-width: 0;
+  color: var(--text-primary);
+}
+
+.schedule__event-title {
+  @include heading-md;
+}
+
+.schedule__event-location {
+  @include body-sm-italic;
+}
+
+.schedule__badge {
+  @include label-md;
+  font-size: 11px;
+  flex-shrink: 0;
+  padding: var(--space-2xs) var(--space-sm);
+  border-radius: var(--radius-base);
+  color: var(--text-inverse);
+  background-color: var(--decorative-watermark);
+}
+
+// Event-type colours follow the PRD's Google Calendar mapping.
+.schedule__badge--mass {
+  background-color: var(--liturgical-easter);
+}
+
+.schedule__badge--confession {
+  background-color: #2e4359;
+}
+
+.schedule__badge--parish-event {
+  background-color: var(--liturgical-ordinary);
+}
+
+.schedule__badge--meeting {
+  background-color: var(--border-medium);
+}
+
+.schedule__badge--celebration {
+  background-color: var(--liturgical-advent);
+}
+
+.schedule__empty {
+  @include body-base-italic;
+  padding: var(--space-xl);
+  text-align: center;
+  color: var(--text-primary);
+}
+
+// ---------- Month view ----------
+
+.schedule__month {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.schedule__month-label {
+  @include heading-2xl;
+  color: var(--text-primary);
+}
+
+.schedule__month-weekdays,
+.schedule__month-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.schedule__month-weekday {
+  @include label-md;
+  padding: var(--space-xs);
+  color: var(--border-medium);
+}
+
+.schedule__month-grid {
+  border-top: 1px solid var(--border-subtle);
+  border-left: 1px solid var(--border-subtle);
+}
+
+.schedule__month-cell {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  min-height: 110px;
+  padding: var(--space-xs);
+  border-right: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.schedule__month-cell--blank {
+  background-color: rgba(213, 186, 148, 0.12);
+}
+
+.schedule__month-day {
+  @include label-md;
+  color: var(--text-primary);
+}
+
+.schedule__month-event {
+  @include body-sm-italic;
+  font-size: 12px;
+  overflow: hidden;
+  padding: 2px var(--space-2xs);
+  border-radius: var(--radius-base);
+  color: var(--text-inverse);
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.schedule__month-more {
+  @include body-sm-italic;
+  font-size: 12px;
+  color: var(--border-medium);
+}
+
+// ---------- Event detail modal ----------
+
+.schedule__modal {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-md);
+  background-color: rgba(47, 33, 15, 0.7);
+}
+
+.schedule__modal-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-sm);
+  width: min(520px, 100%);
+  padding: var(--space-xl);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-base);
+  background-color: var(--background-page);
+}
+
+.schedule__modal-title {
+  @include heading-xl;
+  color: var(--text-primary);
+}
+
+.schedule__modal-meta {
+  @include body-base;
+  color: var(--border-medium);
+}
+
+.schedule__modal-description {
+  @include body-base-italic;
+  color: var(--text-primary);
+}
+
+.schedule__modal-close {
+  @include label-md;
+  align-self: flex-end;
+  padding: var(--space-2xs) var(--space-md);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-base);
+  color: var(--text-primary);
+
+  &:hover {
+    background-color: var(--background-inverse);
+    color: var(--text-inverse);
+  }
+}

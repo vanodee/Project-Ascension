@@ -1,0 +1,38 @@
+@use '../../../styles/tokens' as *;
+@use '../../../styles/mixins' as *;
+
+.album {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+  width: 100%;
+}
+
+.album__header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+  padding-top: var(--space-2xl);
+  text-align: center;
+}
+
+.album__meta {
+  @include body-sm-italic;
+  color: var(--border-medium);
+}
+
+.album__title {
+  @include display-lg;
+  color: var(--text-primary);
+}
+
+.album__description {
+  @include body-base-italic;
+  max-width: 640px;
+  color: var(--text-primary);
+}
+
+.album__footer {
+  padding-bottom: var(--space-xl);
+}

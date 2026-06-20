@@ -1,0 +1,31 @@
+@use '../../styles/tokens' as *;
+@use '../../styles/mixins' as *;
+
+.tally-embed {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+  width: 100%;
+  padding: var(--space-2xl) var(--space-lg);
+  border: 1px dashed var(--border-medium);
+  border-radius: var(--radius-base);
+  text-align: center;
+}
+
+.tally-embed__label {
+  @include label-md;
+  color: var(--text-primary);
+}
+
+.tally-embed__note {
+  @include body-base-italic;
+  max-width: 480px;
+  color: var(--text-primary);
+}
+
+.tally-embed__iframe {
+  width: 100%;
+  min-height: 640px;
+  border: none;
+}

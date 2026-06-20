@@ -1,0 +1,21 @@
+@use '../styles/tokens' as *;
+@use '../styles/mixins' as *;
+
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xl);
+  width: 100%;
+  max-width: $content-max-width;
+  margin-inline: auto;
+  padding: 20px var(--space-md);
+
+  @include breakpoint($bp-md) {
+    gap: var(--space-4xl);
+    padding: 20px var(--space-md);
+  }
+
+  @include breakpoint($bp-2xl) {
+    padding-inline: 0;
+  }
+}

@@ -1,0 +1,120 @@
+@use '../../styles/tokens' as *;
+@use '../../styles/mixins' as *;
+
+.livestream {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xl);
+  width: 100%;
+  max-width: 1100px;
+  margin-inline: auto;
+}
+
+.livestream__player {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.livestream__badge {
+  @include label-md;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  align-self: flex-start;
+  padding: var(--space-2xs) var(--space-md);
+  border-radius: var(--radius-base);
+  background-color: var(--liturgical-easter);
+  color: var(--text-inverse);
+}
+
+.livestream__badge--recorded {
+  background-color: var(--decorative-watermark);
+}
+
+.livestream__badge-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background-color: var(--text-inverse);
+  animation: pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
+.livestream__frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-base);
+  background-color: var(--background-inverse);
+}
+
+.livestream__iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.livestream__title {
+  @include heading-md;
+  color: var(--text-primary);
+}
+
+.livestream__info {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-xl);
+  padding: var(--space-xl) 0 var(--space-2xl);
+  border-top: 1px solid var(--border-subtle);
+
+  @include breakpoint($bp-md) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-2xl);
+  }
+}
+
+.livestream__info-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-md);
+}
+
+.livestream__info-label {
+  @include label-md;
+  color: var(--border-medium);
+}
+
+.livestream__mass-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+}
+
+.livestream__mass-heading {
+  @include heading-md;
+  color: var(--text-primary);
+}
+
+.livestream__mass-time {
+  @include body-base;
+  color: var(--text-primary);
+}
+
+.livestream__info-text {
+  @include body-base-italic;
+  color: var(--text-primary);
+}

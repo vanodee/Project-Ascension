@@ -1,0 +1,65 @@
+// Ascension Design System — design tokens
+// Source of truth: Figma "Project ASCENSION" variables (file ieaRmG1N1zH6QLtNFnoZBE)
+
+// Emitted once from globals.scss — modules only reference var(--…), so this
+// mixin keeps _tokens.scss free of selectors (CSS Modules require pure selectors).
+@mixin css-variables {
+  // background
+  --background-page: #f8f2e9;
+  --background-inverse: #2f210f;
+  --background-inverse-subtle: #452e10;
+
+  // text
+  --text-primary: #2f210f;
+  --text-inverse: #f8f2e9;
+
+  // border
+  --border-default: #2f210f;
+  --border-subtle: #d5ba94;
+  --border-medium: #7a5629;
+
+  // icon
+  --icon-primary: #2f210f;
+  --icon-inverse: #f8f2e9;
+
+  // button
+  --button-primary-background: #f8f2e9;
+  --button-primary-text: #2f210f;
+  --button-ghost-text: #2f210f;
+  --button-ghost-inverse-text: #f8f2e9;
+  --button-ghost-inverse-border: #cebc9a;
+
+  // decorative
+  --decorative-watermark: #5c3f1a;
+
+  // liturgical season accents (season badge backgrounds)
+  --liturgical-easter: #743131;
+  --liturgical-ordinary: #2e5339;
+  --liturgical-advent: #4b2e59;
+  --liturgical-lent: #4b2e59;
+  --liturgical-christmas: #7a5629;
+
+  // radius
+  --radius-base: 4px;
+
+  // spacing scale
+  --space-2xs: 4px;
+  --space-xs: 8px;
+  --space-sm: 12px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+  --space-3xl: 64px;
+  --space-4xl: 80px;
+}
+
+// Breakpoints (mobile-first; use with min-width media queries)
+$bp-sm: 480px;
+$bp-md: 768px;
+$bp-lg: 1024px;
+$bp-xl: 1280px;
+$bp-2xl: 1460px;
+
+// Max content width (Figma page-content frame is 1400px)
+$content-max-width: 1400px;

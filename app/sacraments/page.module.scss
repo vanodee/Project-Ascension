@@ -1,0 +1,109 @@
+@use '../../styles/tokens' as *;
+@use '../../styles/mixins' as *;
+
+.sacraments {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xl);
+  width: 100%;
+}
+
+.sacraments__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-lg);
+
+  @include breakpoint($bp-md) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include breakpoint($bp-lg) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.sacraments__card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-base);
+
+  &:hover {
+    border-color: var(--border-medium);
+  }
+}
+
+.sacraments__card-image {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background-color: var(--background-inverse);
+}
+
+.sacraments__card-photo {
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.sacraments__card:hover .sacraments__card-photo {
+  transform: scale(1.03);
+}
+
+.sacraments__card-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding: var(--space-lg);
+  color: var(--text-primary);
+}
+
+.sacraments__card-label {
+  @include label-md;
+  font-size: 12px;
+  color: var(--border-medium);
+}
+
+.sacraments__card-title {
+  @include heading-md;
+}
+
+.sacraments__card-summary {
+  @include body-base-italic;
+}
+
+.sacraments__rcia {
+  display: flex;
+  width: 100%;
+  border-radius: var(--radius-base);
+  background-color: var(--background-inverse);
+}
+
+.sacraments__rcia-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-md);
+  max-width: 640px;
+  padding: var(--space-xl) var(--space-lg);
+
+  @include breakpoint($bp-md) {
+    padding: var(--space-3xl);
+  }
+}
+
+.sacraments__rcia-eyebrow {
+  @include label-md;
+  color: var(--text-inverse);
+}
+
+.sacraments__rcia-title {
+  @include heading-2xl;
+  color: var(--text-inverse);
+}
+
+.sacraments__rcia-text {
+  @include body-base-italic;
+  color: var(--text-inverse);
+}

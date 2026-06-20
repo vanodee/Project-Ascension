@@ -1,0 +1,39 @@
+@use '../../styles/tokens' as *;
+@use '../../styles/mixins' as *;
+
+.section-title {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  width: 100%;
+  color: var(--text-primary);
+
+  @include breakpoint($bp-md) {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.section-title--inverse {
+  color: var(--text-inverse);
+}
+
+.section-title--underlined {
+  border-bottom: 1px solid var(--border-default);
+  padding-bottom: var(--space-md);
+}
+
+.section-title__text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.section-title__eyebrow {
+  @include label-md;
+}
+
+.section-title__heading {
+  @include heading-2xl;
+}

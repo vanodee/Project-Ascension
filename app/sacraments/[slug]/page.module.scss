@@ -1,0 +1,81 @@
+@use '../../../styles/tokens' as *;
+@use '../../../styles/mixins' as *;
+
+.sacrament {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xl);
+  width: 100%;
+  max-width: 900px;
+  margin-inline: auto;
+}
+
+.sacrament__header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-2xl) 0 0;
+  text-align: center;
+}
+
+.sacrament__eyebrow {
+  @include label-md;
+  color: var(--border-medium);
+}
+
+.sacrament__title {
+  @include display-lg;
+  color: var(--text-primary);
+}
+
+.sacrament__summary {
+  @include body-md-italic;
+  max-width: 640px;
+  color: var(--text-primary);
+}
+
+.sacrament__hero {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 8;
+  overflow: hidden;
+  border-radius: var(--radius-base);
+  background-color: var(--background-inverse);
+}
+
+.sacrament__hero-image {
+  object-fit: cover;
+}
+
+.sacrament__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.sacrament__paragraph {
+  @include body-base;
+  color: var(--text-primary);
+}
+
+.sacrament__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  padding-top: var(--space-xl);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.sacrament__form-title {
+  @include heading-2xl;
+  color: var(--text-primary);
+}
+
+.sacrament__footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-md);
+  justify-content: space-between;
+  padding-bottom: var(--space-xl);
+}

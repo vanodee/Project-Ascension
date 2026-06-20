@@ -1,0 +1,156 @@
+// Ascension Design System — typography mixins & responsive helpers
+// Type styles mirror the Figma text styles (Label/, Heading/, Display/, Body/)
+@use 'tokens' as *;
+
+@mixin breakpoint($width) {
+  @media (min-width: $width) {
+    @content;
+  }
+}
+
+// ---------- Labels (Cinzel, tracked-out small caps) ----------
+
+@mixin label-base {
+  font-family: var(--font-cinzel), serif;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.4;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+@mixin label-md {
+  font-family: var(--font-cinzel), serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.4;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+@mixin label-lg {
+  font-family: var(--font-cinzel), serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.4;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+@mixin label-xl {
+  font-family: var(--font-cinzel), serif;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1.4;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+}
+
+// ---------- Headings (Lora SemiBold) ----------
+
+@mixin heading-md {
+  font-family: var(--font-lora), serif;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+@mixin heading-lg {
+  font-family: var(--font-lora), serif;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+@mixin heading-xl {
+  font-family: var(--font-lora), serif;
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+@mixin heading-2xl {
+  font-family: var(--font-lora), serif;
+  font-size: 30px;
+  font-weight: 600;
+  line-height: 1.2;
+
+  @include breakpoint($bp-md) {
+    font-size: 36px;
+  }
+}
+
+// ---------- Display (Cinzel) ----------
+
+@mixin display-lg {
+  font-family: var(--font-cinzel), serif;
+  font-size: 32px;
+  font-weight: 400;
+  line-height: 1.1;
+
+  @include breakpoint($bp-md) {
+    font-size: 40px;
+  }
+}
+
+@mixin display-4xl {
+  font-family: var(--font-cinzel), serif;
+  font-size: 44px;
+  font-weight: 400;
+  line-height: 1.05;
+
+  @include breakpoint($bp-md) {
+    font-size: 64px;
+  }
+
+  @include breakpoint($bp-lg) {
+    // font-size: 80px;
+  }
+}
+
+// ---------- Body (Lora) ----------
+
+@mixin body-base {
+  font-family: var(--font-lora), serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+@mixin body-base-italic {
+  @include body-base;
+  font-style: italic;
+}
+
+@mixin body-md-italic {
+  font-family: var(--font-lora), serif;
+  font-size: 18px;
+  font-weight: 400;
+  font-style: italic;
+  line-height: 1.6;
+}
+
+@mixin body-sm-italic {
+  font-family: var(--font-lora), serif;
+  font-size: 14px;
+  font-weight: 400;
+  font-style: italic;
+  line-height: 1.55;
+}
+
+// ---------- Shared layout helpers ----------
+
+@mixin content-container {
+  width: 100%;
+  max-width: $content-max-width;
+  margin-inline: auto;
+  padding-inline: var(--space-md);
+
+  @include breakpoint($bp-md) {
+    padding-inline: var(--space-xl);
+  }
+
+  @include breakpoint($bp-2xl) {
+    padding-inline: 0;
+  }
+}

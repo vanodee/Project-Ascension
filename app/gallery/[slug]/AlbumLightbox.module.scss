@@ -1,0 +1,91 @@
+@use '../../../styles/tokens' as *;
+@use '../../../styles/mixins' as *;
+
+.album__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-sm);
+  width: 100%;
+
+  @include breakpoint($bp-sm) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include breakpoint($bp-lg) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.album__tile {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: var(--radius-base);
+  background-color: var(--background-inverse);
+  padding: 0;
+}
+
+.album__photo {
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.album__tile:hover .album__photo {
+  transform: scale(1.03);
+}
+
+.album__lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-md);
+  background-color: rgba(47, 33, 15, 0.92);
+}
+
+.album__lightbox-inner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  width: min(1100px, 100%);
+}
+
+.album__lightbox-image {
+  position: relative;
+  width: 100%;
+  height: min(70vh, 700px);
+}
+
+.album__lightbox-photo {
+  object-fit: contain;
+}
+
+.album__lightbox-caption {
+  @include body-base-italic;
+  color: var(--text-inverse);
+  text-align: center;
+}
+
+.album__lightbox-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-lg);
+}
+
+.album__lightbox-button {
+  @include label-md;
+  padding: var(--space-xs) var(--space-md);
+  border: 1px solid var(--button-ghost-inverse-border);
+  border-radius: var(--radius-base);
+  color: var(--button-ghost-inverse-text);
+
+  &:hover {
+    background-color: var(--button-primary-background);
+    color: var(--button-primary-text);
+  }
+}

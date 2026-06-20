@@ -1,0 +1,29 @@
+@use '../../styles/tokens' as *;
+@use '../../styles/mixins' as *;
+
+.page-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+  text-align: center;
+  padding: var(--space-2xl) 0;
+  border-bottom: 1px solid var(--border-default);
+
+  @include breakpoint($bp-md) {
+    padding: var(--space-3xl) 0;
+  }
+}
+
+.page-header__eyebrow {
+  @include label-md;
+}
+
+.page-header__title {
+  @include display-lg;
+}
+
+.page-header__description {
+  @include body-base-italic;
+  max-width: 640px;
+}

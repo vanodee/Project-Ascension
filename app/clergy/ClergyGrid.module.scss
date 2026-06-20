@@ -1,0 +1,100 @@
+@use '../../styles/tokens' as *;
+@use '../../styles/mixins' as *;
+
+.grid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+  width: 100%;
+}
+
+.grid__filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+}
+
+.grid__filter {
+  @include label-md;
+  padding: var(--space-2xs) var(--space-md);
+  border: 1px solid var(--button-ghost-inverse-border);
+  border-radius: var(--radius-base);
+  color: var(--text-primary);
+  transition: background-color 0.2s ease, color 0.2s ease;
+
+  &:hover {
+    border-color: var(--border-medium);
+  }
+}
+
+.grid__filter--active {
+  background-color: var(--background-inverse);
+  border-color: var(--background-inverse);
+  color: var(--text-inverse);
+}
+
+.grid__cards {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-xl);
+
+  @include breakpoint($bp-sm) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include breakpoint($bp-lg) {
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-2xl);
+  }
+}
+
+.grid__card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.grid__avatar-frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 270 / 369;
+  overflow: hidden;
+  border-radius: var(--radius-base);
+  background-color: var(--background-inverse);
+}
+
+.grid__photo {
+  object-fit: cover;
+  object-position: top center;
+}
+
+.grid__info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  color: var(--text-primary);
+}
+
+.grid__name {
+  @include heading-md;
+}
+
+.grid__role {
+  @include label-md;
+}
+
+.grid__bio {
+  @include body-sm-italic;
+}
+
+.grid__contact {
+  @include body-sm-italic;
+  color: var(--border-medium);
+}
+
+.grid__contact-link {
+  &:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+}
