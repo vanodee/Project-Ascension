@@ -306,21 +306,36 @@ export default function Header(): React.JSX.Element {
 
         <button
           type="button"
-          className={styles['header__menu-toggle']}
+          className={`${styles['header__menu-toggle']} ${menuOpen ? styles['header__menu-toggle--open'] : ''}`}
           aria-expanded={menuOpen}
           aria-controls="site-menu"
           aria-label={menuOpen ? 'Close menu' : 'Open menu'}
           onClick={() => setMenuOpen((open) => !open)}
         >
-          <span
-            aria-hidden="true"
-            className={`${styles.header__hamburger} ${
-              menuOpen ? styles['header__hamburger--open'] : ''
-            }`}
-          >
-            <span />
-            <span />
-            <span />
+          <span className={styles['header__toggle-icons']} aria-hidden="true">
+            <svg
+              className={styles['header__icon-menu']}
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 20 20"
+              fill="none"
+            >
+              <line x1="2" y1="5" x2="18" y2="5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+              <line x1="2" y1="10" x2="18" y2="10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+              <line x1="2" y1="15" x2="18" y2="15" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+            </svg>
+            <svg
+              className={styles['header__icon-close']}
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 20 20"
+              fill="none"
+            >
+              <line x1="4" y1="4" x2="16" y2="16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+              <line x1="16" y1="4" x2="4" y2="16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+            </svg>
           </span>
         </button>
       </nav>
