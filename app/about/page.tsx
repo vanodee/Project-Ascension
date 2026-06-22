@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
+import PageHeader from '@/components/ui/PageHeader';
 import styles from './page.module.scss';
 
 export const metadata: Metadata = {
@@ -58,30 +59,12 @@ export default function AboutPage(): React.JSX.Element {
   return (
     <div className={styles.about}>
 
-      {/* ── Hero ─────────────────────────────────────────────────────────── */}
-      <section className={styles.about__hero} aria-label="About page hero">
-        <Image
-          src="/images/hero-bg.png"
-          alt="Interior of the Catholic Church of the Ascension"
-          fill
-          sizes="(min-width: 1400px) 1400px, 100vw"
-          className={styles['about__hero-img']}
-          priority
-        />
-        <div className={styles['about__hero-scrim']} aria-hidden="true" />
-        <div className={styles['about__hero-content']}>
-          <p className={styles['about__hero-eyebrow']}>Our Parish</p>
-          <h1 className={styles['about__hero-title']}>About Us</h1>
-          <p className={styles['about__hero-desc']}>
-            A community of faith, worship, and service in the heart of Ikeja, Lagos — gathered
-            around the altar of the Ascended Lord.
-          </p>
-          <div className={styles['about__hero-rule']} aria-hidden="true" />
-          <p className={styles['about__hero-motto']}>
-            Pro Deo et pro Gloria Eius · For God and for His Glory
-          </p>
-        </div>
-      </section>
+      <PageHeader
+        eyebrow="Our Parish"
+        title="About Us"
+        description="A community of faith, worship, and service in the heart of Ikeja, Lagos — gathered around the altar of the Ascended Lord."
+        image="/images/hero-bg.png"
+      />
 
       {/* ── History ──────────────────────────────────────────────────────── */}
       <section className={styles.about__history}>
