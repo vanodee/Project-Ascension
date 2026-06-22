@@ -4,116 +4,661 @@
 .about {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2xl);
+  gap: var(--space-4xl);
   width: 100%;
-
-  @include breakpoint($bp-md) {
-    gap: var(--space-3xl);
-  }
 }
+
+// ── Hero ─────────────────────────────────────────────────────────────────────
 
 .about__hero {
   position: relative;
-  width: 100%;
-  aspect-ratio: 16 / 7;
-  min-height: 280px;
+  height: 380px;
   overflow: hidden;
+  border: 1px solid var(--border-default);
   border-radius: var(--radius-base);
-  background-color: var(--background-inverse);
+
+  @include breakpoint($bp-md) {
+    height: 500px;
+  }
 }
 
-.about__hero-image {
+.about__hero-img {
   object-fit: cover;
 }
 
-.about__narrative {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-lg);
-  max-width: 800px;
-  margin-inline: auto;
+.about__hero-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(47, 33, 15, 0.5), rgba(47, 33, 15, 0.72));
 }
 
-.about__eyebrow {
+.about__hero-content {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: var(--space-2xl) var(--space-lg);
+  text-align: center;
+}
+
+.about__hero-eyebrow {
+  @include label-md;
+  color: var(--text-inverse);
+}
+
+.about__hero-title {
+  font-family: var(--font-cinzel), serif;
+  font-size: 36px;
+  font-weight: 400;
+  line-height: 1.05;
+  color: var(--text-inverse);
+
+  @include breakpoint($bp-md) {
+    font-size: 48px;
+  }
+}
+
+.about__hero-desc {
+  font-family: var(--font-lora), serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--text-inverse);
+  max-width: 520px;
+
+  @include breakpoint($bp-md) {
+    font-size: 18px;
+  }
+}
+
+.about__hero-rule {
+  width: 64px;
+  height: 1px;
+  background-color: rgba(206, 188, 154, 0.8);
+  flex-shrink: 0;
+}
+
+.about__hero-motto {
+  font-family: var(--font-lora), serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.55;
+  color: #e2d0b6;
+}
+
+// ── History ──────────────────────────────────────────────────────────────────
+
+.about__history {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xl);
+
+  @include breakpoint($bp-lg) {
+    flex-direction: row;
+    gap: var(--space-3xl);
+    align-items: flex-start;
+  }
+}
+
+.about__history-aside {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2xl);
+
+  @include breakpoint($bp-lg) {
+    flex: 1;
+    align-items: flex-start;
+  }
+}
+
+.about__history-heading {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding-inline: var(--space-xs);
+  width: 100%;
+}
+
+.about__history-eyebrow {
   @include label-md;
   color: var(--text-primary);
 }
 
-.about__paragraph {
+.about__history-title {
+  @include heading-2xl;
+  color: var(--text-primary);
+}
+
+.about__history-emblem {
+  width: 220px;
+  height: 220px;
+  opacity: 0.85;
+  flex-shrink: 0;
+
+  @include breakpoint($bp-lg) {
+    width: 380px;
+    height: 380px;
+  }
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+}
+
+.about__history-prose {
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+
+  @include breakpoint($bp-lg) {
+    flex: 1;
+    padding-top: 0;
+  }
+}
+
+.about__history-lead {
+  font-family: var(--font-lora), serif;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--text-primary);
+}
+
+.about__history-body {
   @include body-base;
   color: var(--text-primary);
 }
 
-.about__mission {
+.about__history-scripture {
+  border-left: 2px solid var(--border-medium);
+  padding-left: 27px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: var(--space-md);
-  padding: var(--space-2xl) var(--space-lg);
-  border-top: 1px solid var(--border-default);
-  border-bottom: 1px solid var(--border-default);
-  text-align: center;
+  gap: 9px;
 }
 
-.about__quote {
-  @include heading-xl;
-  font-style: italic;
-  max-width: 900px;
+.about__history-scripture-text {
+  @include body-md-italic;
   color: var(--text-primary);
 }
 
-.about__quote-attribution {
-  @include label-md;
-  color: var(--border-medium);
+.about__history-scripture-ref {
+  @include label-base;
+  color: #5c3f1a;
+  font-style: normal;
 }
 
-.about__milestones {
+// ── Stats ─────────────────────────────────────────────────────────────────────
+
+.about__stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  border-top: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
+
+  @include breakpoint($bp-md) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.about__stat {
   display: flex;
   flex-direction: column;
-  gap: var(--space-xl);
-  max-width: 800px;
-  width: 100%;
-  margin-inline: auto;
-  padding-bottom: var(--space-2xl);
+  align-items: center;
+  gap: 23px;
+  padding: 35px var(--space-md);
+
+  // Every item except the first column gets a left border
+  &:nth-child(even) {
+    border-left: 1px solid var(--border-subtle);
+  }
+
+  // Bottom row on mobile (items 3+) gets a top border
+  &:nth-child(n + 3) {
+    border-top: 1px solid var(--border-subtle);
+  }
+
+  @include breakpoint($bp-md) {
+    padding: 35px var(--space-xl);
+
+    &:nth-child(n + 2) {
+      border-left: 1px solid var(--border-subtle);
+    }
+
+    // Reset mobile top border
+    &:nth-child(n + 3) {
+      border-top: none;
+    }
+  }
 }
+
+.about__stat-value {
+  @include display-lg;
+  font-family: var(--font-cinzel), serif;
+  color: var(--text-primary);
+  text-align: center;
+}
+
+.about__stat-label {
+  @include label-base;
+  color: #5c3f1a;
+  text-align: center;
+}
+
+// ── Mission ───────────────────────────────────────────────────────────────────
+
+.about__mission {
+  position: relative;
+  background-color: var(--background-inverse);
+  border-radius: var(--radius-base);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.about__mission-inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+  padding: var(--space-4xl) var(--space-xl);
+  max-width: 760px;
+  text-align: center;
+
+  @include breakpoint($bp-md) {
+    padding: 80px var(--space-3xl);
+  }
+}
+
+.about__mission-quote {
+  @include heading-xl;
+  color: var(--text-inverse);
+  font-style: italic;
+}
+
+.about__mission-attr {
+  @include label-md;
+  color: #e2d0b6;
+}
+
+.about__mission-watermark {
+  position: absolute;
+  right: -20px;
+  bottom: -20px;
+  width: 200px;
+  height: 200px;
+  opacity: 0.2;
+  pointer-events: none;
+
+  @include breakpoint($bp-md) {
+    width: 252px;
+    height: 251px;
+  }
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+}
+
+// ── Timeline ─────────────────────────────────────────────────────────────────
 
 .about__timeline {
   display: flex;
   flex-direction: column;
-  border-left: 1px solid var(--border-subtle);
+  gap: var(--space-3xl);
+  align-items: center;
 }
 
-.about__timeline-item {
+.about__timeline-head {
   display: flex;
   flex-direction: column;
-  gap: var(--space-xs);
-  padding: var(--space-lg);
-
-  @include breakpoint($bp-md) {
-    flex-direction: row;
-    gap: var(--space-xl);
-  }
+  align-items: center;
+  gap: var(--space-sm);
+  text-align: center;
 }
 
-.about__timeline-year {
-  @include display-lg;
-  flex-shrink: 0;
-  width: 120px;
-  color: var(--border-medium);
-}
-
-.about__timeline-body {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-xs);
+.about__timeline-eyebrow {
+  @include label-md;
+  color: #5c3f1a;
 }
 
 .about__timeline-title {
-  @include heading-md;
+  @include heading-2xl;
   color: var(--text-primary);
 }
 
-.about__timeline-text {
-  @include body-base-italic;
+// Track: the scrollable area with the axis line
+.about__tl-track {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3xl);
+  padding-block: var(--space-sm);
+}
+
+.about__tl-axis {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 9px; // center of 18px node
+  width: 1px;
+  background-color: var(--border-default);
+  opacity: 0.85;
+
+  @include breakpoint($bp-lg) {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
+// Each row: mobile = node on left axis + content on right
+.about__tl-row {
+  position: relative;
+  padding-left: 44px; // clear the axis + node
+
+  @include breakpoint($bp-lg) {
+    padding-left: 0;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+  }
+}
+
+// Flip: visually swap the date and content sides via row-reverse.
+// DOM order [date-side, node, content-side] → renders [content-side, node, date-side]
+.about__tl-row--flip {
+  @include breakpoint($bp-lg) {
+    flex-direction: row-reverse;
+  }
+}
+
+// Date side (desktop only)
+.about__tl-date-side {
+  display: none;
+
+  @include breakpoint($bp-lg) {
+    display: flex;
+    flex: 1;
+    align-items: flex-start;
+    // Non-flip: date-side is on the left, push pill to the right (toward axis)
+    justify-content: flex-end;
+    padding-right: 20px;
+
+    .about__tl-row--flip & {
+      // Flip: date-side is on the right, push pill to the left (toward axis)
+      justify-content: flex-start;
+      padding-right: 0;
+      padding-left: 20px;
+    }
+  }
+}
+
+.about__tl-pill {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 48px;
+  padding: 0 23px;
+  background-color: var(--background-inverse);
+  border: 1px solid rgba(213, 186, 148, 0.4);
+  border-radius: var(--radius-base);
+  white-space: nowrap;
+}
+
+.about__tl-year {
+  @include label-lg;
+  color: var(--text-inverse);
+}
+
+// Axis node dot
+.about__tl-node {
+  position: absolute;
+  left: 0;
+  top: 14px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background-color: var(--background-inverse);
+  border: 3px solid var(--background-page);
+  z-index: 1;
+
+  @include breakpoint($bp-lg) {
+    position: static;
+    flex-shrink: 0;
+    margin-top: 15px; // vertically centers node (9px) with the 48px pill (center = 24px)
+  }
+}
+
+// Content side
+.about__tl-content-side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+
+  @include breakpoint($bp-lg) {
+    flex: 1;
+    padding-left: 20px;
+
+    .about__tl-row--flip & {
+      // Flip: content-side renders on the left, pad its right edge toward the axis
+      padding-left: 0;
+      padding-right: 20px;
+      text-align: right;
+    }
+  }
+}
+
+// Year shown on mobile instead of pill
+.about__tl-mobile-year {
+  @include label-md;
+  color: #5c3f1a;
+
+  @include breakpoint($bp-lg) {
+    display: none;
+  }
+}
+
+.about__tl-title-row {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-sm);
+
+  @include breakpoint($bp-lg) {
+    .about__tl-row--flip & {
+      flex-direction: row-reverse;
+    }
+  }
+}
+
+.about__tl-item-title {
+  @include heading-lg;
   color: var(--text-primary);
+}
+
+.about__tl-tag {
+  @include label-base;
+  color: #5c3f1a;
+  font-size: 11px;
+}
+
+.about__tl-card {
+  background-color: #fdfbf8;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-base);
+  padding: var(--space-lg);
+}
+
+.about__tl-text {
+  @include body-base;
+  color: var(--text-primary);
+}
+
+// ── Parish Life ───────────────────────────────────────────────────────────────
+
+.about__life {
+  display: flex;
+  flex-direction: column;
+  gap: 45px;
+}
+
+.about__life-head {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.about__life-eyebrow {
+  @include label-md;
+  color: #5c3f1a;
+}
+
+.about__life-title {
+  @include heading-2xl;
+  color: var(--text-primary);
+}
+
+.about__life-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-md);
+
+  @include breakpoint($bp-md) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.about__life-tile {
+  position: relative;
+  height: 340px;
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-base);
+
+  @include breakpoint($bp-md) {
+    height: 570px;
+  }
+}
+
+.about__life-photo {
+  object-fit: cover;
+}
+
+.about__life-cap {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 84px;
+  background: linear-gradient(to top, #2f210f, rgba(47, 33, 15, 0));
+  display: flex;
+  align-items: flex-end;
+  padding: var(--space-md) var(--space-lg);
+}
+
+.about__life-caption {
+  @include label-base;
+  color: var(--text-inverse);
+}
+
+// ── CTA Card ──────────────────────────────────────────────────────────────────
+
+.about__cta {
+  display: flex;
+  flex-direction: column;
+  border: 2px solid var(--border-default);
+  border-radius: var(--radius-base);
+  overflow: hidden;
+
+  @include breakpoint($bp-md) {
+    flex-direction: row;
+  }
+}
+
+.about__cta-media {
+  position: relative;
+  height: 280px;
+  flex-shrink: 0;
+
+  @include breakpoint($bp-md) {
+    flex: 1;
+    height: auto;
+    min-height: 440px;
+  }
+}
+
+.about__cta-photo {
+  object-fit: cover;
+}
+
+.about__cta-body {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  justify-content: center;
+  padding: var(--space-2xl) var(--space-xl);
+
+  @include breakpoint($bp-md) {
+    flex: 1;
+    padding: var(--space-2xl) var(--space-3xl);
+  }
+}
+
+.about__cta-head {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.about__cta-eyebrow {
+  @include label-md;
+  color: #5c3f1a;
+}
+
+.about__cta-title {
+  @include heading-2xl;
+  color: var(--text-primary);
+}
+
+.about__cta-desc {
+  font-family: var(--font-lora), serif;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--text-primary);
+  max-width: 440px;
+}
+
+.about__cta-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  align-self: flex-start;
+  padding: 17px 33px;
+  font-family: var(--font-lora), serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--button-primary-text);
+  background-color: var(--button-primary-background);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-base);
+  text-decoration: none;
+  transition: background-color 0.15s ease, color 0.15s ease;
+
+  &:hover {
+    background-color: var(--background-inverse);
+    color: var(--text-inverse);
+  }
 }
