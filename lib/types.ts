@@ -96,18 +96,29 @@ export interface DonationCategory {
   description: string;
 }
 
+export interface PsalmLine {
+  text: string;
+  isRefrain: boolean;
+  isContinuation: boolean;
+  isStropheStart: boolean;
+}
+
 export interface Reading {
   label: string;
   reference: string;
   excerpt: string;
   text: string[];
+  psalmLines?: PsalmLine[];
 }
 
 export interface DailyReadings {
   date: string;
-  liturgicalDay: string;
+  /** Primary day + any optional memorials, each as its own string (Universalis "or" separators split out). */
+  celebrations: string[];
   lectionaryYear: string;
   season: LiturgicalSeason;
+  colourVar: string;
+  copyright: string;
   readings: Reading[];
 }
 

@@ -285,26 +285,47 @@
     align-items: stretch;
     justify-content: space-between;
     min-height: 70px;
+
   }
 }
 
 .readings__day-cell {
-  @include label-lg;
+  display: grid;
+  grid-auto-rows: 1fr;
+  flex: 1 1 auto;
+  padding-inline: var(--space-lg);
+}
+
+.readings__day-celebration {
+  @include label-md;
+  color: var(--text-primary);
   display: flex;
   align-items: center;
-  flex: 1 1 auto;
-  padding: var(--space-md) var(--space-lg);
-  color: var(--text-primary);
+  padding: var(--space-xs) 0;
+
+  &:not(:first-child) {
+    border-top: 1px solid var(--border-subtle);
+  }
 }
 
 .readings__season-badge {
-  @include label-lg;
   display: flex;
   align-items: center;
-  gap: var(--space-md);
-  padding: var(--space-xs) var(--space-md);
-  background-color: var(--liturgical-easter);
+  justify-content: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
   color: var(--text-inverse);
+  min-width: 250px;
+}
+
+.readings__season-badge-name {
+  @include label-md;
+}
+
+.readings__season-badge-year {
+  @include label-base;
+  opacity: 0.8;
+  margin-top: var(--space-2xs);
 }
 
 .readings__gospel-card {
@@ -414,6 +435,10 @@
 }
 
 .readings__reading-excerpt {
+  @include body-base-italic;
+}
+
+.readings__reading-chorus {
   @include body-base-italic;
 }
 

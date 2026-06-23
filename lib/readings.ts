@@ -1,68 +1,212 @@
-import type { DailyReadings } from './types';
+import type { DailyReadings, PsalmLine, Reading } from './types';
+import {
+  getLiturgicalSeason,
+  getSundayCycle,
+  getWeekdayCycle,
+  getLiturgicalColourVar,
+} from './liturgical';
 
-// Universalis API integration (https://universalis.com/{date}/Mass.json).
-// Mocked until the live fetch is wired up — the function signature matches
-// what the real server-side fetch will return.
-const todaysReadings: DailyReadings = {
-  date: '2026-06-12',
-  liturgicalDay: 'Sixth Sunday of Easter',
-  lectionaryYear: 'Year B',
-  season: 'Easter',
-  readings: [
-    {
-      label: 'First Reading',
-      reference: 'Proverbs 8:22–31',
-      excerpt:
-        '"Before the mountains were settled, before the hills, I was brought forth — rejoicing before him always, rejoicing in his inhabited world..."',
-      text: [
-        'Thus says the Wisdom of God: “The Lord possessed me at the beginning of his ways, the first of his acts of old. Ages ago I was set up, at the first, before the beginning of the earth.”',
-        '“When there were no depths I was brought forth, when there were no springs abounding with water. Before the mountains had been shaped, before the hills, I was brought forth.”',
-        '“When he established the heavens, I was there; when he drew a circle on the face of the deep... then I was beside him, like a master workman, and I was daily his delight, rejoicing before him always, rejoicing in his inhabited world and delighting in the children of man.”',
-      ],
-    },
-    {
-      label: 'Responsorial Psalm',
-      reference: 'Psalm 8:4–5, 6–7, 8–9',
-      excerpt: 'O Lord, our Lord, how majestic is your name in all the earth.',
-      text: [
-        'When I see your heavens, the work of your fingers, the moon and stars that you set in place — what is man that you are mindful of him, and a son of man that you care for him?',
-        'Yet you have made him little less than a god; with glory and honour you crowned him. You gave him power over the works of your hands, put all things under his feet.',
-        'All of them, sheep and oxen, yes, even the savage beasts, birds of the air, and fish that make their way through the waters.',
-      ],
-    },
-    {
-      label: 'Second Reading',
-      reference: 'Romans 5:1–5',
-      excerpt:
-        '"...God\'s love has been poured into our hearts through the Holy Spirit who has been given to us."',
-      text: [
-        'Brothers and sisters: Since we have been justified by faith, we have peace with God through our Lord Jesus Christ, through whom we have obtained access by faith into this grace in which we stand, and we rejoice in hope of the glory of God.',
-        'More than that, we rejoice in our sufferings, knowing that suffering produces endurance, and endurance produces character, and character produces hope.',
-        'And hope does not put us to shame, because God’s love has been poured into our hearts through the Holy Spirit who has been given to us.',
-      ],
-    },
-    {
-      label: 'Gospel',
-      reference: 'John 16:12–15',
-      excerpt:
-        '"When the Spirit of truth comes, he will guide you into all the truth, for he will not speak on his own authority..."',
-      text: [
-        'Jesus said to his disciples: “I still have many things to say to you, but you cannot bear them now. When the Spirit of truth comes, he will guide you into all the truth, for he will not speak on his own authority, but whatever he hears he will speak, and he will declare to you the things that are to come.”',
-        '“He will glorify me, for he will take what is mine and declare it to you. All that the Father has is mine; therefore I said that he will take what is mine and declare it to you.”',
-      ],
-    },
-  ],
-};
+// In-memory fallback: survives across warm invocations within the same process.
+let lastSuccessfulData: DailyReadings | null = null;
 
-/** Fetch the readings for today (mocked Universalis response). */
-export async function getDailyReadings(): Promise<DailyReadings> {
-  return todaysReadings;
+// Returns a Date whose UTC date fields reflect the current time in Lagos (UTC+1, no DST).
+function getLagosDate(): Date {
+  return new Date(Date.now() + 60 * 60 * 1000);
 }
 
-/** Seconds until the next midnight (Africa/Lagos is UTC+1, no DST) — used for ISR. */
+function toDateParam(d: Date): string {
+  const y = d.getUTCFullYear();
+  const m = String(d.getUTCMonth() + 1).padStart(2, '0');
+  const day = String(d.getUTCDate()).padStart(2, '0');
+  return `${y}${m}${day}`;
+}
+
+function toIsoDate(d: Date): string {
+  const y = d.getUTCFullYear();
+  const m = String(d.getUTCMonth() + 1).padStart(2, '0');
+  const day = String(d.getUTCDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
+
+// Decode common HTML entities and strip all tags, returning plain text.
+// Named entities use \uXXXX escapes to avoid encoding issues in the source file.
+function plainText(html: string): string {
+  return html
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&rsquo;/g, '’') // right single quotation mark '
+    .replace(/&lsquo;/g, '‘') // left single quotation mark '
+    .replace(/&rdquo;/g, '”') // right double quotation mark "
+    .replace(/&ldquo;/g, '“') // left double quotation mark "
+    .replace(/&mdash;/g, '—') // em dash —
+    .replace(/&ndash;/g, '–') // en dash –
+    // Hex numeric entities, e.g. &#x2010; (non-breaking hyphen), &#x20; (space)
+    .replace(/&#x([0-9a-fA-F]+);/gi, (_, n: string) => String.fromCodePoint(parseInt(n, 16)))
+    // Decimal numeric entities, e.g. &#8217;
+    .replace(/&#(\d+);/g, (_, n: string) => String.fromCodePoint(Number(n)))
+    .replace(/<[^>]+>/g, '')
+    .trim();
+}
+
+// Split Universalis HTML text into plain-text paragraphs.
+// Universalis uses <div> blocks (not <p>), so split on </div>.
+function toParagraphs(html: string): string[] {
+  return html
+    .split(/<\/(?:p|div)>/i)
+    .map(plainText)
+    .filter((s) => s.length > 0);
+}
+
+// Parse a Universalis psalm into structured lines.
+// Each <div> is one line. Signals from the HTML:
+//   <i> wrapper          → refrain (antiphon)
+//   text-indent: -2em    → indented continuation (second half of a couplet)
+//   margin-top: 0.8em    → new strophe begins here
+function parsePsalmLines(html: string): PsalmLine[] {
+  return html
+    .split(/<\/div>/i)
+    .map((chunk): PsalmLine | null => {
+      const text = plainText(chunk).replace(/^ +/, '').trim();
+      if (!text) return null;
+      return {
+        text,
+        isRefrain: /<i>/i.test(chunk),
+        isContinuation: /text-indent:\s*-2em/.test(chunk),
+        isStropheStart: /margin-top:\s*0\.8em/.test(chunk),
+      };
+    })
+    .filter((l): l is PsalmLine => l !== null);
+}
+
+interface UniversalisReading {
+  source?: string;
+  heading?: string;
+  text?: string;
+}
+
+interface UniversalisPayload {
+  date?: string;
+  day?: string;
+  Mass_R1?: UniversalisReading;
+  Mass_Ps?: UniversalisReading;
+  Mass_R2?: UniversalisReading;
+  Mass_GA?: UniversalisReading;
+  Mass_G?: UniversalisReading;
+  copyright?: { text?: string };
+}
+
+function excerptFrom(text: string, limit = 120): string {
+  if (text.length <= limit) return text;
+  const cut = text.lastIndexOf(' ', limit);
+  return text.slice(0, cut > 0 ? cut : limit) + '…';
+}
+
+function buildReading(
+  label: string,
+  raw: UniversalisReading | undefined,
+  isPsalm = false,
+): Reading | null {
+  if (!raw?.source || !raw.text) return null;
+  if (isPsalm) {
+    const psalmLines = parsePsalmLines(raw.text);
+    if (psalmLines.length === 0) return null;
+    const refrain = psalmLines.find((l) => l.isRefrain)?.text ?? '';
+    return {
+      label,
+      reference: plainText(raw.source),
+      excerpt: refrain,
+      text: psalmLines.map((l) => l.text),
+      psalmLines,
+    };
+  }
+  const paragraphs = toParagraphs(raw.text);
+  if (paragraphs.length === 0) return null;
+  return {
+    label,
+    reference: plainText(raw.source),
+    excerpt: excerptFrom(paragraphs[0] ?? ''),
+    text: paragraphs,
+  };
+}
+
+async function fetchPayload(dateParam: string): Promise<UniversalisPayload> {
+  const url = `https://universalis.com/africa.nigeria/${dateParam}/jsonpmass.js`;
+  const res = await fetch(url, {
+    next: { revalidate: secondsUntilMidnight() },
+  });
+  if (!res.ok) throw new Error(`Universalis HTTP ${res.status}`);
+
+  const raw = await res.text();
+  // Strip JSONP wrapper: universalisCallback({...});
+  const match = /^universalisCallback\(([\s\S]*)\);?\s*$/.exec(raw);
+  if (!match?.[1]) throw new Error('Unexpected Universalis response shape');
+
+  return JSON.parse(match[1]) as UniversalisPayload;
+}
+
+function mapToDailyReadings(
+  payload: UniversalisPayload,
+  lagosDate: Date,
+): DailyReadings {
+  const season = getLiturgicalSeason(lagosDate);
+  const cycle = getSundayCycle(lagosDate);
+  const weekday = getWeekdayCycle(lagosDate);
+  const colourVar = getLiturgicalColourVar(season);
+
+  const readings: Reading[] = [
+    buildReading('First Reading', payload.Mass_R1),
+    buildReading('Responsorial Psalm', payload.Mass_Ps, true),
+    buildReading('Second Reading', payload.Mass_R2),
+    buildReading('Gospel', payload.Mass_G),
+  ].filter((r): r is Reading => r !== null);
+
+  // Universalis wraps each celebration in its own <div> and prefixes alternatives
+  // with non-breaking spaces + "or". Split at </div> boundaries before stripping
+  // HTML so the structure survives, then remove leading "or" from alternatives.
+  const celebrations = (payload.day ?? '')
+    .split(/<\/div>/i)
+    .map(plainText)
+    .map((s) => s.replace(/^\s*or\s+/i, '').trim())
+    .filter((s) => s.length > 0);
+
+  return {
+    date: toIsoDate(lagosDate),
+    celebrations,
+    lectionaryYear: `Year ${cycle}  Week ${weekday}`,
+    season,
+    colourVar,
+    copyright: plainText(payload.copyright?.text ?? 'Universalis Publishing'),
+    readings,
+  };
+}
+
+export async function getDailyReadings(): Promise<DailyReadings> {
+  const lagosDate = getLagosDate();
+  const dateParam = toDateParam(lagosDate);
+
+  try {
+    const payload = await fetchPayload(dateParam);
+    const result = mapToDailyReadings(payload, lagosDate);
+    lastSuccessfulData = result;
+    return result;
+  } catch (err) {
+    console.error('[universalis] fetch error:', err);
+    if (lastSuccessfulData !== null) return lastSuccessfulData;
+    throw err;
+  }
+}
+
+// Seconds from now until Lagos midnight (UTC+1, no DST). Used for fetch-level ISR.
 export function secondsUntilMidnight(): number {
-  const now = new Date();
-  const midnight = new Date(now);
-  midnight.setHours(24, 0, 0, 0);
-  return Math.max(60, Math.floor((midnight.getTime() - now.getTime()) / 1000));
+  const lagosNow = getLagosDate();
+  const lagosMidnight = new Date(
+    Date.UTC(
+      lagosNow.getUTCFullYear(),
+      lagosNow.getUTCMonth(),
+      lagosNow.getUTCDate() + 1,
+    ),
+  );
+  return Math.max(60, Math.floor((lagosMidnight.getTime() - Date.now()) / 1000));
 }

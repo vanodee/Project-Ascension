@@ -194,13 +194,21 @@ export default async function HomePage(): Promise<React.JSX.Element> {
 
           <div className={styles['readings__liturgy-header']}>
             <div className={styles['readings__solemnity-info']}>
-              <p className={styles['readings__day-cell']}>
-                {readings.liturgicalDay} • {readings.lectionaryYear}
-              </p>
-              <p className={styles['readings__season-badge']}>
-                <Image src="/icons/season-badge.svg" alt="" width={24} height={32} />
-                <span>{readings.season} Season</span>
-              </p>
+              <div className={styles['readings__day-cell']}>
+                {readings.celebrations.map((cel) => (
+                  <p key={cel} className={styles['readings__day-celebration']}>{cel}</p>
+                ))}
+              </div>
+              <div
+                className={styles['readings__season-badge']}
+                style={{ backgroundColor: `var(${readings.colourVar})` }}
+              >
+                <Image src="/icons/season-badge.svg" alt="" width={20} height={28} />
+                <div>
+                  <p className={styles['readings__season-badge-name']}>{readings.season}</p>
+                  <p className={styles['readings__season-badge-year']}>{readings.lectionaryYear}</p>
+                </div>
+              </div>
             </div>
 
             {gospel ? (
@@ -237,7 +245,15 @@ export default async function HomePage(): Promise<React.JSX.Element> {
                 <div className={styles['readings__reading-info']}>
                   <p className={styles['readings__reading-label']}>{reading.label}</p>
                   <p className={styles['readings__reading-reference']}>{reading.reference}</p>
-                  <p className={styles['readings__reading-excerpt']}>{reading.excerpt}</p>
+                  <p
+                    className={
+                      reading.label === 'Responsorial Psalm'
+                        ? styles['readings__reading-chorus']
+                        : styles['readings__reading-excerpt']
+                    }
+                  >
+                    {reading.excerpt}
+                  </p>
                 </div>
               </div>
             ))}

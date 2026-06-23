@@ -24,23 +24,49 @@
   }
 }
 
+.readings__date {
+  @include label-xl;
+  color: var(--text-primary);
+  text-align: right;
+}
+
 .readings__banner-day {
+  display: grid;
+  grid-auto-rows: 1fr;
+  flex: 1 1 auto;
+  padding-inline: var(--space-lg);
+}
+
+.readings__banner-celebration {
   @include label-lg;
+  color: var(--text-primary);
   display: flex;
   align-items: center;
-  flex: 1 1 auto;
-  padding: var(--space-md) var(--space-lg);
-  color: var(--text-primary);
+  padding-block: var(--space-xs);
+
+  &:not(:first-child) {
+    border-top: 1px solid var(--border-subtle);
+  }
 }
 
 .readings__banner-season {
-  @include label-lg;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: var(--space-md);
-  padding: var(--space-xs) var(--space-md);
-  background-color: var(--liturgical-easter);
+  padding: var(--space-md) var(--space-lg);
   color: var(--text-inverse);
+  min-width: 270px;
+}
+
+.readings__banner-season-name {
+  @include label-lg;
+}
+
+.readings__banner-season-year {
+  @include label-md;
+  opacity: 0.8;
+  margin-top: var(--space-xs);
 }
 
 .readings__list {
@@ -70,8 +96,29 @@
 .readings__reading-header {
   display: flex;
   flex-direction: column;
-  gap: var(--space-xs);
+  align-items: flex-start;
+  gap: var(--space-md);
   color: var(--text-primary);
+
+  @include breakpoint($bp-md) {
+    flex-direction: row;
+    align-items: center;
+    gap: var(--space-lg);
+  }
+}
+
+.readings__reading-icon {
+  flex: 0 0 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.85;
+}
+
+.readings__reading-titles {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
 }
 
 .readings__reading-label {
@@ -91,6 +138,39 @@
 .readings__paragraph {
   @include body-base;
   color: var(--text-primary);
+}
+
+.readings__response {
+  @include body-sm-italic;
+  color: var(--text-secondary);
+  text-align: right;
+}
+
+.readings__psalm {
+  display: flex;
+  flex-direction: column;
+}
+
+.readings__psalm-refrain {
+  @include body-base-italic;
+  color: var(--text-primary);
+  padding: var(--space-sm) var(--space-md);
+  border-left: 2px solid var(--border-medium);
+  margin-block: var(--space-sm);
+}
+
+.readings__psalm-verse {
+  @include body-base;
+  color: var(--text-primary);
+  line-height: 1.65;
+}
+
+.readings__psalm-verse--continuation {
+  padding-left: var(--space-lg);
+}
+
+.readings__psalm-verse--strophe-start {
+  margin-top: var(--space-md);
 }
 
 .readings__attribution {
