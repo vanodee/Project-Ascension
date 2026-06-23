@@ -16,7 +16,7 @@ const sacraments: SacramentPage[] = [
       'No question is too small and no past is a barrier. Whether you have never been baptised, were baptised in another Christian tradition, or are a baptised Catholic seeking Confirmation, the RCIA is for you.',
       'A new cohort begins each year. Classes hold on Sunday mornings after the second Mass in the parish hall. Begin by filling out the enquiry form below — our catechist will contact you personally.',
     ],
-    tallyFormId: 'mock-rcia-form',
+    tallyFormId: 'eqy8Kk',
   },
   {
     sacrament: 'baptism',

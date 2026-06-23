@@ -63,13 +63,15 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-lg);
-  padding-top: var(--space-xl);
-  border-top: 1px solid var(--border-subtle);
+  padding: var(--space-xl);
+  border: 1px dashed var(--border-medium);
+  border-radius: var(--radius-base);
 }
 
 .sacrament__form-title {
   @include heading-2xl;
   color: var(--text-primary);
+  text-align: center;
 }
 
 .sacrament__footer {

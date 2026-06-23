@@ -59,7 +59,7 @@ export default function ContactPage(): React.JSX.Element {
 
         <section className={styles.contact__form} aria-label="Contact form">
           <h2 className={styles['contact__form-title']}>Send a Message</h2>
-          <TallyEmbed formId="mock-contact-form" title="Contact the Parish" />
+          <TallyEmbed formId="jagX9Q" title="Contact the Parish" />
         </section>
       </div>
 
