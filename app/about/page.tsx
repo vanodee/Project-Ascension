@@ -214,7 +214,7 @@ export default function AboutPage(): React.JSX.Element {
       <div className={styles['about__cta']}>
         <div className={styles['about__cta-media']}>
           <Image
-            src="/images/gospel-photo.png"
+            src="/images/parish-family.jpg"
             alt="Parishioners gathered at the Church of the Ascension"
             fill
             sizes="(min-width: 1280px) 640px, (min-width: 768px) 50vw, 100vw"

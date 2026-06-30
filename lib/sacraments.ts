@@ -24,7 +24,7 @@ const sacraments: SacramentPage[] = [
     label: 'Sacrament of Initiation',
     summary:
       'The gateway to life in the Spirit and the door which gives access to the other sacraments.',
-    heroImage: '/images/gospel-photo.png',
+    heroImage: '/images/sacrament-baptism.jpg',
     body: [
       'Holy Baptism is the basis of the whole Christian life, the gateway to life in the Spirit, and the door which gives access to the other sacraments. Through Baptism we are freed from sin and reborn as children of God.',
       'Infant baptisms are celebrated in the parish on the second and fourth Saturdays of each month. Parents should obtain and complete a baptism form from the parish office at least two weeks beforehand.',
@@ -38,7 +38,7 @@ const sacraments: SacramentPage[] = [
     label: 'Sacrament of Initiation',
     summary:
       'The source and summit of the Christian life — the Body and Blood of Christ truly present.',
-    heroImage: '/images/gospel-photo.png',
+    heroImage: '/images/sacrament-eucharist.jpg',
     body: [
       'The Holy Eucharist is the source and summit of the Christian life. In the Blessed Sacrament, Christ is truly, really, and substantially present — Body, Blood, Soul, and Divinity.',
       'Mass is celebrated daily in the parish. See the Parish Schedule for Mass times, including Sunday and weekday Masses.',
@@ -52,7 +52,7 @@ const sacraments: SacramentPage[] = [
     label: 'Sacrament of Initiation',
     summary:
       'The completion of baptismal grace through the gift of the Holy Spirit.',
-    heroImage: '/images/card-sunday.png',
+    heroImage: '/images/sacrament-confirmation.jpg',
     body: [
       'Confirmation perfects baptismal grace. It is the sacrament which gives the Holy Spirit in order to root us more deeply in divine filiation, incorporate us more firmly into Christ, and strengthen our bond with the Church.',
       'Candidates for Confirmation are prepared through a year-long catechesis programme. Teenagers and adults who have received Baptism and First Holy Communion are eligible to enrol.',
@@ -66,7 +66,7 @@ const sacraments: SacramentPage[] = [
     label: 'Sacrament of Healing',
     summary:
       'The sacrament of God’s mercy — confession, contrition, and absolution.',
-    heroImage: '/images/card-announcement.png',
+    heroImage: '/images/sacrament-reconciliation.jpg',
     body: [
       'In the Sacrament of Reconciliation (Confession), we receive God’s pardon for sins committed after Baptism and are reconciled with the Church which our sins have wounded.',
       'Confessions are heard every Saturday at 4:00 pm in the main church, and at any other time by appointment with any of the priests.',
@@ -80,7 +80,7 @@ const sacraments: SacramentPage[] = [
     label: 'Sacrament of Healing',
     summary:
       'Christ’s healing touch for the seriously ill, the elderly, and those preparing for surgery.',
-    heroImage: '/images/card-homily.png',
+    heroImage: '/images/sacrament-anointing.jpg',
     body: [
       'The Anointing of the Sick is given to those who are seriously ill, the elderly in weakened condition, and those preparing for major surgery. Through this sacrament, Christ strengthens the soul and sometimes the body.',
       'The sacrament may be received at home, in hospital, or in the church. Please contact the parish office to arrange a visit from a priest — at any hour in case of emergency.',
@@ -94,7 +94,7 @@ const sacraments: SacramentPage[] = [
     label: 'Sacrament at the Service of Communion',
     summary:
       'The covenant by which a man and a woman establish a partnership of the whole of life.',
-    heroImage: '/images/rcia-photo.png',
+    heroImage: '/images/sacrament-matrimony.jpg',
     body: [
       'The Sacrament of Matrimony establishes a covenant between a man and a woman, ordered toward the good of the spouses and the procreation and education of children. Christ raises this covenant to the dignity of a sacrament.',
       'Couples intending to marry in the parish should see the Parish Priest at least six months before the proposed wedding date, before making any other arrangements.',

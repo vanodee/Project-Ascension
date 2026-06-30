@@ -15,7 +15,7 @@ const announcements: Announcement[] = [
     publishedAt: '2026-05-10T09:00:00+01:00',
     pinned: true,
     category: 'liturgy',
-    image: '/images/gospel-photo.png',
+    image: '/images/announcement_image.png',
     eventDate: '2026-05-17T19:00:00+01:00',
     eventLocation: 'Main Church Building',
   },
