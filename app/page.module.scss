@@ -62,19 +62,31 @@
 }
 
 .hero__title {
-  @include display-4xl;
+  font-family: var(--font-cinzel), serif;
+  font-size: 30px;
+  font-weight: 400;
+  line-height: 1.05;
+
+  @include breakpoint($bp-md) {
+    font-size: 64px;
+  }
 }
 
 .hero__subtitle {
   @include body-md-italic;
+
+  max-width: 36ch;
 }
 
 .hero__cta-group {
-  display: flex;
-  flex-wrap: wrap;
+  display: none;
   gap: var(--space-md);
   align-items: center;
   padding-top: var(--space-xl);
+
+  @include breakpoint($bp-sm) {
+    display: flex;
+  }
 
   @include breakpoint($bp-md) {
     gap: var(--space-xl);

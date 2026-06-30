@@ -67,9 +67,7 @@ export default async function HomePage(): Promise<React.JSX.Element> {
             of the Ascension
           </h1>
           <p className={styles.hero__subtitle}>
-            A community of faith, worship, and service
-            <br />
-            in the heart of Ikeja, Lagos.
+            A community of faith, worship, and service in the heart of Ikeja, Lagos.
           </p>
           <div className={styles['hero__cta-group']}>
             <Button href="/schedule" variant="primary" size="lg">
