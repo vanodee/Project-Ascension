@@ -11,7 +11,7 @@ Catholic Church of the Ascension parish website — a greenfield Next.js project
 - **Framework:** Next.js (App Router)
 - **Styling:** SCSS Modules
 - **CMS:** Sanity (Studio + API)
-- **Media:** Cloudinary (images, audio, video)
+- **Media:** Sanity native asset pipeline (images, audio via `cdn.sanity.io`); YouTube (embedded video)
 - **Payments:** Paystack (popup JS, not redirect)
 - **Calendar:** Google Calendar API (public calendar, API key auth)
 - **Readings:** Universalis API (no auth required)
@@ -42,9 +42,9 @@ Catholic Church of the Ascension parish website — a greenfield Next.js project
 - `aboutPage` — singleton
 - `clergyMember` — collection
 - `announcement` — collection (requires `expiryDate` and `pinned` fields)
-- `homily` — collection (references `clergyMember`, stores Cloudinary audio file URL)
+- `homily` — collection (references `clergyMember`; audio stored as Sanity file asset)
 - `sacramentPage` — collection (7 pages: rcia, baptism, eucharist, confirmation, reconciliation, anointing, matrimony)
-- `galleryAlbum` — collection (Cloudinary media)
+- `galleryAlbum` — collection (Sanity image assets; YouTube URL strings for video items)
 - `donationCategory` — config list
 - `siteSettings` — singleton (parish name, contact info, social links, YouTube channel ID)
 
@@ -57,7 +57,6 @@ Catholic Church of the Ascension parish website — a greenfield Next.js project
 | Tally.so | Embed ID | Client-side embed |
 | Google Calendar API | API Key | Server-side only |
 | YouTube Data API v3 | API Key | Server-side Route Handler only |
-| Cloudinary | API Key + Secret | Server-side only |
 | Sanity | Project ID + Dataset = public; Token = private | Token server-side only |
 | Resend | API Key | Server-side only |
 
@@ -72,9 +71,6 @@ GOOGLE_CALENDAR_API_KEY=
 GOOGLE_CALENDAR_ID=
 YOUTUBE_API_KEY=
 NEXT_PUBLIC_YOUTUBE_CHANNEL_ID=
-CLOUDINARY_CLOUD_NAME=
-CLOUDINARY_API_KEY=
-CLOUDINARY_API_SECRET=
 RESEND_API_KEY=
 ```
 

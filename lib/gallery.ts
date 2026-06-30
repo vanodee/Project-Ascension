@@ -1,6 +1,6 @@
 import type { GalleryAlbum } from './types';
 
-// Mirrors the `galleryAlbum` collection in Sanity (media on Cloudinary).
+// Mirrors the `galleryAlbum` collection in Sanity (images stored as Sanity assets, videos as YouTube URLs).
 // Mocked until the CMS is wired up.
 const albums: GalleryAlbum[] = [
   {

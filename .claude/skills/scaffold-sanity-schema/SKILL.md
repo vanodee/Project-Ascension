@@ -16,7 +16,7 @@ When asked to scaffold a new Sanity document type (or when `/scaffold-sanity-sch
    - Announcements must include `expiryDate` (datetime) and `pinned` (boolean, default false).
    - Homilies must include a reference to `clergyMember` for the author field.
    - All image fields must require alt text (`validation: Rule => Rule.required()` on the `alt` field) — this is a WCAG 2.1 AA requirement.
-   - Cloudinary assets (images, audio) should store the Cloudinary public URL as a `url` string field, not use the native Sanity asset pipeline.
+   - Images must use the Sanity native `image` type (with `hotspot: true` and a required `alt` string field). Audio must use the Sanity native `file` type with `options: { accept: 'audio/*' }`. Never store media as a plain `url` string field — always use the asset pipeline so files are served from `cdn.sanity.io`.
    - Use Portable Text (`defineArrayMember({ type: 'block' })`) for any rich-text body fields.
 
 4. **Register the type** — add it to the `schemaTypes` array in `sanity/schemaTypes/index.ts` (or equivalent entry point).

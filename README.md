@@ -13,7 +13,7 @@ A modern, content-driven parish website providing parishioners with easy access 
 | Framework | Next.js 14 (App Router) |
 | Styling | SCSS Modules (BEM) |
 | CMS | Sanity (Studio + API) |
-| Media | Cloudinary (images, audio, video) |
+| Media | Sanity CDN (images, audio) |
 | Payments | Paystack (popup JS) |
 | Calendar | Google Calendar API |
 | Daily Readings | Universalis API |
@@ -58,7 +58,7 @@ scripts/          # Dev utilities
 
 - Node.js 18+
 - A Sanity project
-- API keys for Google Calendar, YouTube, Cloudinary, Paystack, and Resend
+- API keys for Google Calendar, YouTube, Paystack, and Resend
 
 ### Installation
 
@@ -79,9 +79,6 @@ GOOGLE_CALENDAR_API_KEY=
 GOOGLE_CALENDAR_ID=
 YOUTUBE_API_KEY=
 NEXT_PUBLIC_YOUTUBE_CHANNEL_ID=
-CLOUDINARY_CLOUD_NAME=
-CLOUDINARY_API_KEY=
-CLOUDINARY_API_SECRET=
 RESEND_API_KEY=
 ```
 

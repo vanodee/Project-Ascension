@@ -10,7 +10,7 @@ When asked to add a new external API integration (or when `/add-api-integration`
 
 2. **Determine where the key lives** using this project's rules:
    - **Client-side only:** Paystack public key (`NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY`), Tally.so embed IDs, Sanity project ID/dataset (`NEXT_PUBLIC_SANITY_*`), YouTube channel ID (`NEXT_PUBLIC_YOUTUBE_CHANNEL_ID`).
-   - **Server-side only (must never reach the browser):** Google Calendar API Key, YouTube Data API v3 Key, Cloudinary API Key + Secret, Sanity token, Resend API Key.
+   - **Server-side only (must never reach the browser):** Google Calendar API Key, YouTube Data API v3 Key, Sanity token, Resend API Key.
    - For server-side keys: create a Route Handler at `app/api/<service>/route.ts` that the client calls — never expose the key in client code.
 
 3. **Add the env var(s)** to `.env.local` using the naming pattern from `CLAUDE.md`. Remind the user to add them to Vercel environment variables as well.

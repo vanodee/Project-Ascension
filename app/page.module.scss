@@ -18,6 +18,7 @@
   position: relative;
   width: 100%;
   min-height: 520px;
+  max-height: 800px;
   overflow: hidden;
   border-radius: var(--radius-base);
   background-color: var(--background-inverse);
@@ -91,6 +92,7 @@
 .motto__image {
   width: 100%;
   max-width: 850px;
+  padding: 0 var(--space-lg);
   height: auto;
 }
 

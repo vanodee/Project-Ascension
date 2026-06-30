@@ -1,9 +1,8 @@
 import type { Homily } from './types';
 
-// Mirrors the `homily` collection in Sanity (audio hosted on Cloudinary).
-// Mocked until the CMS is wired up — audio URLs point at a sample file.
-const MOCK_AUDIO_URL =
-  'https://res.cloudinary.com/demo/video/upload/dog.mp3';
+// Mirrors the `homily` collection in Sanity (audio stored as Sanity file assets).
+// Mocked until the CMS is wired up — audioUrl will be resolved via asset->url in GROQ.
+const MOCK_AUDIO_URL = '';
 
 const homilies: Homily[] = [
   {
