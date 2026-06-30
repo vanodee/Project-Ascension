@@ -19,6 +19,9 @@ out/
 dist/
 build/
 
+# TypeScript
+*.tsbuildinfo
+
 # OS
 .DS_Store
 Thumbs.db
