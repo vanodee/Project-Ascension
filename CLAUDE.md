@@ -58,6 +58,7 @@ Catholic Church of the Ascension parish website — a greenfield Next.js project
 | Google Calendar API | API Key | Server-side only |
 | YouTube Data API v3 | API Key | Server-side Route Handler only |
 | Sanity | Project ID + Dataset = public; Token = private | Token server-side only |
+| Sanity Webhook | Shared secret | Server-side Route Handler only (`/api/revalidate`) |
 | Resend | API Key | Server-side only |
 
 ## Environment Variables (.env.local)
@@ -72,8 +73,19 @@ GOOGLE_CALENDAR_ID=
 YOUTUBE_API_KEY=
 NEXT_PUBLIC_YOUTUBE_CHANNEL_ID=
 RESEND_API_KEY=
+SANITY_WEBHOOK_SECRET=
 ```
 
 ## Out of Scope (v1.0)
 
 No member portal, no login, no seat booking, no confession scheduling, no multilingual support, no native mobile app, no e-commerce, no automated social media cross-posting.
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->

@@ -1,0 +1,171 @@
+// GROQ queries for all Sanity-backed content. Kept alongside the client so the
+// query shape and the schema stay easy to cross-reference.
+
+export const CLERGY_QUERY = /* groq */ `
+  *[_type == "clergyMember"] | order(order asc) {
+    name,
+    "slug": slug.current,
+    title,
+    role,
+    photo,
+    bio,
+    email,
+    phone,
+    order
+  }
+`;
+
+export const CLERGY_MEMBER_QUERY = /* groq */ `
+  *[_type == "clergyMember" && slug.current == $slug][0] {
+    name,
+    "slug": slug.current,
+    title,
+    role,
+    photo,
+    bio,
+    email,
+    phone,
+    order
+  }
+`;
+
+export const ANNOUNCEMENTS_QUERY = /* groq */ `
+  *[_type == "announcement" && (!defined(expiresAt) || expiresAt > now())]
+    | order(pinned desc, publishedAt desc) {
+    title,
+    "slug": slug.current,
+    excerpt,
+    body,
+    image,
+    category,
+    pinned,
+    publishedAt,
+    expiresAt,
+    eventDate,
+    eventLocation
+  }
+`;
+
+export const ANNOUNCEMENT_QUERY = /* groq */ `
+  *[_type == "announcement" && slug.current == $slug][0] {
+    title,
+    "slug": slug.current,
+    excerpt,
+    body,
+    image,
+    category,
+    pinned,
+    publishedAt,
+    expiresAt,
+    eventDate,
+    eventLocation
+  }
+`;
+
+export const HOMILIES_QUERY = /* groq */ `
+  *[_type == "homily"] | order(publishedAt desc) {
+    title,
+    "slug": slug.current,
+    "authorSlug": author->slug.current,
+    "authorName": author->name,
+    publishedAt,
+    scriptureReference,
+    liturgicalSeason,
+    body,
+    "audioUrl": audioFile.asset->url,
+    audioDuration
+  }
+`;
+
+export const HOMILY_QUERY = /* groq */ `
+  *[_type == "homily" && slug.current == $slug][0] {
+    title,
+    "slug": slug.current,
+    "authorSlug": author->slug.current,
+    "authorName": author->name,
+    publishedAt,
+    scriptureReference,
+    liturgicalSeason,
+    body,
+    "audioUrl": audioFile.asset->url,
+    audioDuration
+  }
+`;
+
+export const GALLERY_ALBUMS_QUERY = /* groq */ `
+  *[_type == "galleryAlbum"] | order(eventDate desc) {
+    title,
+    "slug": slug.current,
+    eventDate,
+    category,
+    description,
+    coverImage,
+    media[] {
+      _type,
+      image,
+      caption,
+      url
+    }
+  }
+`;
+
+export const GALLERY_ALBUM_QUERY = /* groq */ `
+  *[_type == "galleryAlbum" && slug.current == $slug][0] {
+    title,
+    "slug": slug.current,
+    eventDate,
+    category,
+    description,
+    coverImage,
+    media[] {
+      _type,
+      image,
+      caption,
+      url
+    }
+  }
+`;
+
+export const SACRAMENT_PAGES_QUERY = /* groq */ `
+  *[_type == "sacramentPage"] {
+    sacrament,
+    title,
+    label,
+    summary,
+    heroImage,
+    body,
+    tallyFormId
+  }
+`;
+
+export const DONATION_CATEGORIES_QUERY = /* groq */ `
+  *[_type == "donationCategory"] | order(_createdAt asc) {
+    id,
+    label,
+    description
+  }
+`;
+
+export const SITE_SETTINGS_QUERY = /* groq */ `
+  *[_type == "siteSettings"][0] {
+    parishName,
+    shortName,
+    location,
+    address,
+    phone,
+    email,
+    facebookUrl,
+    instagramUrl,
+    youtubeChannelId,
+    massTimes
+  }
+`;
+
+export const ABOUT_PAGE_QUERY = /* groq */ `
+  *[_type == "aboutPage"][0] {
+    title,
+    heroImage,
+    missionStatement,
+    body
+  }
+`;

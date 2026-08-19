@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { siteSettings } from '@/lib/site';
+import type { SiteSettings } from '@/lib/types';
 import styles from './Footer.module.scss';
 
 interface FooterLink {
@@ -14,40 +14,47 @@ interface FooterGroup {
   links: FooterLink[];
 }
 
-const LINK_GROUPS: FooterGroup[] = [
-  {
-    heading: 'Parish',
-    links: [
-      { href: '/about', label: 'About Us' },
-      { href: '/clergy', label: 'Our Clergy' },
-      { href: '/sacraments', label: 'Sacraments' },
-      { href: '/sacraments/rcia', label: 'Becoming Catholic' },
-      { href: '/gallery', label: 'Gallery' },
-    ],
-  },
-  {
-    heading: 'Worship',
-    links: [
-      { href: '/readings', label: 'Daily Readings' },
-      { href: '/schedule', label: 'Mass Schedule' },
-      { href: '/homilies', label: 'Homilies' },
-      { href: '/livestream', label: 'Watch Live' },
-      { href: '/announcements', label: 'Announcements' },
-    ],
-  },
-  {
-    heading: 'Connect',
-    links: [
-      { href: '/contact', label: 'Contact Us' },
-      { href: '/give', label: 'Give Online' },
-      { href: '/sacraments/rcia', label: 'RCIA Enquiry' },
-      { href: siteSettings.facebookUrl, label: 'Facebook', external: true },
-      { href: siteSettings.instagramUrl, label: 'Instagram', external: true },
-    ],
-  },
-];
+function buildLinkGroups(siteSettings: SiteSettings): FooterGroup[] {
+  return [
+    {
+      heading: 'Parish',
+      links: [
+        { href: '/about', label: 'About Us' },
+        { href: '/clergy', label: 'Our Clergy' },
+        { href: '/sacraments', label: 'Sacraments' },
+        { href: '/sacraments/rcia', label: 'Becoming Catholic' },
+        { href: '/gallery', label: 'Gallery' },
+      ],
+    },
+    {
+      heading: 'Worship',
+      links: [
+        { href: '/readings', label: 'Daily Readings' },
+        { href: '/schedule', label: 'Mass Schedule' },
+        { href: '/homilies', label: 'Homilies' },
+        { href: '/livestream', label: 'Watch Live' },
+        { href: '/announcements', label: 'Announcements' },
+      ],
+    },
+    {
+      heading: 'Connect',
+      links: [
+        { href: '/contact', label: 'Contact Us' },
+        { href: '/give', label: 'Give Online' },
+        { href: '/sacraments/rcia', label: 'RCIA Enquiry' },
+        { href: siteSettings.facebookUrl, label: 'Facebook', external: true },
+        { href: siteSettings.instagramUrl, label: 'Instagram', external: true },
+      ],
+    },
+  ];
+}
 
-export default function Footer(): React.JSX.Element {
+interface FooterProps {
+  siteSettings: SiteSettings;
+}
+
+export default function Footer({ siteSettings }: FooterProps): React.JSX.Element {
+  const linkGroups = buildLinkGroups(siteSettings);
   return (
     <footer className={styles.footer}>
       <div className={styles.footer__main}>
@@ -73,7 +80,7 @@ export default function Footer(): React.JSX.Element {
         </div>
 
         <div className={styles['footer__link-groups']}>
-          {LINK_GROUPS.map((group) => (
+          {linkGroups.map((group) => (
             <div key={group.heading} className={styles['footer__link-group']}>
               <p className={styles['footer__group-heading']}>{group.heading}</p>
               {group.links.map((link) =>

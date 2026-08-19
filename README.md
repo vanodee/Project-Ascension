@@ -1,6 +1,6 @@
 # Project Ascension
 
-Official website for the **Catholic Church of the Ascension**, Ikeja, Lagos, Nigeria — built with Next.js 14 App Router.
+Official website for the **Catholic Church of the Ascension**, Ikeja, Lagos, Nigeria — built with Next.js 16 App Router.
 
 ## Overview
 
@@ -10,7 +10,7 @@ A modern, content-driven parish website providing parishioners with easy access 
 
 | Concern | Tool |
 |---|---|
-| Framework | Next.js 14 (App Router) |
+| Framework | Next.js 16 (App Router) |
 | Styling | SCSS Modules (BEM) |
 | CMS | Sanity (Studio + API) |
 | Media | Sanity CDN (images, audio) |
@@ -38,18 +38,29 @@ A modern, content-driven parish website providing parishioners with easy access 
 | `/readings` | Daily liturgical readings | ISR (next midnight) |
 | `/livestream` | Live Sunday Mass | ISR (5 min) |
 | `/give` | Online giving (Paystack) | SSG |
+| `/studio` | Embedded Sanity Studio (content editing) | Dynamic |
+
+All ISR pages also revalidate on-demand: a Sanity webhook hits
+`/api/revalidate` on publish, so edits appear within seconds rather than
+waiting for the timer (see `app/api/revalidate/route.ts`).
 
 ## Project Structure
 
 ```
-app/              # Next.js App Router pages & SCSS modules
+app/
+  (site)/         # All public-facing pages & SCSS modules, sharing Header/Footer
+  studio/         # Embedded Sanity Studio route ([[...tool]] catch-all)
+  api/revalidate/ # Sanity webhook receiver for on-demand ISR
 components/
   layout/         # Header, Footer
   ui/             # Reusable UI components (Button, AudioPlayer, etc.)
 lib/              # Data-fetching helpers (Sanity, Google Calendar, YouTube, etc.)
+sanity/
+  lib/            # Sanity client, image URL builder, GROQ queries
+  schemas/        # Sanity Studio document type definitions
 styles/           # Global SCSS tokens, mixins, and base styles
-public/           # Static assets (icons, placeholder images)
-scripts/          # Dev utilities
+public/           # Static assets (icons, images)
+scripts/          # Dev utilities (seed.ts pushes demo content into Sanity)
 ```
 
 ## Getting Started
@@ -74,6 +85,7 @@ Copy the example below into `.env.local` and fill in your values:
 NEXT_PUBLIC_SANITY_PROJECT_ID=
 NEXT_PUBLIC_SANITY_DATASET=
 SANITY_API_TOKEN=
+SANITY_WEBHOOK_SECRET=
 NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY=
 GOOGLE_CALENDAR_API_KEY=
 GOOGLE_CALENDAR_ID=
@@ -88,7 +100,18 @@ RESEND_API_KEY=
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) to view the site.
+Open [http://localhost:3000](http://localhost:3000) to view the site, or
+[http://localhost:3000/studio](http://localhost:3000/studio) to edit content.
+
+### Seed demo content
+
+Pushes placeholder content into every Sanity document type (safe to re-run —
+uses deterministic IDs, so it updates existing documents rather than
+duplicating them):
+
+```bash
+npm run seed
+```
 
 ### Build
 
@@ -105,7 +128,7 @@ npm run build
 
 ## Deployment
 
-The site is deployed on **Vercel**. Pushing to `main` triggers a production build automatically.
+The site is deployed on **Vercel**. Pushing to `master` triggers a production build automatically.
 
 ## License
 

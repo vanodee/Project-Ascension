@@ -1,6 +1,9 @@
 // Shared domain types for the Ascension parish website.
-// These mirror the Sanity schema document types defined in the PRD (section 6),
-// so swapping the mock data layer for real GROQ queries is a drop-in change.
+// These mirror the Sanity schema document types defined in the PRD (section 6).
+// Image fields are resolved to CDN URL strings and `body` fields are Portable
+// Text by the corresponding lib/*.ts fetch functions.
+
+import type { PortableTextBlock } from '@portabletext/types';
 
 export type ClergyRole = 'priest' | 'reverend_sister' | 'catechist';
 
@@ -22,7 +25,7 @@ export interface Announcement {
   slug: string;
   title: string;
   excerpt: string;
-  body: string[];
+  body: PortableTextBlock[];
   publishedAt: string;
   expiresAt?: string;
   pinned: boolean;
@@ -47,7 +50,7 @@ export interface Homily {
   publishedAt: string;
   scriptureReference: string;
   liturgicalSeason: LiturgicalSeason;
-  body: string[];
+  body: PortableTextBlock[];
   audioUrl: string;
   audioDuration: string;
 }
@@ -86,8 +89,15 @@ export interface SacramentPage {
   label: string;
   summary: string;
   heroImage: string;
-  body: string[];
+  body: PortableTextBlock[];
   tallyFormId?: string;
+}
+
+export interface AboutPage {
+  title: string;
+  heroImage: string;
+  missionStatement: string;
+  body: PortableTextBlock[];
 }
 
 export interface DonationCategory {
