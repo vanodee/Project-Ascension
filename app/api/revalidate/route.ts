@@ -9,9 +9,12 @@ interface WebhookPayload {
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
+    // Skip the built-in 3s eventual-consistency wait — we only call revalidatePath,
+    // we never re-fetch data in this request, so there's nothing for it to protect.
     const { isValidSignature, body } = await parseBody<WebhookPayload>(
       req,
       process.env.SANITY_WEBHOOK_SECRET,
+      false,
     );
 
     if (!isValidSignature) {
