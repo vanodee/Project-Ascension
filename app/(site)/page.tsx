@@ -19,7 +19,7 @@ export const revalidate = 600;
 export async function generateMetadata(): Promise<Metadata> {
   const siteSettings = await getSiteSettings();
   return {
-    title: `${siteSettings.parishName} — ${siteSettings.location}`,
+    title: `${siteSettings.parishName}`,
     description:
       'A community of faith, worship, and service in the heart of Ikeja, Lagos. Mass times, daily readings, announcements, homilies, and more.',
   };

@@ -23,7 +23,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const siteSettings = await getSiteSettings();
   return {
     title: {
-      default: `${siteSettings.parishName} — ${siteSettings.location}`,
+      default: `${siteSettings.parishName} - ${siteSettings.location}`,
       template: `%s | ${siteSettings.parishName}`,
     },
     description:

@@ -2,8 +2,8 @@ import type { MetadataRoute } from 'next';
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'Catholic Church of the Ascension',
-    short_name: 'Ascension Parish',
+    name: 'Catholic Church of the Ascension, Ikeja, Lagos',
+    short_name: 'Ascension Parish, Ikeja, Lagos',
     description:
       'A community of faith, worship, and service in the heart of Ikeja, Lagos.',
     start_url: '/',
