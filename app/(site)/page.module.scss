@@ -465,6 +465,11 @@
   overflow: hidden;
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-base);
+  background: none;
+  padding: 0;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
 
   @include breakpoint($bp-md) {
     flex-direction: row;
@@ -544,9 +549,15 @@
 .announcements__item {
   display: flex;
   align-items: stretch;
+  width: 100%;
   gap: var(--space-2xs);
   padding: var(--space-2xs);
+  border: none;
   border-bottom: 1px solid var(--border-subtle);
+  background: none;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
 
   &:last-child {
     border-bottom: none;

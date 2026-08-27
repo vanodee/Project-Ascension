@@ -37,7 +37,7 @@ export const ANNOUNCEMENTS_QUERY = /* groq */ `
     excerpt,
     body,
     image,
-    category,
+    society-> { "slug": slug.current, name, shortName, color, societyType, logo },
     pinned,
     publishedAt,
     expiresAt,
@@ -53,7 +53,7 @@ export const ANNOUNCEMENT_QUERY = /* groq */ `
     excerpt,
     body,
     image,
-    category,
+    society-> { "slug": slug.current, name, shortName, color, societyType, logo },
     pinned,
     publishedAt,
     expiresAt,
@@ -97,9 +97,9 @@ export const GALLERY_ALBUMS_QUERY = /* groq */ `
     title,
     "slug": slug.current,
     eventDate,
-    category,
     description,
     coverImage,
+    society-> { "slug": slug.current, name, shortName, color, societyType, logo },
     media[] {
       _type,
       image,
@@ -114,15 +114,45 @@ export const GALLERY_ALBUM_QUERY = /* groq */ `
     title,
     "slug": slug.current,
     eventDate,
-    category,
     description,
     coverImage,
+    society-> { "slug": slug.current, name, shortName, color, societyType, logo },
     media[] {
       _type,
       image,
       caption,
       url
     }
+  }
+`;
+
+export const SOCIETIES_QUERY = /* groq */ `
+  *[_type == "society" && societyType != "general"] | order(_createdAt asc) {
+    "slug": slug.current,
+    name,
+    shortName,
+    color,
+    societyType,
+    logo
+  }
+`;
+
+export const SOCIETY_QUERY = /* groq */ `
+  *[_type == "society" && slug.current == $slug][0] {
+    "slug": slug.current,
+    name,
+    shortName,
+    color,
+    societyType,
+    logo,
+    subtitle,
+    slogan,
+    description,
+    zonePatron,
+    established,
+    meetingDay,
+    zoneLeader,
+    contact
   }
 `;
 

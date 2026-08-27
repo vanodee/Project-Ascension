@@ -2,14 +2,7 @@ import type { SanityImageSource } from '@sanity/image-url';
 import { client } from '@/sanity/lib/client';
 import { imageUrl } from '@/sanity/lib/image';
 import { GALLERY_ALBUMS_QUERY, GALLERY_ALBUM_QUERY } from '@/sanity/lib/queries';
-import type { GalleryAlbum, GalleryMediaItem } from './types';
-
-const CATEGORY_LABELS: Record<string, GalleryAlbum['category']> = {
-  liturgical: 'Liturgical',
-  youth: 'Youth',
-  outreach: 'Outreach',
-  fundraiser: 'Fundraiser',
-};
+import type { GalleryAlbum, GalleryMediaItem, Society } from './types';
 
 interface ImageWithAlt extends Record<string, unknown> {
   alt?: string;
@@ -22,13 +15,22 @@ interface MediaItemDoc {
   url?: string;
 }
 
+interface SocietyDoc {
+  slug: string;
+  name: string;
+  shortName: string;
+  color: string;
+  societyType: Society['societyType'];
+  logo: SanityImageSource;
+}
+
 interface GalleryAlbumDoc {
   title: string;
   slug: string;
   eventDate: string;
-  category: string;
   description: string;
   coverImage: SanityImageSource;
+  society: SocietyDoc;
   media: MediaItemDoc[];
 }
 
@@ -54,9 +56,16 @@ function toGalleryAlbum(doc: GalleryAlbumDoc): GalleryAlbum {
     slug: doc.slug,
     title: doc.title,
     eventDate: doc.eventDate,
-    category: CATEGORY_LABELS[doc.category] ?? 'Liturgical',
     coverImage: imageUrl(doc.coverImage, 1200),
     description: doc.description,
+    society: {
+      slug: doc.society.slug,
+      name: doc.society.name,
+      shortName: doc.society.shortName,
+      color: doc.society.color,
+      societyType: doc.society.societyType,
+      logo: imageUrl(doc.society.logo, 200),
+    },
     media: doc.media.map(toMediaItem),
   };
 }

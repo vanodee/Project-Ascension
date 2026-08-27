@@ -1,8 +1,9 @@
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import Button from '@/components/ui/Button';
 import { getAlbums, getAlbum } from '@/lib/gallery';
-import { formatDate } from '@/lib/format';
+import AlbumHero from './AlbumHero';
 import AlbumLightbox from './AlbumLightbox';
 import styles from './page.module.scss';
 
@@ -37,21 +38,23 @@ export default async function AlbumPage({
 
   return (
     <div className={styles.album}>
-      <header className={styles.album__header}>
-        <p className={styles.album__meta}>
-          {formatDate(album.eventDate)} • {album.category}
-        </p>
-        <h1 className={styles.album__title}>{album.title}</h1>
+      <AlbumHero album={album} />
+
+      <div className={styles.album__content}>
         <p className={styles.album__description}>{album.description}</p>
-      </header>
 
-      <AlbumLightbox media={album.media} />
+        <AlbumLightbox media={album.media} />
 
-      <footer className={styles.album__footer}>
-        <Button href="/gallery" variant="outline" size="sm">
-          ← All Albums
-        </Button>
-      </footer>
+        <footer className={styles.album__footer}>
+          <Button href="/gallery" variant="outline" size="sm">
+            ← All Albums
+          </Button>
+        </footer>
+
+        <div className={styles.album__watermark}>
+          <Image src="/icons/ascension_logo_dark.svg" alt="" width={72} height={74} />
+        </div>
+      </div>
     </div>
   );
 }

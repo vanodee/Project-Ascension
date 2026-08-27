@@ -12,7 +12,7 @@ Catholic Church of the Ascension parish website — a greenfield Next.js project
 - **Styling:** SCSS Modules
 - **CMS:** Sanity (Studio + API)
 - **Media:** Sanity native asset pipeline (images, audio via `cdn.sanity.io`); YouTube (embedded video)
-- **Payments:** Paystack (popup JS, not redirect)
+- **Payments:** Paystack (popup JS, not redirect) — the `/give` route and its nav links are currently disabled (`notFound()` in `app/(site)/give/page.tsx`); remove the guard to re-enable
 - **Calendar:** Google Calendar API (public calendar, API key auth)
 - **Readings:** Universalis API (no auth required)
 - **Forms:** Tally.so (embed only, no backend)
@@ -24,8 +24,8 @@ Catholic Church of the Ascension parish website — a greenfield Next.js project
 
 | Page | Strategy | Revalidation |
 |---|---|---|
-| Home, About, Sacraments, Clergy, Contact | SSG | Static |
-| Announcements, Homilies, Gallery | ISR | 10 minutes |
+| Home, About, Sacraments, Clergy, Societies (list), Contact | SSG | Static |
+| Announcements, Homilies, Gallery, Societies (detail) | ISR | 10 minutes |
 | Parish Schedule (Google Calendar) | ISR | 1 hour |
 | Daily Readings (Universalis) | ISR | Next midnight |
 | Livestream | ISR | 5 minutes |
@@ -41,10 +41,11 @@ Catholic Church of the Ascension parish website — a greenfield Next.js project
 
 - `aboutPage` — singleton
 - `clergyMember` — collection
-- `announcement` — collection (requires `expiryDate` and `pinned` fields)
+- `society` — collection (parish zones, organizations, and ministries; `name`, `shortName`, `color`, `societyType` enum, `logo` image; optional `subtitle`, `slogan` (`{greeting, response}`), `description` (Portable Text), and a "Key Details" fieldset — `zonePatron`, `established`, `meetingDay`, `zoneLeader`, `contact` (string arrays); referenced by `announcement` and `galleryAlbum` — use the "Ascension Family" entry for parish-wide content not tied to one society)
+- `announcement` — collection (required `society` reference, optional `expiresAt` and `pinned`; no `category` field; detail view renders as a modal opened from `/announcements`, not a `[slug]` route)
 - `homily` — collection (references `clergyMember`; audio stored as Sanity file asset)
 - `sacramentPage` — collection (7 pages: rcia, baptism, eucharist, confirmation, reconciliation, anointing, matrimony)
-- `galleryAlbum` — collection (Sanity image assets; YouTube URL strings for video items)
+- `galleryAlbum` — collection (required `society` reference; Sanity image assets; YouTube URL strings for video items; no `category` field)
 - `donationCategory` — config list
 - `siteSettings` — singleton (parish name, contact info, social links, YouTube channel ID)
 

@@ -31,13 +31,15 @@ A modern, content-driven parish website providing parishioners with easy access 
 | `/clergy` | Clergy directory | SSG |
 | `/sacraments/[slug]` | Seven sacrament pages | SSG |
 | `/contact` | Contact & map | SSG |
-| `/announcements` | Parish announcements | ISR (10 min) |
+| `/announcements` | Parish announcements, searchable with a society filter; detail view is an in-page modal, not a route | ISR (10 min) |
 | `/homilies` | Homily archive with audio | ISR (10 min) |
-| `/gallery` | Photo & video albums | ISR (10 min) |
+| `/gallery` | Photo & video albums, searchable with a society filter | ISR (10 min) |
+| `/societies` | Parish societies directory, searchable with a type filter | SSG |
+| `/societies/[slug]` | Single society (hero, description, slogan, key info) | ISR (10 min) |
 | `/schedule` | Mass & event schedule | ISR (1 hr) |
 | `/readings` | Daily liturgical readings | ISR (next midnight) |
 | `/livestream` | Live Sunday Mass | ISR (5 min) |
-| `/give` | Online giving (Paystack) | SSG |
+| `/give` | Online giving (Paystack) — currently disabled (`notFound()`) and unlinked from nav | SSG |
 | `/studio` | Embedded Sanity Studio (content editing) | Dynamic |
 
 All ISR pages also revalidate on-demand: a Sanity webhook hits
@@ -105,9 +107,12 @@ Open [http://localhost:3000](http://localhost:3000) to view the site, or
 
 ### Seed demo content
 
-Pushes placeholder content into every Sanity document type (safe to re-run —
-uses deterministic IDs, so it updates existing documents rather than
-duplicating them):
+Pushes placeholder content into every Sanity document type. Safe to re-run —
+every write uses `createIfNotExists` keyed on deterministic IDs, so it only
+creates documents that don't already exist; it will never overwrite content
+you've since edited in Studio (real logos, colors, renamed titles, etc.).
+Never change these calls back to `createOrReplace` — see the warning
+comment at the top of `scripts/seed.ts`:
 
 ```bash
 npm run seed

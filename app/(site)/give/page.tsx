@@ -1,10 +1,12 @@
 import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 import PageHeader from '@/components/ui/PageHeader';
 import { getDonationCategories } from '@/lib/donations';
 import GivingForm from './GivingForm';
 import styles from './page.module.scss';
 
 // SSG — the page shell is static; the form is a client island (Paystack popup).
+// Route is disabled (retired from navigation) — remove the notFound() guard to re-enable.
 
 export const metadata: Metadata = {
   title: 'Give',
@@ -13,6 +15,7 @@ export const metadata: Metadata = {
 };
 
 export default async function GivePage(): Promise<React.JSX.Element> {
+  notFound();
   const donationCategories = await getDonationCategories();
   return (
     <div className={styles.give}>

@@ -45,7 +45,9 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 function pathsToRevalidate(type: string, slug?: string): string[] {
   switch (type) {
     case 'announcement':
-      return ['/', '/announcements', ...(slug ? [`/announcements/${slug}`] : [])];
+      // Announcements render in a modal on '/' and '/announcements' — no dedicated
+      // detail route to revalidate per-slug.
+      return ['/', '/announcements'];
     case 'homily':
       return ['/', '/homilies', ...(slug ? [`/homilies/${slug}`] : [])];
     case 'galleryAlbum':
@@ -55,6 +57,10 @@ function pathsToRevalidate(type: string, slug?: string): string[] {
     case 'clergyMember':
       // Homily pages show the author's name via a resolved reference.
       return ['/', '/clergy', '/homilies'];
+    case 'society':
+      // Society name/logo is embedded via dereference on announcement & gallery cards,
+      // and listed directly on the Societies page.
+      return ['/', '/announcements', '/gallery', '/societies'];
     case 'donationCategory':
       return ['/give'];
     case 'aboutPage':

@@ -27,43 +27,45 @@ export default async function SacramentsPage(): Promise<React.JSX.Element> {
         description="The sacraments are efficacious signs of grace, instituted by Christ and entrusted to the Church, by which divine life is dispensed to us."
       />
 
-      <div className={styles.sacraments__grid}>
-        {sevenSacraments.map((sacrament) => (
-          <Link
-            key={sacrament.sacrament}
-            href={`/sacraments/${sacrament.sacrament}`}
-            className={styles.sacraments__card}
-          >
-            <span className={styles['sacraments__card-image']}>
-              <Image
-                src={sacrament.heroImage}
-                alt=""
-                fill
-                sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
-                className={styles['sacraments__card-photo']}
-              />
-            </span>
-            <span className={styles['sacraments__card-body']}>
-              <span className={styles['sacraments__card-label']}>{sacrament.label}</span>
-              <span className={styles['sacraments__card-title']}>{sacrament.title}</span>
-              <span className={styles['sacraments__card-summary']}>{sacrament.summary}</span>
-            </span>
-          </Link>
-        ))}
-      </div>
+      <div className={styles.sacraments__content}>
+        <div className={styles.sacraments__grid}>
+          {sevenSacraments.map((sacrament) => (
+            <Link
+              key={sacrament.sacrament}
+              href={`/sacraments/${sacrament.sacrament}`}
+              className={styles.sacraments__card}
+            >
+              <span className={styles['sacraments__card-image']}>
+                <Image
+                  src={sacrament.heroImage}
+                  alt=""
+                  fill
+                  sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+                  className={styles['sacraments__card-photo']}
+                />
+              </span>
+              <span className={styles['sacraments__card-body']}>
+                <span className={styles['sacraments__card-label']}>{sacrament.label}</span>
+                <span className={styles['sacraments__card-title']}>{sacrament.title}</span>
+                <span className={styles['sacraments__card-summary']}>{sacrament.summary}</span>
+              </span>
+            </Link>
+          ))}
+        </div>
 
-      {rcia ? (
-        <section className={styles.sacraments__rcia}>
-          <div className={styles['sacraments__rcia-content']}>
-            <p className={styles['sacraments__rcia-eyebrow']}>{rcia.label}</p>
-            <h2 className={styles['sacraments__rcia-title']}>Becoming Catholic</h2>
-            <p className={styles['sacraments__rcia-text']}>{rcia.summary}</p>
-            <Button href="/sacraments/rcia" variant="ghost-inverse" size="lg">
-              Begin Your Journey →
-            </Button>
-          </div>
-        </section>
-      ) : null}
+        {rcia ? (
+          <section className={styles.sacraments__rcia}>
+            <div className={styles['sacraments__rcia-content']}>
+              <p className={styles['sacraments__rcia-eyebrow']}>{rcia.label}</p>
+              <h2 className={styles['sacraments__rcia-title']}>Becoming Catholic</h2>
+              <p className={styles['sacraments__rcia-text']}>{rcia.summary}</p>
+              <Button href="/sacraments/rcia" variant="ghost-inverse" size="lg">
+                Begin Your Journey →
+              </Button>
+            </div>
+          </section>
+        ) : null}
+      </div>
     </div>
   );
 }

@@ -8,6 +8,15 @@
   width: 100%;
 }
 
+.about__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4xl);
+  width: 100%;
+
+  @include content-inset;
+}
+
 // ── History ──────────────────────────────────────────────────────────────────
 
 .about__history {

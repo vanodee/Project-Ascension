@@ -19,7 +19,39 @@ export interface ClergyMember {
   order: number;
 }
 
-export type AnnouncementCategory = 'general' | 'liturgy' | 'youth' | 'charity';
+export type SocietyType =
+  | 'parish_zone'
+  | 'demographic_organization'
+  | 'pious_devotional'
+  | 'charismatic_movement'
+  | 'knightly_professional'
+  | 'liturgical_ministry'
+  | 'general';
+
+export interface Society {
+  slug: string;
+  name: string;
+  shortName: string;
+  color: string;
+  societyType: SocietyType;
+  logo: string;
+}
+
+export interface SocietySlogan {
+  greeting: string;
+  response: string;
+}
+
+export interface SocietyDetail extends Society {
+  subtitle?: string;
+  slogan?: SocietySlogan;
+  description?: PortableTextBlock[];
+  zonePatron?: string;
+  established?: string;
+  meetingDay?: string;
+  zoneLeader?: string[];
+  contact?: string[];
+}
 
 export interface Announcement {
   slug: string;
@@ -29,8 +61,8 @@ export interface Announcement {
   publishedAt: string;
   expiresAt?: string;
   pinned: boolean;
-  category: AnnouncementCategory;
-  image: string;
+  image: string | null;
+  society: Society;
   eventDate?: string;
   eventLocation?: string;
 }
@@ -55,8 +87,6 @@ export interface Homily {
   audioDuration: string;
 }
 
-export type GalleryCategory = 'Liturgical' | 'Youth' | 'Outreach' | 'Fundraiser';
-
 export interface GalleryMediaItem {
   type: 'image' | 'video';
   url: string;
@@ -68,9 +98,9 @@ export interface GalleryAlbum {
   slug: string;
   title: string;
   eventDate: string;
-  category: GalleryCategory;
   coverImage: string;
   description: string;
+  society: Society;
   media: GalleryMediaItem[];
 }
 

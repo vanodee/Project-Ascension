@@ -3,15 +3,24 @@ import type { SanityImageSource } from '@sanity/image-url';
 import { client } from '@/sanity/lib/client';
 import { imageUrl } from '@/sanity/lib/image';
 import { ANNOUNCEMENTS_QUERY, ANNOUNCEMENT_QUERY } from '@/sanity/lib/queries';
-import type { Announcement } from './types';
+import type { Announcement, Society } from './types';
+
+interface SocietyDoc {
+  slug: string;
+  name: string;
+  shortName: string;
+  color: string;
+  societyType: Society['societyType'];
+  logo: SanityImageSource;
+}
 
 interface AnnouncementDoc {
   title: string;
   slug: string;
   excerpt: string;
   body: PortableTextBlock[];
-  image: SanityImageSource;
-  category: Announcement['category'];
+  image: SanityImageSource | null;
+  society: SocietyDoc;
   pinned: boolean;
   publishedAt: string;
   expiresAt?: string;
@@ -28,8 +37,15 @@ function toAnnouncement(doc: AnnouncementDoc): Announcement {
     publishedAt: doc.publishedAt,
     ...(doc.expiresAt ? { expiresAt: doc.expiresAt } : {}),
     pinned: doc.pinned,
-    category: doc.category,
-    image: imageUrl(doc.image, 1200),
+    image: doc.image ? imageUrl(doc.image, 1200) : null,
+    society: {
+      slug: doc.society.slug,
+      name: doc.society.name,
+      shortName: doc.society.shortName,
+      color: doc.society.color,
+      societyType: doc.society.societyType,
+      logo: imageUrl(doc.society.logo, 200),
+    },
     ...(doc.eventDate ? { eventDate: doc.eventDate } : {}),
     ...(doc.eventLocation ? { eventLocation: doc.eventLocation } : {}),
   };

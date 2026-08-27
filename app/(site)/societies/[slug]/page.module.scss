@@ -1,0 +1,250 @@
+@use '../../../../styles/tokens' as *;
+@use '../../../../styles/mixins' as *;
+
+.society {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xl);
+  width: 100%;
+}
+
+.society__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xl);
+  width: 100%;
+
+  @include content-inset;
+}
+
+// ---------- Body (two column) ----------
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xl);
+
+  @include breakpoint($bp-lg) {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+}
+
+.body__main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  min-width: 0;
+
+  @include breakpoint($bp-lg) {
+    flex: 1;
+  }
+}
+
+// ---------- About ----------
+
+.about {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.about__title {
+  @include heading-2xl;
+  color: var(--text-primary);
+}
+
+.about__text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.about__paragraph {
+  font-family: var(--font-lora), serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--text-secondary);
+
+  @include breakpoint($bp-md) {
+    font-size: 18px;
+  }
+}
+
+// ---------- Slogan ----------
+
+.slogan {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+  padding: var(--space-md);
+  border-top: 1px solid var(--border-medium);
+  border-bottom: 1px solid var(--border-medium);
+}
+
+.slogan__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 60px;
+  height: 60px;
+  border-radius: var(--radius-base);
+}
+
+.slogan__text {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 7px;
+
+  p {
+    @include body-md-italic;
+    color: var(--text-primary);
+  }
+}
+
+// ---------- Sidebar ----------
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  width: 100%;
+  padding: var(--space-lg);
+  background-color: var(--background-surface);
+  border: 2px solid var(--border-default);
+  border-radius: 8px;
+
+  @include breakpoint($bp-lg) {
+    width: min(400px, 100%);
+    flex-shrink: 0;
+    padding: var(--space-xl);
+  }
+}
+
+.sidebar__header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding-bottom: var(--space-md);
+  border-bottom: 1px solid var(--border-default);
+}
+
+.sidebar__header-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 60px;
+  height: 60px;
+  border-radius: var(--radius-base);
+}
+
+.sidebar__header-text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  min-width: 0;
+}
+
+.sidebar__header-eyebrow {
+  @include label-md;
+  color: var(--text-secondary);
+}
+
+.sidebar__header-title {
+  @include heading-lg;
+  color: var(--text-primary);
+}
+
+.sidebar__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.sidebar__info-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+}
+
+.sidebar__info-label {
+  @include label-base;
+  color: var(--text-secondary);
+}
+
+.sidebar__info-value {
+  font-family: var(--font-lora), serif;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--text-primary);
+}
+
+.sidebar__cta {
+  display: flex;
+  justify-content: center;
+  padding-top: var(--space-lg);
+  border-top: 1px solid var(--border-default);
+}
+
+// ---------- Bottom CTA band ----------
+
+.cta {
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  gap: var(--space-xl);
+  padding: var(--space-xl);
+  background-color: var(--background-inverse);
+  border-radius: var(--radius-base);
+
+  @include breakpoint($bp-lg) {
+    flex-direction: row;
+    justify-content: center;
+    gap: var(--space-2xl);
+  }
+}
+
+.cta__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  max-width: 500px;
+}
+
+.cta__eyebrow {
+  @include label-md;
+  color: var(--text-inverse);
+}
+
+.cta__title {
+  @include heading-2xl;
+  color: var(--text-inverse);
+}
+
+.cta__text {
+  @include body-base-italic;
+  color: var(--text-inverse);
+}
+
+.cta__image {
+  position: relative;
+  flex-shrink: 0;
+  width: 260px;
+  height: 260px;
+
+  @include breakpoint($bp-md) {
+    width: 400px;
+    height: 340px;
+  }
+}
+
+.cta__image-img {
+  object-fit: contain;
+}

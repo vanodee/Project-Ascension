@@ -46,17 +46,11 @@ export default defineType({
       ],
     }),
     defineField({
-      name: 'category',
-      title: 'Category',
-      type: 'string',
-      options: {
-        list: [
-          { title: 'General', value: 'general' },
-          { title: 'Liturgy', value: 'liturgy' },
-          { title: 'Youth', value: 'youth' },
-          { title: 'Charity', value: 'charity' },
-        ],
-      },
+      name: 'society',
+      title: 'Society',
+      type: 'reference',
+      to: [{ type: 'society' }],
+      description: 'Use "Ascension Family" for parish-wide content not tied to one society.',
       validation: (Rule) => Rule.required(),
     }),
     defineField({
@@ -96,6 +90,6 @@ export default defineType({
     },
   ],
   preview: {
-    select: { title: 'title', subtitle: 'category', media: 'image' },
+    select: { title: 'title', subtitle: 'society.name', media: 'image' },
   },
 })

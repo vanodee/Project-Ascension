@@ -8,6 +8,15 @@
   width: 100%;
 }
 
+.contact__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xl);
+  width: 100%;
+
+  @include content-inset;
+}
+
 .contact__columns {
   display: grid;
   grid-template-columns: 1fr;

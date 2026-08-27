@@ -9,24 +9,25 @@ When asked to create a new page or route (or when `/new-page-route` is invoked w
 1. **Identify the route** from `$ARGUMENTS` or the user's request. Match it against the site's IA in `ascension-parish-prd.md` if relevant.
 
 2. **Determine the rendering strategy** using this project's rules:
-   - **SSG** (no `revalidate`): About, Sacraments, Clergy, Contact — content changes infrequently, managed in Sanity.
+   - **SSG** (no `revalidate`): About, Sacraments, Clergy, Societies, Contact — content changes infrequently, managed in Sanity.
    - **ISR 10 min** (`revalidate: 600`): Announcements, Homilies, Gallery.
    - **ISR 1 hour** (`revalidate: 3600`): Parish Schedule (Google Calendar).
    - **ISR next midnight**: Daily Readings (Universalis) — calculate seconds until next midnight for `revalidate`.
    - **ISR 5 min** (`revalidate: 300`): Livestream.
 
-3. **Create the page file** at `app/<route>/page.tsx`. Apply these conventions:
-   - Default to Server Components — no `'use client'` unless the page genuinely needs it (almost never for these pages).
+3. **Create the page file** at `app/(site)/<route>/page.tsx` (all public pages live under the `(site)` route group, sharing its Header/Footer layout). Apply these conventions:
+   - Default to Server Components — no `'use client'` unless the page genuinely needs it.
    - TypeScript strict mode — no `any`, explicit return types.
    - Export `generateMetadata` for SEO (title, description, Open Graph, Twitter Card).
    - For dynamic routes (`[slug]`), also export `generateStaticParams` to pre-render known slugs at build time.
-   - Fetch data inside the Server Component (or a `lib/` helper), not via `useEffect`.
+   - Fetch data inside the Server Component via a `lib/<feature>.ts` helper, not via `useEffect`.
+   - If the page needs search, filtering, or other interactivity over the fetched list (see `SocietiesGrid.tsx`, `GalleryGrid.tsx`, `AnnouncementsGrid.tsx` for the established pattern), keep `page.tsx` a server component that only fetches data, and put the interactive part in a sibling `'use client'` component (e.g. `<Feature>Grid.tsx`) that owns the `useState` filter logic and renders the cards.
 
-4. **Create the SCSS Module** at `app/<route>/page.module.scss` with BEM class names. Mobile-first: base styles for mobile, `min-width` breakpoints for tablet/desktop.
+4. **Create the SCSS Module** at `app/(site)/<route>/page.module.scss` (plus a second module next to any client Grid component) with BEM class names. Mobile-first: base styles for mobile, `min-width` breakpoints for tablet/desktop.
 
 5. **Wire up Sanity data fetching** if the page pulls from the CMS:
-   - Use the Sanity client from `lib/sanity.ts` (or wherever it is defined in the project).
-   - Use GROQ queries.
-   - For ISR pages, pass the `next: { revalidate: N }` option in the fetch or use the page-level `export const revalidate = N`.
+   - Add a GROQ query to `sanity/lib/queries.ts`.
+   - Add a `get<Feature>()` fetch function to a `lib/<feature>.ts` helper, using the client from `sanity/lib/client.ts` and resolving images via `sanity/lib/image.ts`'s `imageUrl()`.
+   - For ISR pages, use the page-level `export const revalidate = N`. SSG pages instead rely on the on-publish webhook (`app/api/revalidate/route.ts`) for freshness — check whether the new document type needs a `case` added there, and remember the webhook's own GROQ `Filter` (dashboard-only, sanity.io/manage) needs the type added too.
 
 6. **Summarize** what was created, the rendering strategy chosen and why, and any follow-up steps (e.g., adding the route to `next-sitemap` config, creating the matching Sanity schema if not yet done).

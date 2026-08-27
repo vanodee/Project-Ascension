@@ -50,6 +50,7 @@ const NAV_LEFT: NavItem[] = [
 ];
 
 const NAV_RIGHT: NavItem[] = [
+  { label: 'Societies', href: '/societies' },
   {
     label: 'News & Media',
     children: [
@@ -59,7 +60,6 @@ const NAV_RIGHT: NavItem[] = [
     ],
     dropdownAlign: 'right',
   },
-  { label: 'Give', href: '/give' },
   { label: 'Contact', href: '/contact' },
 ];
 

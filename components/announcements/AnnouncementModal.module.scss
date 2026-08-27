@@ -1,0 +1,163 @@
+@use '../../styles/tokens' as *;
+@use '../../styles/mixins' as *;
+
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  overflow-y: auto;
+  background-color: rgba(47, 33, 15, 0.7);
+  padding: var(--space-2xl) var(--space-md);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  // Scrollbar theming lives globally in styles/globals.scss.
+}
+
+.modal--visible {
+  opacity: 1;
+
+  .modal__panel {
+    transform: translateY(0);
+  }
+}
+
+.modal__close {
+  position: fixed;
+  top: var(--space-md);
+  right: var(--space-xl);
+  z-index: 101;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 50%;
+  background-color: var(--background-page);
+  color: var(--text-primary);
+  transition: background-color 0.2s ease, color 0.2s ease;
+
+  &:hover {
+    background-color: var(--background-inverse);
+    color: var(--text-inverse);
+  }
+}
+
+.modal__panel {
+  display: flex;
+  flex-direction: column;
+  width: min(900px, 100%);
+  margin-inline: auto;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-base);
+  background-color: var(--background-page);
+  overflow: hidden;
+  transform: translateY(64px);
+  transition: transform 0.3s ease;
+}
+
+// ---------- Hero ----------
+
+.modal__hero {
+  position: relative;
+  display: flex;
+  align-items: end;
+  justify-content: center;
+  aspect-ratio: 2.25 / 1;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.modal__hero-icon {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  object-position: bottom;
+}
+
+.modal__hero-logo {
+  position: absolute;
+  top: var(--space-md);
+  left: var(--space-md);
+  width: 72px;
+  height: 72px;
+  overflow: hidden;
+  border-radius: 50%;
+}
+
+.modal__hero-logo-img {
+  object-fit: contain;
+}
+
+// ---------- Content ----------
+
+.modal__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  padding: var(--space-xl) var(--space-lg) var(--space-lg);
+
+  @include breakpoint($bp-md) {
+    padding: var(--space-2xl);
+  }
+}
+
+.modal__header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+  text-align: center;
+  padding-bottom: var(--space-xl);
+  border-bottom: 1px solid var(--border-medium);
+}
+
+.modal__title {
+  @include display-lg;
+  color: var(--text-primary);
+}
+
+.modal__meta-row {
+  @include body-base;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-primary);
+}
+
+.modal__image {
+  width: 100%;
+  border-radius: var(--radius-base);
+  overflow: hidden;
+}
+
+.modal__image-img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.modal__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.modal__paragraph {
+  @include body-base;
+  color: var(--text-primary);
+}
+
+// ---------- Footer ----------
+
+.modal__footer {
+  display: flex;
+  justify-content: center;
+  padding-bottom: var(--space-2xl);
+  opacity: 0.3;
+}
+
+.modal__watermark {
+  width: 72px;
+  height: auto;
+}

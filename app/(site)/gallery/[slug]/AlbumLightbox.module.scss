@@ -45,6 +45,38 @@
   justify-content: center;
   padding: var(--space-md);
   background-color: rgba(47, 33, 15, 0.92);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.album__lightbox--visible {
+  opacity: 1;
+
+  .album__lightbox-inner {
+    transform: translateY(0);
+  }
+}
+
+.album__lightbox-close {
+  position: fixed;
+  top: var(--space-md);
+  right: var(--space-xl);
+  z-index: 101;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 50%;
+  background-color: var(--background-page);
+  color: var(--text-primary);
+  transition: background-color 0.2s ease, color 0.2s ease;
+
+  &:hover {
+    background-color: var(--background-inverse);
+    color: var(--text-inverse);
+  }
 }
 
 .album__lightbox-inner {
@@ -52,6 +84,8 @@
   flex-direction: column;
   gap: var(--space-md);
   width: min(1100px, 100%);
+  transform: translateY(64px);
+  transition: transform 0.3s ease;
 }
 
 .album__lightbox-image {
@@ -70,22 +104,34 @@
   text-align: center;
 }
 
-.album__lightbox-controls {
+.album__lightbox-nav {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: var(--space-lg);
+  gap: var(--space-3xl);
 }
 
-.album__lightbox-button {
-  @include label-md;
-  padding: var(--space-xs) var(--space-md);
+.album__lightbox-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
   border: 1px solid var(--button-ghost-inverse-border);
-  border-radius: var(--radius-base);
+  border-radius: 50%;
   color: var(--button-ghost-inverse-text);
+  transition: background-color 0.2s ease, color 0.2s ease;
 
   &:hover {
     background-color: var(--button-primary-background);
     color: var(--button-primary-text);
   }
+}
+
+.album__lightbox-counter {
+  @include label-md;
+  min-width: 90px;
+  text-align: center;
+  color: var(--text-inverse);
 }

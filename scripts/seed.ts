@@ -3,6 +3,14 @@
  * (the mock data layer) into Sanity as real documents, so the Studio has something to
  * show in every section. Does NOT touch the frontend — pages still read from lib/*.ts.
  *
+ * Safe to re-run: every write uses `createIfNotExists`, so documents that already exist
+ * (including ones since edited in Studio — new logos, colors, renamed titles, etc.) are
+ * left untouched. NEVER switch these back to `createOrReplace` — that overwrites live
+ * Studio edits with this file's placeholder data on every re-run (this happened once:
+ * a re-run meant only to backfill an unrelated schema change wiped out every society's
+ * uploaded logo/color, recovered from Sanity's document history). Schema backfills or
+ * migrations belong in their own one-off script, never routed through this file.
+ *
  * Run with: npx tsx scripts/seed.ts
  */
 import { createClient } from '@sanity/client';
@@ -150,7 +158,7 @@ async function seedClergy(): Promise<Map<string, string>> {
   for (const c of clergy) {
     const _id = `clergy-${c.slug}`;
     const photo = await imageField('/images/clergy-photo.png', `Portrait of ${c.name}`);
-    await client.createOrReplace({
+    await client.createIfNotExists({
       _id,
       _type: 'clergyMember',
       name: c.name,
@@ -165,6 +173,46 @@ async function seedClergy(): Promise<Map<string, string>> {
     });
     idMap.set(c.slug, _id);
     console.log(`  ${c.name}`);
+  }
+  return idMap;
+}
+
+async function seedSocieties(): Promise<Map<string, string>> {
+  console.log('Seeding societies...');
+  const societies = [
+    { slug: 'ascension-family', name: 'Ascension Family', shortName: 'Ascension Family', color: '#7A1F2B', societyType: 'general' },
+    { slug: 'all-saints', name: 'All Saints', shortName: 'All Saints', color: '#2E5339', societyType: 'parish_zone' },
+    { slug: 'st-theresa-of-calcutta', name: 'St Theresa of Calcutta', shortName: 'St Theresa', color: '#1F4E5F', societyType: 'parish_zone' },
+    { slug: 'st-rita-of-cascia', name: 'St Rita of Cascia', shortName: 'St Rita', color: '#4A2E6B', societyType: 'parish_zone' },
+    { slug: 'catholic-men-organization', name: 'Catholic Men Organization', shortName: 'CMO', color: '#1C3D5A', societyType: 'demographic_organization' },
+    { slug: 'catholic-women-organization', name: 'Catholic Women Organization', shortName: 'CWO', color: '#8E3B6E', societyType: 'demographic_organization' },
+    { slug: 'catholic-youth-organization', name: 'Catholic Youth Organization', shortName: 'CYO', color: '#C0722A', societyType: 'demographic_organization' },
+    { slug: 'young-catholic-professionals', name: 'Young Catholic Professionals', shortName: 'YCP', color: '#2C6E7A', societyType: 'demographic_organization' },
+    { slug: 'legion-of-mary', name: 'Legion of Mary', shortName: 'Legion of Mary', color: '#2A4D8F', societyType: 'pious_devotional' },
+    { slug: 'sacred-heart-immaculate-heart', name: 'Sacred Heart / Immaculate Heart', shortName: 'Sacred/Immaculate Heart', color: '#A32638', societyType: 'pious_devotional' },
+    { slug: 'saint-vincent-de-paul', name: 'Saint Vincent de Paul', shortName: 'SVDP', color: '#3E5C3A', societyType: 'pious_devotional' },
+    { slug: 'charismatic-renewal', name: 'Charismatic Renewal', shortName: 'Charismatic Renewal', color: '#B8860B', societyType: 'charismatic_movement' },
+    { slug: 'board-of-lectors', name: 'Board of Lectors', shortName: 'Lectors', color: '#5B4636', societyType: 'liturgical_ministry' },
+    { slug: 'altar-servers', name: 'Altar Servers', shortName: 'Altar Servers', color: '#6B7280', societyType: 'liturgical_ministry' },
+    { slug: 'church-warden', name: 'Church Warden', shortName: 'Church Warden', color: '#4B4B4B', societyType: 'liturgical_ministry' },
+  ];
+
+  const idMap = new Map<string, string>();
+  for (const s of societies) {
+    const _id = `society-${s.slug}`;
+    const logo = await imageField('/images/parish-slogan.svg', `${s.name} logo`);
+    await client.createIfNotExists({
+      _id,
+      _type: 'society',
+      name: s.name,
+      slug: slugField(s.slug),
+      shortName: s.shortName,
+      color: s.color,
+      societyType: s.societyType,
+      logo,
+    });
+    idMap.set(s.slug, _id);
+    console.log(`  ${s.name}`);
   }
   return idMap;
 }
@@ -269,7 +317,7 @@ async function seedSacraments(): Promise<void> {
 
   for (const s of sacraments) {
     const heroImage = await imageField(s.heroImage, `${s.title} — ${s.label}`);
-    await client.createOrReplace({
+    await client.createIfNotExists({
       _id: `sacrament-${s.sacrament}`,
       _type: 'sacramentPage',
       sacrament: s.sacrament,
@@ -284,13 +332,14 @@ async function seedSacraments(): Promise<void> {
   }
 }
 
-async function seedAnnouncements(): Promise<void> {
+async function seedAnnouncements(societyIds: Map<string, string>): Promise<void> {
   console.log('Seeding announcements...');
   const announcements = [
     {
       slug: 'ascension-family-prayer',
       title: 'Ascension Family Prayer',
       excerpt: 'Join us for a special evening of Eucharistic Adoration, praise and worship.',
+      society: 'ascension-family',
       body: [
         'The parish invites every family to an evening of Eucharistic Adoration, praise, and worship in the main church building. The evening will open with the Rosary, followed by exposition of the Blessed Sacrament and Benediction.',
         'Families are encouraged to come together — parents, children, and grandparents alike. Booklets with the order of prayer will be provided at the entrance.',
@@ -298,7 +347,6 @@ async function seedAnnouncements(): Promise<void> {
       ],
       publishedAt: '2026-05-10T09:00:00+01:00',
       pinned: true,
-      category: 'liturgy',
       image: '/images/announcement_image.png',
       eventDate: '2026-05-17T19:00:00+01:00',
       eventLocation: 'Main Church Building',
@@ -307,6 +355,7 @@ async function seedAnnouncements(): Promise<void> {
       slug: 'youth-congress-registration',
       title: 'Youth Congress Registration Open',
       excerpt: 'Parishioners aged 16–35 are invited to register for the Annual Archdiocesan Youth Congress holding on June 14th.',
+      society: 'catholic-youth-organization',
       body: [
         'Parishioners aged 16–35 are invited to register for the Annual Archdiocesan Youth Congress holding on June 14th at the Holy Cross Cathedral, Lagos.',
         'Registration forms are available at the parish office and from the youth chaplaincy after every Sunday Mass. Registration closes on June 7th.',
@@ -314,7 +363,6 @@ async function seedAnnouncements(): Promise<void> {
       ],
       publishedAt: '2026-05-18T09:00:00+01:00',
       pinned: false,
-      category: 'youth',
       image: '/images/announcement-1.png',
       eventDate: '2026-06-14T08:00:00+01:00',
       eventLocation: 'Holy Cross Cathedral, Lagos',
@@ -323,6 +371,7 @@ async function seedAnnouncements(): Promise<void> {
       slug: 'building-fund-drive',
       title: 'Building Fund Contribution Drive',
       excerpt: 'The second phase of the church renovation begins next month. Parishioners are encouraged to contribute generously to the Building Fund.',
+      society: 'ascension-family',
       body: [
         'The second phase of the church renovation begins next month, covering the roofing of the new chapel wing and the resurfacing of the parish car park.',
         'Parishioners are encouraged to contribute generously to the Building Fund. Contributions can be made online through the Give page, at the offertory during Mass, or directly at the parish office.',
@@ -330,13 +379,13 @@ async function seedAnnouncements(): Promise<void> {
       ],
       publishedAt: '2026-05-25T09:00:00+01:00',
       pinned: false,
-      category: 'general',
       image: '/images/announcement-2.png',
     },
     {
       slug: 'rcia-new-cohort',
       title: 'RCIA Programme — New Cohort',
       excerpt: 'Are you or someone you know interested in becoming Catholic? A new RCIA cohort begins in June.',
+      society: 'ascension-family',
       body: [
         'Are you or someone you know interested in becoming Catholic? A new cohort of the Rite of Christian Initiation of Adults (RCIA) begins in June.',
         'The RCIA is a journey of faith for adults who wish to be received into the Catholic Church — whether unbaptised, baptised in another Christian tradition, or baptised Catholic but yet to receive Confirmation and the Eucharist.',
@@ -344,7 +393,6 @@ async function seedAnnouncements(): Promise<void> {
       ],
       publishedAt: '2026-06-01T09:00:00+01:00',
       pinned: false,
-      category: 'general',
       image: '/images/announcement-3.png',
       eventDate: '2026-06-21T11:00:00+01:00',
       eventLocation: 'Parish Hall',
@@ -353,6 +401,7 @@ async function seedAnnouncements(): Promise<void> {
       slug: 'corpus-christi-procession',
       title: 'Corpus Christi Procession',
       excerpt: 'The parish will hold an outdoor Eucharistic Procession after the 11 am Mass on the Solemnity of Corpus Christi.',
+      society: 'ascension-family',
       body: [
         'The parish will hold an outdoor Eucharistic Procession after the 11 am Mass on the Solemnity of the Most Holy Body and Blood of Christ (Corpus Christi).',
         'The procession will move through the parish grounds with four altars of repose, concluding with Benediction in the main church. All parish societies are asked to attend in their uniforms.',
@@ -360,7 +409,6 @@ async function seedAnnouncements(): Promise<void> {
       ],
       publishedAt: '2026-05-28T09:00:00+01:00',
       pinned: false,
-      category: 'liturgy',
       image: '/images/card-announcement.png',
       eventDate: '2026-06-07T11:00:00+01:00',
       eventLocation: 'Parish Grounds',
@@ -369,6 +417,7 @@ async function seedAnnouncements(): Promise<void> {
       slug: 'st-vincent-de-paul-food-drive',
       title: 'St. Vincent de Paul Food Drive',
       excerpt: 'The Society of St. Vincent de Paul is collecting food items for families in need throughout the month of June.',
+      society: 'saint-vincent-de-paul',
       body: [
         'The Society of St. Vincent de Paul is collecting non-perishable food items for families in need throughout the month of June.',
         'Collection baskets are placed at the church entrances. Most needed items: rice, beans, garri, cooking oil, tinned tomatoes, and powdered milk.',
@@ -376,14 +425,15 @@ async function seedAnnouncements(): Promise<void> {
       ],
       publishedAt: '2026-06-02T09:00:00+01:00',
       pinned: false,
-      category: 'charity',
       image: '/images/announcement-1.png',
     },
   ];
 
   for (const a of announcements) {
     const image = await imageField(a.image, a.title);
-    await client.createOrReplace({
+    const societyId = societyIds.get(a.society);
+    if (!societyId) throw new Error(`Unknown society slug "${a.society}" for announcement "${a.slug}"`);
+    await client.createIfNotExists({
       _id: `announcement-${a.slug}`,
       _type: 'announcement',
       title: a.title,
@@ -391,7 +441,7 @@ async function seedAnnouncements(): Promise<void> {
       excerpt: a.excerpt,
       body: portableText(a.body),
       image,
-      category: a.category,
+      society: { _type: 'reference', _ref: societyId },
       pinned: a.pinned,
       publishedAt: a.publishedAt,
       ...(a.eventDate ? { eventDate: a.eventDate } : {}),
@@ -500,7 +550,7 @@ async function seedHomilies(clergyIds: Map<string, string>): Promise<void> {
   for (const h of homilies) {
     const authorId = clergyIds.get(h.authorSlug);
     if (!authorId) throw new Error(`Unknown clergy slug for homily author: ${h.authorSlug}`);
-    await client.createOrReplace({
+    await client.createIfNotExists({
       _id: `homily-${h.slug}`,
       _type: 'homily',
       title: h.title,
@@ -516,20 +566,14 @@ async function seedHomilies(clergyIds: Map<string, string>): Promise<void> {
   }
 }
 
-async function seedGallery(): Promise<void> {
+async function seedGallery(societyIds: Map<string, string>): Promise<void> {
   console.log('Seeding gallery albums...');
-  const categoryMap: Record<string, string> = {
-    Liturgical: 'liturgical',
-    Youth: 'youth',
-    Outreach: 'outreach',
-    Fundraiser: 'fundraiser',
-  };
   const albums = [
     {
       slug: 'ycp-induction-may-2026',
       title: 'YCP Induction',
       eventDate: '2026-05-10',
-      category: 'Youth',
+      society: 'young-catholic-professionals',
       coverImage: '/images/gallery-1.jpg',
       description: 'Induction ceremony of new members into the Young Catholic Professionals, followed by a reception at the parish hall.',
       media: [
@@ -542,7 +586,7 @@ async function seedGallery(): Promise<void> {
       slug: 'first-holy-communion-april-2026',
       title: 'First Holy Communion',
       eventDate: '2026-04-19',
-      category: 'Liturgical',
+      society: 'ascension-family',
       coverImage: '/images/gallery-2.jpg',
       description: 'Children of the parish receive Our Lord in the Holy Eucharist for the first time.',
       media: [
@@ -555,7 +599,7 @@ async function seedGallery(): Promise<void> {
       slug: 'cultural-day-october-2025',
       title: 'Cultural Day',
       eventDate: '2025-10-05',
-      category: 'Fundraiser',
+      society: 'ascension-family',
       coverImage: '/images/gallery-3.jpg',
       description: 'A celebration of the cultures of our parish family, with traditional attire, dance, and a harvest fundraiser.',
       media: [
@@ -567,7 +611,7 @@ async function seedGallery(): Promise<void> {
       slug: 'legion-of-mary-love-feast-june-2025',
       title: 'Legion of Mary, Love Feast',
       eventDate: '2025-06-22',
-      category: 'Outreach',
+      society: 'legion-of-mary',
       coverImage: '/images/gallery-4.jpg',
       description: 'The Legion of Mary hosts its annual Love Feast for members and auxiliaries.',
       media: [
@@ -579,7 +623,7 @@ async function seedGallery(): Promise<void> {
       slug: 'professionals-day-april-2025',
       title: 'Professionals Day',
       eventDate: '2025-04-27',
-      category: 'Outreach',
+      society: 'young-catholic-professionals',
       coverImage: '/images/gallery-5.jpg',
       description: 'Thanksgiving Mass and career mentorship session organised by the parish professionals’ guild.',
       media: [
@@ -591,6 +635,8 @@ async function seedGallery(): Promise<void> {
 
   for (const a of albums) {
     const coverImage = await imageField(a.coverImage, `${a.title} — cover photo`);
+    const societyId = societyIds.get(a.society);
+    if (!societyId) throw new Error(`Unknown society slug "${a.society}" for album "${a.slug}"`);
     const media = [];
     for (const m of a.media) {
       const image = await imageField(m.url, m.altText);
@@ -601,15 +647,15 @@ async function seedGallery(): Promise<void> {
         caption: m.caption,
       });
     }
-    await client.createOrReplace({
+    await client.createIfNotExists({
       _id: `gallery-${a.slug}`,
       _type: 'galleryAlbum',
       title: a.title,
       slug: slugField(a.slug),
       eventDate: a.eventDate,
-      category: categoryMap[a.category],
       description: a.description,
       coverImage,
+      society: { _type: 'reference', _ref: societyId },
       media,
     });
     console.log(`  ${a.title}`);
@@ -626,7 +672,7 @@ async function seedDonationCategories(): Promise<void> {
     { id: 'mass-intentions', label: 'Mass Intentions', description: 'Offerings for Masses to be said for your intentions.' },
   ];
   for (const c of categories) {
-    await client.createOrReplace({
+    await client.createIfNotExists({
       _id: `donation-${c.id}`,
       _type: 'donationCategory',
       id: c.id,
@@ -639,7 +685,7 @@ async function seedDonationCategories(): Promise<void> {
 
 async function seedSiteSettings(): Promise<void> {
   console.log('Seeding site settings...');
-  await client.createOrReplace({
+  await client.createIfNotExists({
     _id: 'siteSettings',
     _type: 'siteSettings',
     parishName: 'Catholic Church of the Ascension',
@@ -691,7 +737,7 @@ async function seedAboutPage(): Promise<void> {
     '/images/hero-bg.png',
     'The Catholic Church of the Ascension, Ikeja, Lagos',
   );
-  await client.createOrReplace({
+  await client.createIfNotExists({
     _id: 'aboutPage',
     _type: 'aboutPage',
     title: 'About Us',
@@ -710,10 +756,11 @@ async function seedAboutPage(): Promise<void> {
 async function main(): Promise<void> {
   console.log(`Seeding project ${projectId} (dataset: ${dataset})\n`);
   const clergyIds = await seedClergy();
+  const societyIds = await seedSocieties();
   await seedSacraments();
-  await seedAnnouncements();
+  await seedAnnouncements(societyIds);
   await seedHomilies(clergyIds);
-  await seedGallery();
+  await seedGallery(societyIds);
   await seedDonationCategories();
   await seedSiteSettings();
   await seedAboutPage();

@@ -27,6 +27,7 @@
    - 5.10 [Gallery](#510-gallery)
    - 5.11 [Media Review System](#511-media-review-system)
    - 5.12 [Contact Page](#512-contact-page)
+   - 5.13 [Parish Societies Directory](#513-parish-societies-directory)
 6. [Sanity CMS Schema Overview](#6-sanity-cms-schema-overview)
 7. [Third-Party Integrations Summary](#7-third-party-integrations-summary)
 8. [Non-Functional Requirements](#8-non-functional-requirements)
@@ -68,7 +69,7 @@ The Catholic Church of the Ascension requires a modern, performant, and maintain
 | Framework | **Next.js (App Router)** | SSR/SSG for SEO, performance, and flexibility |
 | Styling | **SCSS Modules** | Scoped styles, maintainability, design precision |
 | CMS | **Sanity CMS** | Structured content, custom Studio, generous free tier |
-| Media Storage | **Cloudinary** | Images, audio, and video hosting with optimisation |
+| Media Storage | **Sanity native asset pipeline** | Images and audio hosted on `cdn.sanity.io`; video via YouTube URLs (no separate media host) |
 | Payments | **Paystack** | Leading Nigerian payment gateway; supports anonymous giving |
 | Calendar | **Google Calendar API** | Non-technical management, fully custom-styled UI |
 | Daily Readings | **Universalis API** | Free, reliable, structured liturgical content |
@@ -86,11 +87,11 @@ The Catholic Church of the Ascension requires a modern, performant, and maintain
 / (Home)
 ├── /about                      → About / Parish History
 ├── /clergy                     → Our Clergy
-├── /give                       → Donations (Paystack)
+├── /societies                  → Parish Societies Directory (search + type filter)
+├── /give                       → Donations (Paystack) — currently disabled, unlinked from nav
 ├── /readings                   → Daily Readings (Universalis API)
 ├── /schedule                   → Parish Schedule (Google Calendar API)
-├── /announcements              → Parish Announcements
-│   └── /announcements/[slug]   → Single Announcement
+├── /announcements              → Parish Announcements (search + society filter; detail view is an in-page modal, not a route)
 ├── /homilies                   → Homily Archive
 │   └── /homilies/[slug]        → Single Homily
 ├── /sacraments                 → Sacraments Overview
@@ -102,10 +103,14 @@ The Catholic Church of the Ascension requires a modern, performant, and maintain
 │   ├── /sacraments/anointing
 │   └── /sacraments/matrimony
 ├── /livestream                 → Mass Livestream (YouTube)
-├── /gallery                    → Photo & Video Gallery
+├── /gallery                    → Photo & Video Gallery (search + society filter)
 │   └── /gallery/[event-slug]   → Single Event Album
 └── /contact                    → Contact Page
 ```
+
+`/societies` also has a detail route, `/societies/[slug]` → Single Society, covered in §5.13.
+
+Primary nav order (left → right): About, Worship, Sacraments, Societies, News & Media (Announcements/Homilies/Gallery), Contact. Give is currently omitted from the nav (see above).
 
 ---
 
@@ -132,7 +137,7 @@ The Catholic Church of the Ascension requires a modern, performant, and maintain
 | Field | Type | Notes |
 |---|---|---|
 | `title` | String | Page title |
-| `heroImage` | Image (Cloudinary) | Full-width banner |
+| `heroImage` | Image (Sanity) | Full-width banner |
 | `body` | Portable Text | Rich text with image embeds |
 | `milestones` | Array of objects | `{ year, title, description }` |
 | `missionStatement` | Text | Displayed as a pull quote |
@@ -157,7 +162,7 @@ The Catholic Church of the Ascension requires a modern, performant, and maintain
 | `name` | String | Full name |
 | `title` | String | e.g. "Rev. Fr.", "Sr.", "Mr." |
 | `role` | String (enum) | `priest`, `reverend_sister`, `catechist` |
-| `photo` | Image (Cloudinary) | Portrait photo |
+| `photo` | Image (Sanity) | Portrait photo |
 | `bio` | Portable Text | Short biography |
 | `email` | String | Contact email |
 | `phone` | String | Optional |
@@ -248,8 +253,9 @@ where `{date}` is `YYYYMMDD` or `today`.
 **Content managed via:** Sanity CMS
 
 **Features:**
-- Announcements list page with cards (title, excerpt, date)
-- Individual announcement detail page
+- Announcements list page with cards (society logo badge, title, date, excerpt, society-color name tag) — no image falls back to a society-color gradient with a default illustration
+- Live search (title, excerpt, event location, body text) and a society filter dropdown
+- Announcement detail shown in a modal overlay (slides up from the bottom, themed scrollbar) opened from the list card — not a dedicated route
 - Expiry date field — expired announcements automatically hidden from the frontend
 - Pinned announcements (displayed at top regardless of date)
 
@@ -260,11 +266,14 @@ where `{date}` is `YYYYMMDD` or `today`.
 |---|---|---|
 | `title` | String | |
 | `slug` | Slug | Auto-generated from title |
+| `excerpt` | Text | Short summary shown on the list page |
 | `body` | Portable Text | Full content |
+| `image` | Image (Sanity) | Optional; falls back to a society-color gradient + default illustration on the card, or the society's own logo on the detail page hero |
+| `society` | Reference → `society` | Required; use "Ascension Family" for parish-wide content |
 | `publishedAt` | Datetime | |
 | `expiresAt` | Datetime | Optional; hides post after this date |
 | `pinned` | Boolean | Forces top position |
-| `category` | String (enum) | e.g. `general`, `liturgy`, `youth`, `charity` |
+| `eventDate` / `eventLocation` | Datetime / String | Both optional — not every announcement is tied to a specific event |
 
 ---
 
@@ -273,7 +282,7 @@ where `{date}` is `YYYYMMDD` or `today`.
 **Purpose:** Provide a searchable, filterable archive of priestly homilies, including audio recordings from Mass.
 
 **Content managed via:** Sanity CMS  
-**Audio storage:** Cloudinary
+**Audio storage:** Sanity (native file asset)
 
 **Features:**
 - Homily archive page with filter by priest, liturgical year, scripture reference
@@ -297,7 +306,7 @@ where `{date}` is `YYYYMMDD` or `today`.
 | `scriptureReference` | String | e.g. "John 6:51-58" |
 | `liturgicalSeason` | String (enum) | Advent, Christmas, Lent, Easter, Ordinary Time |
 | `body` | Portable Text | Written reflection |
-| `audioFile` | File (Cloudinary URL) | MP3 recording of the homily |
+| `audioFile` | File (Sanity file asset) | MP3 recording of the homily |
 | `audioDuration` | String | e.g. "14:32" — entered manually |
 
 ---
@@ -362,15 +371,14 @@ where `{date}` is `YYYYMMDD` or `today`.
 
 **Purpose:** Showcase photos and videos from parish events, organised and filterable.
 
-**Content managed via:** Sanity CMS (metadata)  
-**Media storage:** Cloudinary
+**Content managed via:** Sanity CMS  
+**Media storage:** Sanity native asset pipeline (images); YouTube URLs (video)
 
 **Features:**
-- Gallery index page showing event albums as cards (cover photo, event name, date)
-- Individual album page with masonry/grid photo layout
-- Filter gallery index by year, category (e.g. Liturgical, Youth, Outreach, Fundraiser)
-- Lightbox for full-size image viewing
-- Video support (Cloudinary-hosted or YouTube embed)
+- Gallery index page showing event albums as cards (cover photo, society-logo badge, society-color stripe, event name, date, description)
+- Individual album page with a lightbox photo/video viewer
+- Live search (title, description, media captions and alt text) and a society filter dropdown
+- Video support via YouTube embed (no separate video hosting)
 
 **Sanity Document Type:** `galleryAlbum`
 
@@ -380,10 +388,10 @@ where `{date}` is `YYYYMMDD` or `today`.
 | `title` | String | Event name |
 | `slug` | Slug | |
 | `eventDate` | Date | |
-| `category` | String (enum) | |
-| `coverImage` | Image (Cloudinary) | Thumbnail for album card |
+| `society` | Reference → `society` | Required; use "Ascension Family" for parish-wide content |
+| `coverImage` | Image (Sanity) | Thumbnail for album card |
 | `description` | Text | Short description |
-| `media` | Array of objects | `{ type: image/video, cloudinaryUrl, caption, altText }` |
+| `media` | Array of objects | `imageItem { image (Sanity), caption }` or `videoItem { url (YouTube), caption }` |
 
 ---
 
@@ -439,12 +447,51 @@ This is handled by two separate but complementary systems:
 
 ---
 
+### 5.13 Parish Societies Directory
+
+**Purpose:** Give the parish's zones, organizations, devotional societies, and ministries a home of their own, and let their name/logo/color carry through wherever their content appears (Announcements, Gallery).
+
+**Content managed via:** Sanity CMS
+
+**Page Sections — List (`/societies`):**
+- Hero banner (matches the site's other interior-page headers)
+- Live search by name
+- Filter pills by society type, built from whichever types are actually present in the data
+- Responsive card grid: each card uses the society's own color as its background, its logo in a circular badge, and a type badge + name on a frosted-glass panel — each card links to that society's detail page
+
+**Page Sections — Detail (`/societies/[slug]`):**
+- Split hero, sized to match the site's other interior-page headers: left side is the society's color with its logo centered on top, right side is a dark panel with the static parish name, the society's name, and its subtitle
+- Two-column body: left column is the description (Portable Text) followed by a top/bottom-bordered slogan strip (icon in the society's color, greeting/response call-and-response stacked beside it); right column is a "Key Information" sidebar bordered and icon-filled in the society's color, listing whichever of Zone Patron / Established / Meeting Day / Zone Leader / Contact are present (Zone Leader and Contact can hold multiple values, each stacked on its own line)
+- Closing CTA band linking to the About page (not Give, which is currently disabled)
+
+**Cross-cutting role:** Every `announcement` and `galleryAlbum` document has a required reference to a `society` (the "Ascension Family" entry covers parish-wide content not tied to one group). Their list pages use this to show a society-logo badge, a society-color accent, and a society filter dropdown; an announcement with no image falls back to a gradient in the society's color instead of a generic placeholder.
+
+**Sanity Document Type:** `society`
+
+**Fields:**
+| Field | Type | Notes |
+|---|---|---|
+| `name` | String | Full name, e.g. "Catholic Women Organization" |
+| `slug` | Slug | Auto-generated from name |
+| `societyType` | String (enum) | `parish_zone`, `demographic_organization`, `pious_devotional`, `charismatic_movement`, `knightly_professional`, `liturgical_ministry`, `general` (the last is reserved for "Ascension Family") |
+| `shortName` | String | Abbreviated name for compact display, e.g. "CWO" |
+| `color` | String | Hex color code used throughout the site for this society |
+| `logo` | Image (Sanity) | Circular crest/logo |
+| `subtitle` | String | Optional; short single-line sentence shown under the name on the detail hero |
+| `slogan` | Object | Optional; `{ greeting, response }` call-and-response strings, shown on the detail page. Parish zones share the parish's own slogan rather than having their own |
+| `description` | Portable Text | Optional |
+| `zonePatron` / `established` / `meetingDay` | String | Optional key-info fields, grouped in Studio under a "Key Details" fieldset |
+| `zoneLeader` / `contact` | Array of strings | Optional; each entry rendered on its own line on the detail sidebar (no cap enforced by the schema) |
+
+---
+
 ## 6. Sanity CMS Schema Overview
 
 | Document Type | Purpose |
 |---|---|
 | `aboutPage` | Singleton — About / Parish History page content |
 | `clergyMember` | Individual clergy/catechist profiles |
+| `society` | Parish zones, organizations, and ministries — referenced by `announcement` and `galleryAlbum` |
 | `announcement` | Parish announcements with expiry |
 | `homily` | Homily records with audio and reflection |
 | `sacramentPage` | Content for each sacrament page |
@@ -462,7 +509,6 @@ This is handled by two separate but complementary systems:
 | **Universalis API** | Daily Readings | No auth (public API) |
 | **Google Calendar API** | Parish Schedule | API Key (public calendar) |
 | **YouTube Data API v3** | Livestream detection | API Key (server-side) |
-| **Cloudinary** | Images, audio, video storage | API Key + Secret (server-side uploads) |
 | **Tally.so** | RCIA form, Contact form | Embed ID (no backend required) |
 | **Resend** | Transactional email (optional) | API Key (server-side) |
 | **Loomly** | Social media approval workflow | SaaS — standalone tool |
@@ -477,7 +523,7 @@ All API keys and secrets stored as **environment variables** — never committed
 ### Performance
 - Lighthouse score ≥ 90 on Performance, Accessibility, and SEO
 - Core Web Vitals within "Good" thresholds
-- Images served in next-gen formats (WebP/AVIF) via Cloudinary transformations
+- Images served in next-gen formats (WebP/AVIF) via Sanity's image pipeline and Next.js `Image` optimization
 - Static pages (About, Sacraments, Clergy) built at compile time (SSG)
 - Dynamic pages (Readings, Calendar, Livestream) use ISR with appropriate revalidation windows
 
@@ -485,7 +531,7 @@ All API keys and secrets stored as **environment variables** — never committed
 - Semantic HTML throughout
 - Open Graph and Twitter Card meta tags on all pages
 - Structured data (JSON-LD) for the parish as a `LocalBusiness` / `Church` entity
-- Sitemap auto-generated via `next-sitemap`
+- Sitemap auto-generated via `next-sitemap` (not yet implemented — no `sitemap.ts`/`robots.ts` exists in the repo yet)
 - Canonical URLs configured
 
 ### Accessibility

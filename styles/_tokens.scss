@@ -6,12 +6,15 @@
 @mixin css-variables {
   // background
   --background-page: #f8f2e9;
+  --background-surface: #fdfbf8;
   --background-inverse: #2f210f;
   --background-inverse-subtle: #452e10;
 
   // text
   --text-primary: #2f210f;
+  --text-secondary: #5c3f1a;
   --text-inverse: #f8f2e9;
+  --text-inverse-secondary: #e2d0b6;
 
   // border
   --border-default: #2f210f;

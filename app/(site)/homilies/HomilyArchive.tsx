@@ -16,6 +16,8 @@ const ALL = 'All';
 export default function HomilyArchive({ homilies }: HomilyArchiveProps): React.JSX.Element {
   const [priestFilter, setPriestFilter] = useState<string>(ALL);
   const [seasonFilter, setSeasonFilter] = useState<string>(ALL);
+  const [priestOpen, setPriestOpen] = useState(false);
+  const [seasonOpen, setSeasonOpen] = useState(false);
 
   const priests = useMemo(
     () => [ALL, ...new Set(homilies.map((h) => h.authorName))],
@@ -37,31 +39,51 @@ export default function HomilyArchive({ homilies }: HomilyArchiveProps): React.J
       <div className={styles.archive__filters}>
         <label className={styles.archive__filter}>
           <span className={styles['archive__filter-label']}>Priest</span>
-          <select
-            value={priestFilter}
-            onChange={(event) => setPriestFilter(event.target.value)}
-            className={styles['archive__filter-select']}
-          >
-            {priests.map((priest) => (
-              <option key={priest} value={priest}>
-                {priest}
-              </option>
-            ))}
-          </select>
+          <span className={styles['archive__select-wrap']}>
+            <select
+              value={priestFilter}
+              onChange={(event) => setPriestFilter(event.target.value)}
+              onFocus={() => setPriestOpen(true)}
+              onBlur={() => setPriestOpen(false)}
+              className={styles['archive__filter-select']}
+            >
+              {priests.map((priest) => (
+                <option key={priest} value={priest}>
+                  {priest}
+                </option>
+              ))}
+            </select>
+            <span
+              className={`${styles['archive__select-chevron']} ${
+                priestOpen ? styles['archive__select-chevron--open'] : ''
+              }`}
+              aria-hidden="true"
+            />
+          </span>
         </label>
         <label className={styles.archive__filter}>
           <span className={styles['archive__filter-label']}>Season</span>
-          <select
-            value={seasonFilter}
-            onChange={(event) => setSeasonFilter(event.target.value)}
-            className={styles['archive__filter-select']}
-          >
-            {seasons.map((season) => (
-              <option key={season} value={season}>
-                {season}
-              </option>
-            ))}
-          </select>
+          <span className={styles['archive__select-wrap']}>
+            <select
+              value={seasonFilter}
+              onChange={(event) => setSeasonFilter(event.target.value)}
+              onFocus={() => setSeasonOpen(true)}
+              onBlur={() => setSeasonOpen(false)}
+              className={styles['archive__filter-select']}
+            >
+              {seasons.map((season) => (
+                <option key={season} value={season}>
+                  {season}
+                </option>
+              ))}
+            </select>
+            <span
+              className={`${styles['archive__select-chevron']} ${
+                seasonOpen ? styles['archive__select-chevron--open'] : ''
+              }`}
+              aria-hidden="true"
+            />
+          </span>
         </label>
       </div>
 

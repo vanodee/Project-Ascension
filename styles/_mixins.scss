@@ -154,3 +154,12 @@
     padding-inline: 0;
   }
 }
+
+// Adds side padding to page content at $bp-lg+, while the hero above it and
+// everything below $bp-lg stay untouched. Mirrors the idiom already used by
+// page.module.scss's .clergy and .rcia sections on the homepage.
+@mixin content-inset {
+  @include breakpoint($bp-lg) {
+    padding-inline: var(--space-3xl);
+  }
+}

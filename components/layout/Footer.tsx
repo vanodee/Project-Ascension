@@ -23,6 +23,7 @@ function buildLinkGroups(siteSettings: SiteSettings): FooterGroup[] {
         { href: '/clergy', label: 'Our Clergy' },
         { href: '/sacraments', label: 'Sacraments' },
         { href: '/sacraments/rcia', label: 'Becoming Catholic' },
+        { href: '/societies', label: 'Societies' },
         { href: '/gallery', label: 'Gallery' },
       ],
     },
@@ -40,7 +41,6 @@ function buildLinkGroups(siteSettings: SiteSettings): FooterGroup[] {
       heading: 'Connect',
       links: [
         { href: '/contact', label: 'Contact Us' },
-        { href: '/give', label: 'Give Online' },
         { href: '/sacraments/rcia', label: 'RCIA Enquiry' },
         { href: siteSettings.facebookUrl, label: 'Facebook', external: true },
         { href: siteSettings.instagramUrl, label: 'Instagram', external: true },

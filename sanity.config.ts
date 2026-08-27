@@ -13,6 +13,7 @@ export const basePlugins = [
         .title('Content')
         .items([
           S.documentTypeListItem('clergyMember').title('Clergy'),
+          S.documentTypeListItem('society').title('Societies'),
           S.documentTypeListItem('announcement').title('Announcements'),
           S.documentTypeListItem('homily').title('Homilies'),
           S.documentTypeListItem('galleryAlbum').title('Gallery Albums'),

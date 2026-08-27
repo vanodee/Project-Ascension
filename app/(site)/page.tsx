@@ -9,8 +9,10 @@ import { getAnnouncements } from '@/lib/announcements';
 import { getHomilies } from '@/lib/homilies';
 import { getClergy } from '@/lib/clergy';
 import { getAlbums } from '@/lib/gallery';
-import { formatDate, formatTime, dateBlockParts } from '@/lib/format';
+import { formatDate } from '@/lib/format';
 import { toPlainText } from '@/lib/portableText';
+import HomeAnnouncementCard from './HomeAnnouncementCard';
+import HomeAnnouncementsSection from './HomeAnnouncementsSection';
 import styles from './page.module.scss';
 
 // Announcements and homilies feed the homepage — ISR every 10 minutes.
@@ -163,31 +165,7 @@ export default async function HomePage(): Promise<React.JSX.Element> {
           </article>
         ) : null}
 
-        {cardAnnouncement ? (
-          <article className={styles['quick-updates__card']}>
-            <Image
-              src="/images/card-announcement.png"
-              alt=""
-              fill
-              sizes="(min-width: 1024px) 33vw, 100vw"
-              className={styles['quick-updates__bg']}
-            />
-            <div className={styles['quick-updates__panel']}>
-              <div className={styles['quick-updates__info']}>
-                <p className={styles['quick-updates__label']}>Announcements</p>
-                <h3 className={styles['quick-updates__title']}>{cardAnnouncement.title}</h3>
-                <p className={styles['quick-updates__text']}>{cardAnnouncement.excerpt}</p>
-              </div>
-              <Button
-                href={`/announcements/${cardAnnouncement.slug}`}
-                variant="ghost-inverse"
-                size="sm"
-              >
-                Read More →
-              </Button>
-            </div>
-          </article>
-        ) : null}
+        {cardAnnouncement ? <HomeAnnouncementCard announcement={cardAnnouncement} /> : null}
       </section>
 
       {/* ---------- Readings & Announcements ---------- */}
@@ -267,96 +245,10 @@ export default async function HomePage(): Promise<React.JSX.Element> {
           </Button>
         </div>
 
-        <div className={styles.announcements}>
-          <SectionTitle eyebrow="Parish Notices" title="Announcements" />
-
-          {featuredAnnouncement ? (
-            <Link
-              href={`/announcements/${featuredAnnouncement.slug}`}
-              className={styles['announcements__featured-card']}
-            >
-              <div className={styles['announcements__featured-image']}>
-                <Image
-                  src={featuredAnnouncement.image}
-                  alt=""
-                  fill
-                  sizes="(min-width: 768px) 280px, 100vw"
-                  className={styles['announcements__featured-photo']}
-                />
-              </div>
-              <div className={styles['announcements__featured-info']}>
-                <span className={styles['announcements__featured-tag']}>Featured</span>
-                <h3 className={styles['announcements__featured-title']}>
-                  {featuredAnnouncement.title}
-                </h3>
-                {featuredAnnouncement.eventDate ? (
-                  <p className={styles['announcements__meta-row']}>
-                    <Image src="/icons/calendar.svg" alt="" width={24} height={24} />
-                    <span>
-                      {formatDate(featuredAnnouncement.eventDate)} •{' '}
-                      {formatTime(featuredAnnouncement.eventDate)}
-                    </span>
-                  </p>
-                ) : null}
-                {featuredAnnouncement.eventLocation ? (
-                  <p className={styles['announcements__meta-row']}>
-                    <Image src="/icons/location.svg" alt="" width={24} height={24} />
-                    <span>{featuredAnnouncement.eventLocation}</span>
-                  </p>
-                ) : null}
-                <p className={styles['announcements__featured-excerpt']}>
-                  {featuredAnnouncement.excerpt}
-                </p>
-              </div>
-            </Link>
-          ) : null}
-
-          <div className={styles['announcements__list']}>
-            {listedAnnouncements.map((announcement) => {
-              const dateParts = dateBlockParts(
-                announcement.eventDate ?? announcement.publishedAt,
-              );
-              return (
-                <Link
-                  key={announcement.slug}
-                  href={`/announcements/${announcement.slug}`}
-                  className={styles['announcements__item']}
-                >
-                  <span className={styles['announcements__date-block']}>
-                    <span className={styles['announcements__date-weekday']}>
-                      {dateParts.weekday}
-                    </span>
-                    <span className={styles['announcements__date-day']}>{dateParts.day}</span>
-                    <span className={styles['announcements__date-month']}>
-                      {dateParts.month}
-                    </span>
-                  </span>
-                  <span className={styles['announcements__item-image']}>
-                    <Image
-                      src={announcement.image}
-                      alt=""
-                      fill
-                      sizes="159px"
-                      className={styles['announcements__item-photo']}
-                    />
-                  </span>
-                  <span className={styles['announcements__item-text']}>
-                    <span className={styles['announcements__item-title']}>
-                      {announcement.title}
-                    </span>
-                    <span className={styles['announcements__item-excerpt']}>
-                      {announcement.excerpt}
-                    </span>
-                  </span>
-                </Link>
-              );
-            })}
-          </div>
-
-          <Button href="/announcements" variant="outline" size="sm">
-            View All Announcements →
-          </Button>
-        </div>
+        <HomeAnnouncementsSection
+          featuredAnnouncement={featuredAnnouncement}
+          listedAnnouncements={listedAnnouncements}
+        />
       </section>
 
       {/* ---------- Support the mission ---------- */}
