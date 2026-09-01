@@ -63,6 +63,15 @@ export default async function SacramentsPage(): Promise<React.JSX.Element> {
                 Begin Your Journey →
               </Button>
             </div>
+            <div className={styles['sacraments__rcia-media']}>
+              <Image
+                src={rcia.heroImage}
+                alt=""
+                fill
+                sizes="(min-width: 768px) 45vw, 100vw"
+                className={styles['sacraments__rcia-photo']}
+              />
+            </div>
           </section>
         ) : null}
       </div>

@@ -84,22 +84,49 @@
 
 .sacraments__rcia {
   display: flex;
+  flex-direction: column;
   width: 100%;
+  overflow: hidden;
   border-radius: var(--radius-base);
   background-color: var(--background-inverse);
+
+  @include breakpoint($bp-md) {
+    flex-direction: row;
+    align-items: stretch;
+  }
 }
 
 .sacraments__rcia-content {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  justify-content: center;
   gap: var(--space-md);
-  max-width: 640px;
   padding: var(--space-xl) var(--space-lg);
 
   @include breakpoint($bp-md) {
+    flex: 1 1 55%;
     padding: var(--space-3xl);
   }
+}
+
+.sacraments__rcia-media {
+  position: relative;
+  width: 100%;
+  height: 240px;
+  flex-shrink: 0;
+  background-color: var(--background-inverse);
+
+  @include breakpoint($bp-md) {
+    flex: 1 1 45%;
+    width: auto;
+    height: auto;
+    min-height: 360px;
+  }
+}
+
+.sacraments__rcia-photo {
+  object-fit: cover;
 }
 
 .sacraments__rcia-eyebrow {
