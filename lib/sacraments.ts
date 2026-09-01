@@ -11,6 +11,7 @@ interface SacramentPageDoc {
   label: string;
   summary: string;
   heroImage: SanityImageSource;
+  heroImageAspectRatio: number | null;
   body: PortableTextBlock[];
   tallyFormId?: string;
 }
@@ -22,6 +23,7 @@ function toSacramentPage(doc: SacramentPageDoc): SacramentPage {
     label: doc.label,
     summary: doc.summary,
     heroImage: imageUrl(doc.heroImage, 1600),
+    heroImageAspectRatio: doc.heroImageAspectRatio ?? 16 / 9,
     body: doc.body,
     ...(doc.tallyFormId ? { tallyFormId: doc.tallyFormId } : {}),
   };

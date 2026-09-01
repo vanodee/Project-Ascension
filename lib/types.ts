@@ -119,6 +119,7 @@ export interface SacramentPage {
   label: string;
   summary: string;
   heroImage: string;
+  heroImageAspectRatio: number;
   body: PortableTextBlock[];
   tallyFormId?: string;
 }

@@ -44,7 +44,7 @@ const NAV_LEFT: NavItem[] = [
       { href: '/sacraments/reconciliation', label: 'Reconciliation' },
       { href: '/sacraments/anointing', label: 'Anointing' },
       { href: '/sacraments/matrimony', label: 'Matrimony' },
-      { href: '/sacraments/rcia', label: 'RCIA / Becoming Catholic' },
+      { href: '/sacraments/rcia', label: 'RCIA' },
     ],
   },
 ];
@@ -63,13 +63,22 @@ const NAV_RIGHT: NavItem[] = [
   { label: 'Contact', href: '/contact' },
 ];
 
-function isChildActive(child: NavChild, pathname: string): boolean {
-  return pathname === child.href || pathname.startsWith(child.href + '/');
+// Returns the href of the single active child in a group: the most specific
+// (longest) one whose href matches the current path. This keeps a section-index
+// link like "/sacraments" (Overview) from staying active on "/sacraments/baptism".
+function activeChildHref(children: NavChild[], pathname: string): string | null {
+  let best: string | null = null;
+  for (const child of children) {
+    if (pathname === child.href || pathname.startsWith(child.href + '/')) {
+      if (best === null || child.href.length > best.length) best = child.href;
+    }
+  }
+  return best;
 }
 
 function isItemActive(item: NavItem, pathname: string): boolean {
   if (item.href) return pathname === item.href;
-  return item.children?.some((c) => isChildActive(c, pathname)) ?? false;
+  return item.children ? activeChildHref(item.children, pathname) !== null : false;
 }
 
 export default function Header(): React.JSX.Element {
@@ -153,6 +162,7 @@ export default function Header(): React.JSX.Element {
 
     const isOpen = openDropdown === item.label;
     const isWide = item.label === 'Sacraments';
+    const activeChild = activeChildHref(item.children, pathname);
 
     return (
       <div key={item.label} className={styles['header__nav-item']}>
@@ -191,7 +201,7 @@ export default function Header(): React.JSX.Element {
               role="menuitem"
               tabIndex={isOpen ? 0 : -1}
               className={`${styles['header__dropdown-link']} ${
-                isChildActive(child, pathname) ? styles['header__dropdown-link--active'] : ''
+                activeChild === child.href ? styles['header__dropdown-link--active'] : ''
               }`}
               onClick={closeAll}
             >
@@ -223,6 +233,7 @@ export default function Header(): React.JSX.Element {
     }
 
     const isOpen = openMobileGroups.has(item.label);
+    const activeChild = activeChildHref(item.children, pathname);
 
     return (
       <div key={item.label} className={styles['header__mobile-group']}>
@@ -253,7 +264,7 @@ export default function Header(): React.JSX.Element {
               href={child.href}
               tabIndex={isOpen ? 0 : -1}
               className={`${styles['header__mobile-child-link']} ${
-                isChildActive(child, pathname)
+                activeChild === child.href
                   ? styles['header__mobile-child-link--active']
                   : ''
               }`}

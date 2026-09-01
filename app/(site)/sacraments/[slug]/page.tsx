@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { PortableText } from '@portabletext/react';
 import Button from '@/components/ui/Button';
+import PageHeader from '@/components/ui/PageHeader';
 import TallyEmbed from '@/components/ui/TallyEmbed';
 import { getSacraments, getSacrament } from '@/lib/sacraments';
 import { paragraphComponents } from '@/lib/portableText';
@@ -38,21 +39,24 @@ export default async function SacramentDetailPage({
 
   return (
     <article className={styles.sacrament}>
-      <header className={styles.sacrament__header}>
-        <p className={styles.sacrament__eyebrow}>{sacrament.label}</p>
-        <h1 className={styles.sacrament__title}>{sacrament.title}</h1>
-        <p className={styles.sacrament__summary}>{sacrament.summary}</p>
-      </header>
+      <PageHeader
+        eyebrow={sacrament.label}
+        title={sacrament.title}
+        description={sacrament.summary}
+      />
 
-      <div className={styles.sacrament__hero}>
+      <figure
+        className={styles.sacrament__figure}
+        style={{ aspectRatio: sacrament.heroImageAspectRatio }}
+      >
         <Image
           src={sacrament.heroImage}
           alt=""
           fill
-          sizes="(min-width: 1400px) 1400px, 100vw"
-          className={styles['sacrament__hero-image']}
+          sizes="(min-width: 900px) 900px, 100vw"
+          className={styles['sacrament__figure-image']}
         />
-      </div>
+      </figure>
 
       <div className={styles.sacrament__body}>
         <PortableText

@@ -148,6 +148,7 @@ export const SACRAMENT_PAGES_QUERY = /* groq */ `
     label,
     summary,
     heroImage,
+    "heroImageAspectRatio": heroImage.asset->metadata.dimensions.aspectRatio,
     body,
     tallyFormId
   }
