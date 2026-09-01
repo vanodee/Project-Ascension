@@ -8,11 +8,10 @@ interface ImageWithAlt extends Record<string, unknown> {
   alt?: string;
 }
 
+// Media items are images only — video support was removed (see qol-ideas.md).
 interface MediaItemDoc {
-  _type: 'imageItem' | 'videoItem';
-  image?: ImageWithAlt;
+  image: ImageWithAlt;
   caption?: string;
-  url?: string;
 }
 
 interface SocietyDoc {
@@ -35,19 +34,10 @@ interface GalleryAlbumDoc {
 }
 
 function toMediaItem(doc: MediaItemDoc): GalleryMediaItem {
-  if (doc._type === 'videoItem') {
-    return {
-      type: 'video',
-      url: doc.url ?? '',
-      caption: doc.caption ?? '',
-      altText: doc.caption ?? '',
-    };
-  }
   return {
-    type: 'image',
-    url: doc.image ? imageUrl(doc.image as SanityImageSource, 1600) : '',
+    url: imageUrl(doc.image as SanityImageSource, 1600),
     caption: doc.caption ?? '',
-    altText: doc.image?.alt ?? doc.caption ?? '',
+    altText: doc.image.alt ?? doc.caption ?? '',
   };
 }
 

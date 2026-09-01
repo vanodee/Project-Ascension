@@ -1,4 +1,5 @@
 import { defineArrayMember, defineField, defineType } from 'sanity'
+import { AudioFileInput } from '../components/AudioFileInput'
 
 export default defineType({
   name: 'homily',
@@ -32,10 +33,11 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'scriptureReference',
-      title: 'Scripture Reference',
-      type: 'string',
-      description: 'e.g. "John 3:16–21"',
+      name: 'scriptureReferences',
+      title: 'Scripture References',
+      type: 'array',
+      of: [defineArrayMember({ type: 'string' })],
+      description: 'One entry per reading covered, e.g. "John 3:16–21".',
     }),
     defineField({
       name: 'liturgicalSeason',
@@ -57,18 +59,30 @@ export default defineType({
       title: 'Homily Text',
       type: 'array',
       of: [defineArrayMember({ type: 'block' })],
+      description:
+        'Always required, even when an audio recording is attached — this is what readers see, and it’s the whole experience for homilies with no recording.',
+      validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'audioFile',
       title: 'Audio Recording',
       type: 'file',
-      options: { accept: 'audio/*' },
+      // No `accept` restriction: Studio checks a dropped/selected file's
+      // *browser-reported* MIME type against it, not its real content or
+      // extension. Windows' file-type associations for audio extensions vary
+      // per machine — a perfectly valid MP3 can get reported as e.g.
+      // "video/mpeg" (confirmed: a real MP3 renamed to end in .mpeg was
+      // rejected as "no known conversion... (video/mpeg)" until this was
+      // removed) or with no type at all. The field is already scoped to
+      // audio by its label; Sanity's storage/serving doesn't care about MIME.
+      components: { input: AudioFileInput },
     }),
     defineField({
-      name: 'audioDuration',
-      title: 'Audio Duration',
-      type: 'string',
-      description: 'Enter manually in MM:SS format, e.g. "18:04".',
+      name: 'audioDurationSeconds',
+      title: 'Audio Duration (seconds)',
+      type: 'number',
+      description:
+        'Filled in automatically from the uploaded recording — adjust only if it looks wrong.',
     }),
   ],
   orderings: [

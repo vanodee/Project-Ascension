@@ -80,15 +80,15 @@ export interface Homily {
   authorSlug: string;
   authorName: string;
   publishedAt: string;
-  scriptureReference: string;
+  scriptureReferences: string[];
   liturgicalSeason: LiturgicalSeason;
   body: PortableTextBlock[];
   audioUrl: string;
-  audioDuration: string;
+  audioDurationSeconds: number;
 }
 
+// Images only — video support was removed (see qol-ideas.md).
 export interface GalleryMediaItem {
-  type: 'image' | 'video';
   url: string;
   caption: string;
   altText: string;

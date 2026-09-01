@@ -1,0 +1,57 @@
+@use '../../../styles/tokens' as *;
+@use '../../../styles/mixins' as *;
+
+.now-playing {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding: var(--space-md) var(--space-lg);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-base);
+  background-color: rgba(213, 186, 148, 0.15);
+}
+
+.now-playing__text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  min-width: 0;
+}
+
+.now-playing__eyebrow {
+  @include label-md;
+  color: var(--border-medium);
+}
+
+.now-playing__title {
+  @include heading-md;
+  overflow: hidden;
+  color: var(--text-primary);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.now-playing__author {
+  @include body-sm-italic;
+  color: var(--text-secondary);
+}
+
+.now-playing__stop {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--border-medium);
+  border-radius: 50%;
+  background-color: var(--background-page);
+  color: var(--text-primary);
+  transition: background-color 0.2s ease, color 0.2s ease;
+
+  &:hover {
+    background-color: var(--background-inverse);
+    color: var(--text-inverse);
+  }
+}

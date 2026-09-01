@@ -1,8 +1,9 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import type { GalleryMediaItem } from '@/lib/types';
+import { useFocusTrap } from '@/lib/useFocusTrap';
 import styles from './AlbumLightbox.module.scss';
 
 interface AlbumLightboxProps {
@@ -16,6 +17,9 @@ const TRANSITION_MS = 300;
 export default function AlbumLightbox({ media }: AlbumLightboxProps): React.JSX.Element {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [visible, setVisible] = useState(false);
+  const dialogRef = useRef<HTMLDivElement>(null);
+
+  useFocusTrap(dialogRef, activeIndex !== null);
 
   const requestClose = useCallback((): void => {
     setVisible(false);
@@ -95,10 +99,12 @@ export default function AlbumLightbox({ media }: AlbumLightboxProps): React.JSX.
 
       {active && activeIndex !== null ? (
         <div
+          ref={dialogRef}
           className={`${styles.album__lightbox} ${visible ? styles['album__lightbox--visible'] : ''}`}
           role="dialog"
           aria-modal="true"
           aria-label={active.altText}
+          tabIndex={-1}
           onClick={requestClose}
         >
           <button

@@ -103,7 +103,7 @@ The Catholic Church of the Ascension requires a modern, performant, and maintain
 │   ├── /sacraments/anointing
 │   └── /sacraments/matrimony
 ├── /livestream                 → Mass Livestream (YouTube)
-├── /gallery                    → Photo & Video Gallery (search + society filter)
+├── /gallery                    → Photo Gallery (search + society filter)
 │   └── /gallery/[event-slug]   → Single Event Album
 └── /contact                    → Contact Page
 ```
@@ -303,11 +303,11 @@ where `{date}` is `YYYYMMDD` or `today`.
 | `slug` | Slug | |
 | `author` | Reference → `clergyMember` | |
 | `publishedAt` | Datetime | Date of the Mass |
-| `scriptureReference` | String | e.g. "John 6:51-58" |
+| `scriptureReferences` | Array of Strings | e.g. ["John 6:51-58"] — one entry per reading |
 | `liturgicalSeason` | String (enum) | Advent, Christmas, Lent, Easter, Ordinary Time |
 | `body` | Portable Text | Written reflection |
 | `audioFile` | File (Sanity file asset) | MP3 recording of the homily |
-| `audioDuration` | String | e.g. "14:32" — entered manually |
+| `audioDurationSeconds` | Number | Auto-filled from the uploaded recording on upload |
 
 ---
 
@@ -369,16 +369,18 @@ where `{date}` is `YYYYMMDD` or `today`.
 
 ### 5.10 Gallery
 
-**Purpose:** Showcase photos and videos from parish events, organised and filterable.
+**Purpose:** Showcase photos from parish events, organised and filterable.
 
 **Content managed via:** Sanity CMS  
-**Media storage:** Sanity native asset pipeline (images); YouTube URLs (video)
+**Media storage:** Sanity native asset pipeline (images)
 
 **Features:**
 - Gallery index page showing event albums as cards (cover photo, society-logo badge, society-color stripe, event name, date, description)
-- Individual album page with a lightbox photo/video viewer
+- Individual album page with a lightbox photo viewer
 - Live search (title, description, media captions and alt text) and a society filter dropdown
-- Video support via YouTube embed (no separate video hosting)
+
+Video support (`videoItem`, YouTube embed) was scoped for v1.0 but never implemented end-to-end
+and has been removed from the schema — see `qol-ideas.md` if it's revisited.
 
 **Sanity Document Type:** `galleryAlbum`
 
@@ -391,7 +393,7 @@ where `{date}` is `YYYYMMDD` or `today`.
 | `society` | Reference → `society` | Required; use "Ascension Family" for parish-wide content |
 | `coverImage` | Image (Sanity) | Thumbnail for album card |
 | `description` | Text | Short description |
-| `media` | Array of objects | `imageItem { image (Sanity), caption }` or `videoItem { url (YouTube), caption }` |
+| `media` | Array of objects | `imageItem { image (Sanity), caption }` — photos only |
 
 ---
 
@@ -495,7 +497,7 @@ This is handled by two separate but complementary systems:
 | `announcement` | Parish announcements with expiry |
 | `homily` | Homily records with audio and reflection |
 | `sacramentPage` | Content for each sacrament page |
-| `galleryAlbum` | Event photo/video albums |
+| `galleryAlbum` | Event photo albums |
 | `donationCategory` | Admin-editable list of giving categories |
 | `siteSettings` | Singleton — global settings (parish name, contact details, social links, YouTube channel ID) |
 
@@ -603,7 +605,7 @@ The following are explicitly not included in v1.0 of this project:
 | 4 | Who will be the designated Sanity Publisher / Media Reviewer? | Parish Admin | Open |
 | 5 | Will Paystack be registered under the parish's existing account or a new one? | Parish Finance | Open |
 | 6 | What is the desired Loomly plan tier? (Base ~$32/mo recommended) | Parish Communications | Open |
-| 7 | Are there existing photos/videos to seed the Gallery at launch? | Parish Communications | Open |
+| 7 | Are there existing photos to seed the Gallery at launch? | Parish Communications | Open |
 | 8 | Should the Tally.so RCIA form submissions also copy to a Google Sheet for tracking? | Parish Admin | Open |
 | 9 | Is there a preference for the Sanity plan (Free tier or Growth)? | Dev / Admin | Open |
 | 10 | What hosting environment is preferred — Vercel, or another provider? | Dev | Open |

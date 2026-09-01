@@ -57,6 +57,7 @@ export default defineType({
       name: 'media',
       title: 'Media',
       type: 'array',
+      description: 'Photos only — video support was removed (see qol-ideas.md).',
       of: [
         defineArrayMember({
           name: 'imageItem',
@@ -86,27 +87,6 @@ export default defineType({
           ],
           preview: {
             select: { media: 'image', title: 'caption' },
-          },
-        }),
-        defineArrayMember({
-          name: 'videoItem',
-          title: 'Video',
-          type: 'object',
-          fields: [
-            defineField({
-              name: 'url',
-              title: 'YouTube URL',
-              type: 'url',
-              validation: (Rule) => Rule.required().uri({ scheme: ['https'] }),
-            }),
-            defineField({
-              name: 'caption',
-              title: 'Caption',
-              type: 'string',
-            }),
-          ],
-          preview: {
-            select: { title: 'caption', subtitle: 'url' },
           },
         }),
       ],

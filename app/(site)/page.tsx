@@ -9,7 +9,7 @@ import { getAnnouncements } from '@/lib/announcements';
 import { getHomilies } from '@/lib/homilies';
 import { getClergy } from '@/lib/clergy';
 import { getAlbums } from '@/lib/gallery';
-import { formatDate } from '@/lib/format';
+import { formatDate, formatDuration } from '@/lib/format';
 import { toPlainText } from '@/lib/portableText';
 import HomeAnnouncementCard from './HomeAnnouncementCard';
 import HomeAnnouncementsSection from './HomeAnnouncementsSection';
@@ -153,12 +153,13 @@ export default async function HomePage(): Promise<React.JSX.Element> {
                 <p className={styles['quick-updates__label']}>Latest Homily</p>
                 <h3 className={styles['quick-updates__title']}>{latestHomily.title}</h3>
                 <p className={styles['quick-updates__text']}>
-                  {latestHomily.authorName} reflects on {latestHomily.scriptureReference};{' '}
+                  {latestHomily.authorName} reflects on{' '}
+                  {latestHomily.scriptureReferences.join('; ')};{' '}
                   {toPlainText(latestHomily.body.slice(0, 1)).replace(/\.$/, '')}. Duration:{' '}
-                  {latestHomily.audioDuration} minutes.
+                  {formatDuration(latestHomily.audioDurationSeconds)} minutes.
                 </p>
               </div>
-              <Button href={`/homilies/${latestHomily.slug}`} variant="ghost-inverse" size="sm">
+              <Button href={`/homilies?play=${latestHomily.slug}`} variant="ghost-inverse" size="sm">
                 Listen Now →
               </Button>
             </div>

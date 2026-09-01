@@ -1,0 +1,37 @@
+.marquee {
+  overflow: hidden;
+  width: 100%;
+  min-width: 0;
+}
+
+.marquee__track {
+  display: inline-block;
+  white-space: nowrap;
+  will-change: transform;
+}
+
+.marquee--overflowing .marquee__track {
+  animation: marquee var(--marquee-duration, 8s) ease-in-out infinite;
+}
+
+@keyframes marquee {
+  0%,
+  15% {
+    transform: translateX(0);
+  }
+  45%,
+  65% {
+    transform: translateX(var(--marquee-distance, 0));
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee--overflowing .marquee__track {
+    animation: none;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}

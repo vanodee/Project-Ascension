@@ -69,26 +69,11 @@ export const HOMILIES_QUERY = /* groq */ `
     "authorSlug": author->slug.current,
     "authorName": author->name,
     publishedAt,
-    scriptureReference,
+    scriptureReferences,
     liturgicalSeason,
     body,
     "audioUrl": audioFile.asset->url,
-    audioDuration
-  }
-`;
-
-export const HOMILY_QUERY = /* groq */ `
-  *[_type == "homily" && slug.current == $slug][0] {
-    title,
-    "slug": slug.current,
-    "authorSlug": author->slug.current,
-    "authorName": author->name,
-    publishedAt,
-    scriptureReference,
-    liturgicalSeason,
-    body,
-    "audioUrl": audioFile.asset->url,
-    audioDuration
+    audioDurationSeconds
   }
 `;
 
@@ -100,11 +85,11 @@ export const GALLERY_ALBUMS_QUERY = /* groq */ `
     description,
     coverImage,
     society-> { "slug": slug.current, name, shortName, color, societyType, logo },
-    media[] {
-      _type,
+    // Images only — filtered defensively even though the schema no longer
+    // offers video items, in case any stray videoItem entries ever exist.
+    media[_type == "imageItem"] {
       image,
-      caption,
-      url
+      caption
     }
   }
 `;
@@ -117,11 +102,11 @@ export const GALLERY_ALBUM_QUERY = /* groq */ `
     description,
     coverImage,
     society-> { "slug": slug.current, name, shortName, color, societyType, logo },
-    media[] {
-      _type,
+    // Images only — filtered defensively even though the schema no longer
+    // offers video items, in case any stray videoItem entries ever exist.
+    media[_type == "imageItem"] {
       image,
-      caption,
-      url
+      caption
     }
   }
 `;

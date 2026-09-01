@@ -49,7 +49,9 @@ function pathsToRevalidate(type: string, slug?: string): string[] {
       // detail route to revalidate per-slug.
       return ['/', '/announcements'];
     case 'homily':
-      return ['/', '/homilies', ...(slug ? [`/homilies/${slug}`] : [])];
+      // Homilies play inline from the archive via a sticky player — no dedicated
+      // detail route to revalidate per-slug.
+      return ['/', '/homilies'];
     case 'galleryAlbum':
       return ['/', '/gallery', ...(slug ? [`/gallery/${slug}`] : [])];
     case 'sacramentPage':

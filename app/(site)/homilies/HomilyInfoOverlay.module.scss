@@ -1,0 +1,113 @@
+@use '../../../styles/tokens' as *;
+@use '../../../styles/mixins' as *;
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  overflow-y: auto;
+  background-color: rgba(47, 33, 15, 0.7);
+  padding: var(--space-2xl) var(--space-md);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  // Scrollbar theming lives globally in styles/globals.scss.
+}
+
+.overlay--visible {
+  opacity: 1;
+
+  .overlay__panel {
+    transform: translateY(0);
+  }
+}
+
+.overlay__close {
+  position: fixed;
+  top: var(--space-md);
+  right: var(--space-xl);
+  z-index: 101;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 50%;
+  background-color: var(--background-page);
+  color: var(--text-primary);
+  transition: background-color 0.2s ease, color 0.2s ease;
+
+  &:hover {
+    background-color: var(--background-inverse);
+    color: var(--text-inverse);
+  }
+}
+
+.overlay__panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  width: min(760px, 100%);
+  margin-inline: auto;
+  padding: var(--space-xl) var(--space-lg);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-base);
+  background-color: var(--background-page);
+  transform: translateY(64px);
+  transition: transform 0.3s ease;
+
+  @include breakpoint($bp-md) {
+    padding: var(--space-2xl);
+  }
+}
+
+.overlay__header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+  text-align: center;
+  padding-bottom: var(--space-xl);
+  border-bottom: 1px solid var(--border-medium);
+}
+
+.overlay__meta {
+  @include body-sm-italic;
+  color: var(--border-medium);
+}
+
+.overlay__title {
+  @include display-lg;
+  color: var(--text-primary);
+}
+
+.overlay__author {
+  @include body-md-italic;
+  color: var(--text-primary);
+}
+
+.overlay__author-link {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+
+  &:hover {
+    color: var(--border-medium);
+  }
+}
+
+.overlay__reading {
+  @include label-md;
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+.overlay__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.overlay__paragraph {
+  @include body-base;
+  color: var(--text-primary);
+}

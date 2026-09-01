@@ -1,11 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { PortableText } from '@portabletext/react';
 import type { Announcement } from '@/lib/types';
 import { formatDate, formatTime } from '@/lib/format';
 import { paragraphComponents } from '@/lib/portableText';
+import { useFocusTrap } from '@/lib/useFocusTrap';
 import styles from './AnnouncementModal.module.scss';
 
 interface AnnouncementModalProps {
@@ -22,6 +23,9 @@ export default function AnnouncementModal({
   onClose,
 }: AnnouncementModalProps): React.JSX.Element {
   const [visible, setVisible] = useState(false);
+  const dialogRef = useRef<HTMLDivElement>(null);
+
+  useFocusTrap(dialogRef, true);
 
   const requestClose = (): void => {
     setVisible(false);
@@ -64,10 +68,12 @@ export default function AnnouncementModal({
 
   return (
     <div
+      ref={dialogRef}
       className={`${styles.modal} ${visible ? styles['modal--visible'] : ''}`}
       role="dialog"
       aria-modal="true"
       aria-label={announcement.title}
+      tabIndex={-1}
       onClick={requestClose}
     >
       <button
