@@ -9,6 +9,11 @@ export default defineCliConfig({
   },
   // Hosted Studio URL: https://ascension-parish.sanity.studio
   studioHost: 'ascension-parish',
-  // Let Sanity keep the hosted Studio bundle patched without a redeploy.
-  deployment: { autoUpdates: true },
+  deployment: {
+    // Let Sanity keep the hosted Studio bundle patched without a redeploy.
+    autoUpdates: true,
+    // Pin the studio application so `sanity deploy` never prompts for it
+    // (keeps non-interactive/checklist deploys from hanging).
+    appId: 'kbc5hi6ct7n2p1lentfdzyjb',
+  },
 })
