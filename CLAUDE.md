@@ -49,6 +49,20 @@ Catholic Church of the Ascension parish website — a greenfield Next.js project
 - `donationCategory` — config list
 - `siteSettings` — singleton (parish name, contact info, social links, YouTube channel ID)
 
+## Sanity Studio Deployment
+
+The Studio is hosted by Sanity at `ascension-parish.sanity.studio` and deployed
+manually — there is no CI for it. **On every "commit and push" request, check
+whether the pushed commits touch `sanity/**`, `sanity.config.ts`, or
+`sanity.cli.ts`; if so, run `npx sanity deploy` after pushing.**
+
+- Deploy at most once per push; skip it when none of those paths changed.
+- `sanity deploy` is idempotent — a redundant run republishes the same bundle,
+  so when unsure, deploy.
+- Only ships our schema/structure/config; the Studio framework auto-updates
+  (`deployment.autoUpdates`).
+- Requires `npx sanity login` as an account with access to project `p3p9t4z1`.
+
 ## Integration Auth — Where Keys Live
 
 | Service | Key Type | Location |
