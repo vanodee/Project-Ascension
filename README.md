@@ -40,7 +40,10 @@ A modern, content-driven parish website providing parishioners with easy access 
 | `/readings` | Daily liturgical readings | ISR (next midnight) |
 | `/livestream` | Live Sunday Mass | ISR (5 min) |
 | `/give` | Online giving (Paystack) — currently disabled (`notFound()`) and unlinked from nav | SSG |
-| `/studio` | Embedded Sanity Studio (content editing) | Dynamic |
+
+Content is edited in the **Sanity-hosted Studio** at
+[ascension-parish.sanity.studio](https://ascension-parish.sanity.studio) — it is
+not part of this Next app. See "Sanity Studio" below.
 
 All ISR pages also revalidate on-demand: a Sanity webhook hits
 `/api/revalidate` on publish, so edits appear within seconds rather than
@@ -51,7 +54,6 @@ waiting for the timer (see `app/api/revalidate/route.ts`).
 ```
 app/
   (site)/         # All public-facing pages & SCSS modules, sharing Header/Footer
-  studio/         # Embedded Sanity Studio route ([[...tool]] catch-all)
   api/revalidate/ # Sanity webhook receiver for on-demand ISR
 components/
   layout/         # Header, Footer
@@ -59,10 +61,13 @@ components/
 lib/              # Data-fetching helpers (Sanity, Google Calendar, YouTube, etc.)
 sanity/
   lib/            # Sanity client, image URL builder, GROQ queries
-  schemas/        # Sanity Studio document type definitions
+  schemas/        # Sanity document type definitions (compiled into the hosted Studio)
+  components/     # Custom Studio input components
 styles/           # Global SCSS tokens, mixins, and base styles
 public/           # Static assets (icons, images)
 scripts/          # Dev utilities (seed.ts pushes demo content into Sanity)
+sanity.config.ts  # Studio config — loaded by the Sanity CLI only, not the Next app
+sanity.cli.ts     # Sanity CLI config (deploy target, studio host)
 ```
 
 ## Getting Started
@@ -102,8 +107,21 @@ RESEND_API_KEY=
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) to view the site, or
-[http://localhost:3000/studio](http://localhost:3000/studio) to edit content.
+Open [http://localhost:3000](http://localhost:3000) to view the site.
+
+### Sanity Studio
+
+The Studio is hosted by Sanity at
+[ascension-parish.sanity.studio](https://ascension-parish.sanity.studio) and is
+**not** part of the Next app (`sanity` / `@sanity/vision` are devDependencies —
+CLI tooling only). It auto-updates its bundle; redeploy only when the schema or
+Studio config (`sanity.config.ts`) changes:
+
+```bash
+npx sanity login      # once per machine, as an account with access to project p3p9t4z1
+npx sanity deploy     # rebuilds & publishes to ascension-parish.sanity.studio
+npx sanity dev        # optional: run the Studio locally at http://localhost:3333
+```
 
 ### Seed demo content
 

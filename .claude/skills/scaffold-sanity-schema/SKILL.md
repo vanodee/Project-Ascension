@@ -21,6 +21,6 @@ When asked to scaffold a new Sanity document type (or when `/scaffold-sanity-sch
 
 4. **Register the type** — add it to the `schemaTypes` array in `sanity/schemas/index.ts`.
 
-5. **Add Studio structure** (optional, only if the type needs a custom desk structure) — update `sanity.config.ts` if the type is a singleton (singletons need `S.document()` views rather than list items).
+5. **Add Studio structure** (optional, only if the type needs a custom desk structure) — update `sanity.config.ts` if the type is a singleton (singletons need `S.document()` views rather than list items, plus an entry in the `singletons` set so the "create" template is filtered out).
 
-6. **Summarize** what was created and remind the user to run `npx sanity@latest dev` to verify the schema in Sanity Studio.
+6. **Summarize** what was created and remind the user that the Studio is hosted by Sanity: run `npx sanity dev` to verify the schema locally (http://localhost:3333), then `npx sanity deploy` to publish it to `ascension-parish.sanity.studio`. If a new document type was added, also update the Sanity webhook's GROQ filter (see `memory/project_webhook_filter_sync.md`).

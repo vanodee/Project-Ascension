@@ -10,7 +10,7 @@ Catholic Church of the Ascension parish website — a greenfield Next.js project
 
 - **Framework:** Next.js (App Router)
 - **Styling:** SCSS Modules
-- **CMS:** Sanity (Studio + API)
+- **CMS:** Sanity. The Studio is **hosted by Sanity** at `ascension-parish.sanity.studio` (deployed via `npx sanity deploy`) — it is not embedded in the Next app. `sanity` + `@sanity/vision` are devDependencies (CLI/typegen tooling); `sanity.config.ts` and `sanity.cli.ts` are loaded only by the Sanity CLI. Redeploy the Studio after any schema or `sanity.config.ts` change; its bundle otherwise auto-updates.
 - **Media:** Sanity native asset pipeline (images, audio via `cdn.sanity.io`); YouTube (embedded video)
 - **Payments:** Paystack (popup JS, not redirect) — the `/give` route and its nav links are currently disabled (`notFound()` in `app/(site)/give/page.tsx`); remove the guard to re-enable
 - **Calendar:** Google Calendar API (public calendar, API key auth)
