@@ -153,6 +153,7 @@
 
 .readings__psalm-refrain {
   @include body-base-italic;
+  font-weight: 600;
   color: var(--text-primary);
   padding: var(--space-sm) var(--space-md);
   border-left: 2px solid var(--border-medium);

@@ -18,8 +18,8 @@ export const metadata: Metadata = {
 const READING_ICONS: Record<string, string> = {
   'First Reading': '/icons/reading-bible.svg',
   'Responsorial Psalm': '/icons/reading-harp.svg',
-  'Second Reading': '/icons/reading-cross.svg',
-  'Gospel': '/icons/reading-bible.svg',
+  'Second Reading': '/icons/reading-bible.svg',
+  'Gospel': '/icons/reading-cross.svg',
 };
 
 export default async function ReadingsPage(): Promise<React.JSX.Element> {
