@@ -719,7 +719,8 @@
 .clergy__avatar-frame {
   position: relative;
   width: 100%;
-  aspect-ratio: 270 / 369;
+  // Matches the clergy page grid — photos crop to a 3:4 portrait frame.
+  aspect-ratio: 3 / 4;
   overflow: hidden;
   border-radius: var(--radius-base);
   background-color: var(--background-inverse);

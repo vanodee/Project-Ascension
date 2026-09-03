@@ -48,7 +48,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: ReactNode }>): React.JSX.Element {
   return (
-    <html lang="en" className={`${cinzel.variable} ${lora.variable}`}>
+    <html lang="en" data-scroll-behavior="smooth" className={`${cinzel.variable} ${lora.variable}`}>
       <body>{children}</body>
     </html>
   );

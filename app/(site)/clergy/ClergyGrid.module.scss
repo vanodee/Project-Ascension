@@ -59,7 +59,9 @@
 .grid__avatar-frame {
   position: relative;
   width: 100%;
-  aspect-ratio: 270 / 369;
+  // Every card crops its photo to this portrait frame so real and placeholder
+  // images stay uniform. Export clergy photos at 3:4 (e.g. 900 × 1200).
+  aspect-ratio: 3 / 4;
   overflow: hidden;
   border-radius: var(--radius-base);
   background-color: var(--background-inverse);
