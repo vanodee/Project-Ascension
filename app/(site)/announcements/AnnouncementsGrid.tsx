@@ -160,10 +160,7 @@ export default function AnnouncementsGrid({
                     />
                   </div>
                 )}
-                <div
-                  className={styles.card__logo}
-                  style={{ borderColor: announcement.society.color }}
-                >
+                <div className={styles.card__logo}>
                   <Image
                     src={announcement.society.logo}
                     alt=""

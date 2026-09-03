@@ -11,7 +11,7 @@ import { getAnnouncements } from '@/lib/announcements';
 import { getHomilies } from '@/lib/homilies';
 import { getClergy } from '@/lib/clergy';
 import { getAlbums } from '@/lib/gallery';
-import { formatDate, formatDuration } from '@/lib/format';
+import { formatDuration } from '@/lib/format';
 import { toPlainText } from '@/lib/portableText';
 import HomeAnnouncementCard from './HomeAnnouncementCard';
 import HomeAnnouncementsSection from './HomeAnnouncementsSection';
@@ -73,7 +73,6 @@ export default async function HomePage(): Promise<React.JSX.Element> {
           className={styles['hero__bg-image']}
         />
         <div className={styles['hero__text-group']}>
-          <p className={styles.hero__eyebrow}>Parish of the Archdiocese of Lagos</p>
           <h1 className={styles.hero__title}>
             Catholic Church
             <br />
@@ -229,9 +228,14 @@ export default async function HomePage(): Promise<React.JSX.Element> {
                   />
                 </div>
                 <div className={styles['readings__gospel-info']}>
-                  <p className={styles['readings__gospel-label']}>Gospel</p>
-                  <p className={styles['readings__gospel-reference']}>{gospel.reference}</p>
-                  <p className={styles['readings__gospel-excerpt']}>{gospel.excerpt}</p>
+                  <span className={styles['readings__gospel-icon']}>
+                    <Image src="/icons/reading-cross.svg" alt="" width={72} height={72} />
+                  </span>
+                  <div className={styles['readings__gospel-text']}>
+                    <p className={styles['readings__gospel-label']}>Gospel</p>
+                    <p className={styles['readings__gospel-reference']}>{gospel.reference}</p>
+                    <p className={styles['readings__gospel-excerpt']}>{gospel.excerpt}</p>
+                  </div>
                 </div>
               </div>
             ) : null}
@@ -276,31 +280,32 @@ export default async function HomePage(): Promise<React.JSX.Element> {
         />
       </section>
 
-      {/* ---------- Support the mission ---------- */}
+      {/* ---------- Discover the parish ---------- */}
       <section className={styles.support}>
         <div className={styles.support__content}>
-          <p className={styles.support__eyebrow}>Stewardship &amp; Giving</p>
+          <p className={styles.support__eyebrow}>Welcome to Ascension</p>
           <h2 className={styles.support__title}>
-            Support the Mission
-            <br />
-            of the Parish
+            Discover the Life of Our Parish
           </h2>
           <p className={styles.support__text}>
-            Your generosity sustains the life and ministry of our parish community, from the
-            celebration of the sacraments to outreach for those most in need. Every gift,
-            great or small, is an act of worship.
+            Drawn from every corner of Nigeria and beyond, the Catholic Church of the
+            Ascension is a community shaped by the liturgy we celebrate, the disciples we
+            form, and the charity we practise. Learn about our history, our patrons, and
+            the many societies that carry the life of the parish.
           </p>
-          <Button href="/give" variant="primary" size="lg">
-            Make a Donation
+          <Button href="/about" variant="primary" size="lg">
+            Learn More About Us
           </Button>
         </div>
-        <Image
-          src="/icons/ascension_logo_light.svg"
-          alt=""
-          width={353}
-          height={351}
-          className={styles.support__watermark}
-        />
+        <div className={styles.support__image}>
+          <Image
+            src="/images/church_w_logo.png"
+            alt="Catholic Church of the Ascension building"
+            fill
+            sizes="(min-width: 768px) 400px, 100vw"
+            className={styles['support__image-img']}
+          />
+        </div>
       </section>
 
       {/* ---------- Our clergy ---------- */}
@@ -369,6 +374,20 @@ export default async function HomePage(): Promise<React.JSX.Element> {
                 index === 0 ? styles['gallery__item--large'] : ''
               }`}
             >
+              <span className={styles.gallery__badge}>
+                <span
+                  className={styles['gallery__badge-pill']}
+                  style={{ backgroundColor: album.society.color }}
+                >
+                  <Image
+                    src={album.society.logo}
+                    alt=""
+                    fill
+                    sizes="60px"
+                    className={styles['gallery__badge-img']}
+                  />
+                </span>
+              </span>
               <Image
                 src={album.coverImage}
                 alt={album.description}
@@ -376,9 +395,7 @@ export default async function HomePage(): Promise<React.JSX.Element> {
                 sizes={index === 0 ? '(min-width: 1024px) 700px, 100vw' : '(min-width: 1024px) 350px, 50vw'}
                 className={styles.gallery__photo}
               />
-              <span className={styles.gallery__caption}>
-                {album.title} — {formatDate(album.eventDate)}
-              </span>
+              <span className={styles.gallery__caption}>{album.title}</span>
             </Link>
           ))}
         </div>
