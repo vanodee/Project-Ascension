@@ -12,51 +12,6 @@ export const metadata: Metadata = {
     'The history and mission of the Catholic Church of the Ascension, MMIA, Ikeja, Lagos — a parish of the Catholic Archdiocese of Lagos.',
 };
 
-interface Milestone {
-  year: string;
-  title: string;
-  tag: string;
-  description: string;
-}
-
-const milestones: Milestone[] = [
-  {
-    year: '1962',
-    title: 'A Chapel at the Airport',
-    tag: 'Ikeja',
-    description:
-      'A small chapel is established to serve Catholic travellers and workers at the Lagos international airport, with Mass said by visiting priests.',
-  },
-  {
-    year: '1978',
-    title: 'Parish Erected',
-    tag: 'Lagos',
-    description:
-      'The chaplaincy is formally erected as a parish of the Archdiocese of Lagos under the title of the Ascension of the Lord.',
-  },
-  {
-    year: '1994',
-    title: 'The Present Church',
-    tag: 'Ascension',
-    description:
-      'The present church building is solemnly dedicated to the Ascension of Our Lord. Doors opened to the whole community of Ikeja — a house of prayer for God and for His glory.',
-  },
-  {
-    year: '2010',
-    title: 'Parish Societies Flourish',
-    tag: 'Community',
-    description:
-      'The parish grows to host over twenty societies and pious organisations, from the Legion of Mary to the Young Catholic Professionals.',
-  },
-  {
-    year: '2024',
-    title: 'Renovation Begins',
-    tag: 'Growth',
-    description:
-      'A two-phase renovation of the church and parish grounds begins, sustained entirely by the generosity of parishioners.',
-  },
-];
-
 export default async function AboutPage(): Promise<React.JSX.Element> {
   const aboutPage = await getAboutPage();
 
@@ -65,9 +20,8 @@ export default async function AboutPage(): Promise<React.JSX.Element> {
 
       <PageHeader
         eyebrow="Our Parish"
-        title={aboutPage.title}
+        title="About Us"
         description="A community of faith, worship, and service in the heart of Ikeja, Lagos — gathered around the altar of the Ascended Lord."
-        image={aboutPage.heroImage}
       />
 
       <div className={styles.about__content}>
@@ -106,32 +60,30 @@ export default async function AboutPage(): Promise<React.JSX.Element> {
                 },
               }}
             />
-            <blockquote className={styles['about__history-scripture']}>
-              <p className={styles['about__history-scripture-text']}>
-                "God's love has been poured into our hearts through the Holy Spirit who has been given
-                to us."
-              </p>
-              <cite className={styles['about__history-scripture-ref']}>Romans 5:5</cite>
-            </blockquote>
+            {aboutPage.scriptureQuote ? (
+              <blockquote className={styles['about__history-scripture']}>
+                <p className={styles['about__history-scripture-text']}>
+                  &ldquo;{aboutPage.scriptureQuote.text}&rdquo;
+                </p>
+                <cite className={styles['about__history-scripture-ref']}>
+                  {aboutPage.scriptureQuote.reference}
+                </cite>
+              </blockquote>
+            ) : null}
           </div>
         </section>
 
         {/* ── Stats ────────────────────────────────────────────────────────── */}
-        <div className={styles.about__stats} aria-label="Parish statistics">
-          {(
-            [
-              { value: '1962', label: 'Founded' },
-              { value: '1,000+', label: 'Seats at Mass' },
-              { value: '20+', label: 'Societies & Ministries' },
-              { value: '1000s', label: 'Families Served' },
-            ] as const
-          ).map((stat) => (
-            <div key={stat.label} className={styles['about__stat']}>
-              <p className={styles['about__stat-value']}>{stat.value}</p>
-              <p className={styles['about__stat-label']}>{stat.label}</p>
-            </div>
-          ))}
-        </div>
+        {aboutPage.stats.length > 0 ? (
+          <div className={styles.about__stats} aria-label="Parish statistics">
+            {aboutPage.stats.map((stat) => (
+              <div key={stat._key} className={styles['about__stat']}>
+                <p className={styles['about__stat-value']}>{stat.value}</p>
+                <p className={styles['about__stat-label']}>{stat.label}</p>
+              </div>
+            ))}
+          </div>
+        ) : null}
 
         {/* ── Mission ──────────────────────────────────────────────────────── */}
         <section className={styles.about__mission} aria-label="Parish mission statement">
@@ -147,75 +99,47 @@ export default async function AboutPage(): Promise<React.JSX.Element> {
         </section>
 
         {/* ── Timeline ─────────────────────────────────────────────────────── */}
-        <section className={styles.about__timeline}>
-          <header className={styles['about__timeline-head']}>
-            <p className={styles['about__timeline-eyebrow']}>Through the Years</p>
-            <h2 className={styles['about__timeline-title']}>Key Milestones</h2>
-          </header>
-          <div className={styles['about__tl-track']}>
-            <div className={styles['about__tl-axis']} aria-hidden="true" />
-            {milestones.map((milestone, i) => (
-              <div
-                key={milestone.year}
-                className={`${styles['about__tl-row']} ${
-                  i % 2 !== 0 ? styles['about__tl-row--flip'] : ''
-                }`}
-              >
-                {/* Date side (desktop only) */}
-                <div className={styles['about__tl-date-side']}>
-                  <div className={styles['about__tl-pill']}>
-                    <span className={styles['about__tl-year']}>{milestone.year}</span>
+        {aboutPage.milestones.length > 0 ? (
+          <section className={styles.about__timeline}>
+            <header className={styles['about__timeline-head']}>
+              <p className={styles['about__timeline-eyebrow']}>Through the Years</p>
+              <h2 className={styles['about__timeline-title']}>Key Milestones</h2>
+            </header>
+            <div className={styles['about__tl-track']}>
+              <div className={styles['about__tl-axis']} aria-hidden="true" />
+              {aboutPage.milestones.map((milestone, i) => (
+                <div
+                  key={milestone._key}
+                  className={`${styles['about__tl-row']} ${
+                    i % 2 !== 0 ? styles['about__tl-row--flip'] : ''
+                  }`}
+                >
+                  {/* Date side (desktop only) */}
+                  <div className={styles['about__tl-date-side']}>
+                    <div className={styles['about__tl-pill']}>
+                      <span className={styles['about__tl-year']}>{milestone.year}</span>
+                    </div>
+                  </div>
+
+                  {/* Axis node */}
+                  <div className={styles['about__tl-node']} aria-hidden="true" />
+
+                  {/* Content side */}
+                  <div className={styles['about__tl-content-side']}>
+                    <p className={styles['about__tl-mobile-year']}>{milestone.year}</p>
+                    <div className={styles['about__tl-title-row']}>
+                      <h3 className={styles['about__tl-item-title']}>{milestone.title}</h3>
+                      <span className={styles['about__tl-tag']}>{milestone.tag}</span>
+                    </div>
+                    <div className={styles['about__tl-card']}>
+                      <p className={styles['about__tl-text']}>{milestone.description}</p>
+                    </div>
                   </div>
                 </div>
-
-                {/* Axis node */}
-                <div className={styles['about__tl-node']} aria-hidden="true" />
-
-                {/* Content side */}
-                <div className={styles['about__tl-content-side']}>
-                  <p className={styles['about__tl-mobile-year']}>{milestone.year}</p>
-                  <div className={styles['about__tl-title-row']}>
-                    <h3 className={styles['about__tl-item-title']}>{milestone.title}</h3>
-                    <span className={styles['about__tl-tag']}>{milestone.tag}</span>
-                  </div>
-                  <div className={styles['about__tl-card']}>
-                    <p className={styles['about__tl-text']}>{milestone.description}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* ── Parish Life ──────────────────────────────────────────────────── */}
-        <section className={styles['about__life']}>
-          <header className={styles['about__life-head']}>
-            <p className={styles['about__life-eyebrow']}>Parish Life</p>
-            <h2 className={styles['about__life-title']}>One Family in Christ</h2>
-          </header>
-          <div className={styles['about__life-grid']}>
-            {(
-              [
-                { src: '/images/gallery-1.jpg', caption: 'After Sunday Mass' },
-                { src: '/images/gallery-2.jpg', caption: 'Feast Day Celebrations' },
-                { src: '/images/gallery-3.jpg', caption: 'Societies & Ministries' },
-              ] as const
-            ).map(({ src, caption }) => (
-              <div key={caption} className={styles['about__life-tile']}>
-                <Image
-                  src={src}
-                  alt={caption}
-                  fill
-                  sizes="(min-width: 1280px) 415px, (min-width: 768px) 33vw, 100vw"
-                  className={styles['about__life-photo']}
-                />
-                <div className={styles['about__life-cap']}>
-                  <p className={styles['about__life-caption']}>{caption}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
+              ))}
+            </div>
+          </section>
+        ) : null}
 
         {/* ── CTA Card ─────────────────────────────────────────────────────── */}
         <div className={styles['about__cta']}>

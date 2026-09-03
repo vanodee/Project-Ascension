@@ -124,11 +124,26 @@ export interface SacramentPage {
   tallyFormId?: string;
 }
 
-export interface AboutPage {
+export interface AboutMilestone {
+  _key: string;
+  year: string;
   title: string;
-  heroImage: string;
-  missionStatement: string;
+  tag: string;
+  description: string;
+}
+
+export interface AboutStat {
+  _key: string;
+  value: string;
+  label: string;
+}
+
+export interface AboutPage {
   body: PortableTextBlock[];
+  scriptureQuote: { text: string; reference: string } | null;
+  stats: AboutStat[];
+  missionStatement: string;
+  milestones: AboutMilestone[];
 }
 
 export interface DonationCategory {

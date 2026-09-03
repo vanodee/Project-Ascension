@@ -222,9 +222,10 @@ export const PARISH_EVENTS_QUERY = /* groq */ `
 
 export const ABOUT_PAGE_QUERY = /* groq */ `
   *[_type == "aboutPage"][0] {
-    title,
-    heroImage,
+    body,
+    scriptureQuote,
+    stats[] { _key, value, label },
     missionStatement,
-    body
+    milestones[] { _key, year, title, tag, description }
   }
 `;

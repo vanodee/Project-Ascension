@@ -778,15 +778,9 @@ async function seedSiteSettings(): Promise<void> {
 
 async function seedAboutPage(): Promise<void> {
   console.log('Seeding about page...');
-  const heroImage = await imageField(
-    '/images/hero-bg.png',
-    'The Catholic Church of the Ascension, Ikeja, Lagos',
-  );
   await client.createIfNotExists({
     _id: 'aboutPage',
     _type: 'aboutPage',
-    title: 'About Us',
-    heroImage,
     missionStatement:
       'To worship God in spirit and in truth, to form disciples of the Ascended Lord, and to serve every person who passes through our doors — for God and for His glory.',
     body: portableText([
@@ -794,6 +788,53 @@ async function seedAboutPage(): Promise<void> {
       'The Catholic Church of the Ascension began as a small chapel serving travellers and workers at the Murtala Muhammed International Airport, Ikeja. Today our parish family numbers in the thousands — drawn from every corner of Nigeria and beyond, reflecting the journeys that pass daily through this part of Lagos.',
       'We take our name from the Ascension of Our Lord — the mystery in which Christ, lifted up in glory, sends His Church into the world. That commission shapes everything we do: the liturgy we celebrate, the disciples we form, and the charity we practise.',
     ]),
+    scriptureQuote: {
+      text: "God's love has been poured into our hearts through the Holy Spirit who has been given to us.",
+      reference: 'Romans 5:5',
+    },
+    stats: [
+      { value: '1962', label: 'Founded' },
+      { value: '1,000+', label: 'Seats at Mass' },
+      { value: '20+', label: 'Societies & Ministries' },
+      { value: '1000s', label: 'Families Served' },
+    ].map((s) => ({ _key: key(), ...s })),
+    milestones: [
+      {
+        year: '1962',
+        title: 'A Chapel at the Airport',
+        tag: 'Ikeja',
+        description:
+          'A small chapel is established to serve Catholic travellers and workers at the Lagos international airport, with Mass said by visiting priests.',
+      },
+      {
+        year: '1978',
+        title: 'Parish Erected',
+        tag: 'Lagos',
+        description:
+          'The chaplaincy is formally erected as a parish of the Archdiocese of Lagos under the title of the Ascension of the Lord.',
+      },
+      {
+        year: '1994',
+        title: 'The Present Church',
+        tag: 'Ascension',
+        description:
+          'The present church building is solemnly dedicated to the Ascension of Our Lord. Doors opened to the whole community of Ikeja — a house of prayer for God and for His glory.',
+      },
+      {
+        year: '2010',
+        title: 'Parish Societies Flourish',
+        tag: 'Community',
+        description:
+          'The parish grows to host over twenty societies and pious organisations, from the Legion of Mary to the Young Catholic Professionals.',
+      },
+      {
+        year: '2024',
+        title: 'Renovation Begins',
+        tag: 'Growth',
+        description:
+          'A two-phase renovation of the church and parish grounds begins, sustained entirely by the generosity of parishioners.',
+      },
+    ].map((m) => ({ _key: key(), ...m })),
   });
   console.log('  About Page');
 }

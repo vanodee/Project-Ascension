@@ -40,7 +40,7 @@ Catholic Church of the Ascension parish website — a greenfield Next.js project
 
 ## Sanity Schema Document Types
 
-- `aboutPage` — singleton
+- `aboutPage` — singleton (`body` history Portable Text, `scriptureQuote` `{text, reference}`, `stats[]` `{value, label}` max 4, `missionStatement`, `milestones[]` `{year, title, tag, description}`; page title + hero are hard-coded in `app/(site)/about/page.tsx`)
 - `clergyMember` — collection
 - `society` — collection (parish zones, organizations, and ministries; `name`, `shortName`, `color`, `societyType` enum, `logo` image; optional `subtitle`, `slogan` (`{greeting, response}`), `description` (Portable Text), and a "Key Details" fieldset — `zonePatron`, `established`, `meetingDay`, `zoneLeader`, `contact` (string arrays); referenced by `announcement` and `galleryAlbum` — use the "Ascension Family" entry for parish-wide content not tied to one society)
 - `announcement` — collection (required `society` reference, optional `expiresAt` and `pinned`; no `category` field; detail view renders as a modal opened from `/announcements`, not a `[slug]` route)
