@@ -5,7 +5,6 @@ import homily from './homily'
 import galleryAlbum from './galleryAlbum'
 import sacramentPage from './sacramentPage'
 import aboutPage from './aboutPage'
-import donationCategory from './donationCategory'
 import siteSettings from './siteSettings'
 import recurringEvent from './recurringEvent'
 import parishEvent from './parishEvent'
@@ -18,7 +17,6 @@ export const schemaTypes = [
   galleryAlbum,
   sacramentPage,
   aboutPage,
-  donationCategory,
   siteSettings,
   recurringEvent,
   parishEvent,

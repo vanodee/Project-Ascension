@@ -154,14 +154,6 @@ export const SACRAMENT_PAGES_QUERY = /* groq */ `
   }
 `;
 
-export const DONATION_CATEGORIES_QUERY = /* groq */ `
-  *[_type == "donationCategory"] | order(_createdAt asc) {
-    id,
-    label,
-    description
-  }
-`;
-
 export const SITE_SETTINGS_QUERY = /* groq */ `
   *[_type == "siteSettings"][0] {
     parishName,

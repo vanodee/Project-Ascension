@@ -662,27 +662,6 @@ async function seedGallery(societyIds: Map<string, string>): Promise<void> {
   }
 }
 
-async function seedDonationCategories(): Promise<void> {
-  console.log('Seeding donation categories...');
-  const categories = [
-    { id: 'general-offering', label: 'General Offering', description: 'Supports the day-to-day life and ministry of the parish.' },
-    { id: 'building-fund', label: 'Building Fund', description: 'Funds the ongoing renovation and expansion of the church buildings.' },
-    { id: 'charity', label: 'Charity & Outreach', description: 'Feeds and supports the poor through the Society of St. Vincent de Paul.' },
-    { id: 'thanksgiving', label: 'Thanksgiving', description: 'An offering of gratitude for blessings received.' },
-    { id: 'mass-intentions', label: 'Mass Intentions', description: 'Offerings for Masses to be said for your intentions.' },
-  ];
-  for (const c of categories) {
-    await client.createIfNotExists({
-      _id: `donation-${c.id}`,
-      _type: 'donationCategory',
-      id: c.id,
-      label: c.label,
-      description: c.description,
-    });
-    console.log(`  ${c.label}`);
-  }
-}
-
 // Lagos "YYYY-MM-DD", N days from the seed run.
 function scheduleDate(offsetDays: number): string {
   return new Date(Date.now() + offsetDays * 86_400_000).toLocaleDateString('en-CA', {
@@ -847,7 +826,6 @@ async function main(): Promise<void> {
   await seedAnnouncements(societyIds);
   await seedHomilies(clergyIds);
   await seedGallery(societyIds);
-  await seedDonationCategories();
   await seedSchedule();
   await seedSiteSettings();
   await seedAboutPage();

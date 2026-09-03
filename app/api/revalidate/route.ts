@@ -63,8 +63,6 @@ function pathsToRevalidate(type: string, slug?: string): string[] {
       // Society name/logo is embedded via dereference on announcement & gallery cards,
       // and listed directly on the Societies page.
       return ['/', '/announcements', '/gallery', '/societies'];
-    case 'donationCategory':
-      return ['/give'];
     case 'recurringEvent':
     case 'parishEvent':
       // Mass/Confession times are derived from the schedule on the home, contact,

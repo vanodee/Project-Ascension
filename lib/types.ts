@@ -146,12 +146,6 @@ export interface AboutPage {
   milestones: AboutMilestone[];
 }
 
-export interface DonationCategory {
-  id: string;
-  label: string;
-  description: string;
-}
-
 export interface PsalmLine {
   text: string;
   isRefrain: boolean;

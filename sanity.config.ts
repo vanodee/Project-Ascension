@@ -25,7 +25,6 @@ export default defineConfig({
             S.documentTypeListItem('homily').title('Homilies'),
             S.documentTypeListItem('galleryAlbum').title('Gallery Albums'),
             S.documentTypeListItem('sacramentPage').title('Sacrament Pages'),
-            S.documentTypeListItem('donationCategory').title('Donation Categories'),
             S.listItem()
               .title('Schedule')
               .child(
