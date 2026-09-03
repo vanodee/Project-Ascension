@@ -89,7 +89,7 @@ export default async function AboutPage(): Promise<React.JSX.Element> {
         <section className={styles.about__mission} aria-label="Parish mission statement">
           <div className={styles['about__mission-inner']}>
             <blockquote className={styles['about__mission-quote']}>
-              "{aboutPage.missionStatement}"
+              &ldquo;{aboutPage.missionStatement}&rdquo;
             </blockquote>
             <p className={styles['about__mission-attr']}>Parish Mission Statement</p>
           </div>
