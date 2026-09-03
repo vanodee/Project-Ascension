@@ -25,7 +25,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     }
 
     if (body._type === 'siteSettings') {
-      // Header/footer/mass times are shared across every (site) page via the layout.
+      // Header/footer contact details are shared across every (site) page via the layout.
       revalidatePath('/', 'layout');
       return NextResponse.json({ revalidated: true, paths: ['/ (layout)'], now: Date.now() });
     }
@@ -65,6 +65,11 @@ function pathsToRevalidate(type: string, slug?: string): string[] {
       return ['/', '/announcements', '/gallery', '/societies'];
     case 'donationCategory':
       return ['/give'];
+    case 'recurringEvent':
+    case 'parishEvent':
+      // Mass/Confession times are derived from the schedule on the home, contact,
+      // and livestream pages too.
+      return ['/schedule', '/', '/contact', '/livestream'];
     case 'aboutPage':
       return ['/about'];
     default:

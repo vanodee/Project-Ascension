@@ -172,8 +172,51 @@ export const SITE_SETTINGS_QUERY = /* groq */ `
     email,
     facebookUrl,
     instagramUrl,
-    youtubeChannelId,
-    massTimes
+    youtubeChannelId
+  }
+`;
+
+export const RECURRING_EVENTS_QUERY = /* groq */ `
+  *[_type == "recurringEvent" && active == true] {
+    _id,
+    title,
+    eventType,
+    location,
+    description,
+    frequency,
+    daysOfWeek,
+    monthlyOrdinal,
+    monthlyWeekday,
+    startMode,
+    anchorRelation,
+    "anchorId": anchorEvent._ref,
+    time,
+    durationMinutes,
+    startDate,
+    endDate,
+    overrides[] { date, mode, time, location, title, note }
+  }
+`;
+
+// $historyFrom is a Lagos "YYYY-MM-DD" string (~13 months before today) — one-off
+// events older than that are dropped to keep the payload lean. Recurring events
+// have no such floor. Includes multi-day events still in progress.
+export const PARISH_EVENTS_QUERY = /* groq */ `
+  *[_type == "parishEvent" && coalesce(endDate, startDate) >= $historyFrom]
+    | order(startDate asc) {
+    _id,
+    title,
+    eventType,
+    location,
+    description,
+    startDate,
+    endDate,
+    allDay,
+    startMode,
+    anchorRelation,
+    "anchorId": anchorEvent._ref,
+    startTime,
+    endTime
   }
 `;
 

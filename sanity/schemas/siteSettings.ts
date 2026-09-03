@@ -1,4 +1,4 @@
-import { defineArrayMember, defineField, defineType } from 'sanity'
+import { defineField, defineType } from 'sanity'
 
 export default defineType({
   name: 'siteSettings',
@@ -52,40 +52,6 @@ export default defineType({
       name: 'youtubeChannelId',
       title: 'YouTube Channel ID',
       type: 'string',
-    }),
-    defineField({
-      name: 'massTimes',
-      title: 'Mass Times',
-      type: 'array',
-      of: [
-        defineArrayMember({
-          type: 'object',
-          fields: [
-            defineField({
-              name: 'heading',
-              title: 'Heading',
-              type: 'string',
-              description: 'e.g. "Sundays" or "Weekdays"',
-              validation: (Rule) => Rule.required(),
-            }),
-            defineField({
-              name: 'times',
-              title: 'Times',
-              type: 'array',
-              of: [defineArrayMember({ type: 'string' })],
-              description: 'e.g. ["7:00 AM", "9:00 AM", "11:00 AM"]',
-            }),
-            defineField({
-              name: 'note',
-              title: 'Note',
-              type: 'string',
-            }),
-          ],
-          preview: {
-            select: { title: 'heading' },
-          },
-        }),
-      ],
     }),
   ],
   preview: {

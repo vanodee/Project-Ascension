@@ -109,14 +109,18 @@
 }
 
 // ---------- Mass times strip ----------
+// 1px grid gaps over a coloured backdrop draw the hairline dividers, so the
+// column count can change per breakpoint without border seams.
 
 .mass-times {
   display: grid;
   grid-template-columns: 1fr;
+  gap: 1px;
   width: 100%;
   overflow: hidden;
   border: 1px solid var(--border-default);
   border-radius: var(--radius-base);
+  background-color: var(--border-default);
 
   @include breakpoint($bp-md) {
     grid-template-columns: repeat(2, 1fr);
@@ -133,20 +137,11 @@
   justify-content: center;
   gap: var(--space-sm);
   padding: var(--space-xl) 20px;
-  border-bottom: 1px solid var(--border-default);
+  background-color: var(--background-page);
   color: var(--text-primary);
 
   @include breakpoint($bp-md) {
     padding: 40px 20px;
-    border-right: 1px solid var(--border-default);
-  }
-
-  @include breakpoint($bp-lg) {
-    border-bottom: none;
-  }
-
-  &:last-child {
-    border-bottom: none;
   }
 }
 

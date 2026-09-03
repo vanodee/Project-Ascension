@@ -14,7 +14,7 @@ Backlog of quality-of-life improvements to revisit later. Not scheduled — pick
 ## Announcements
 
 - [ ] **Surface `eventDate` on the list card itself** (small badge/line, same idea as Gallery's date-forward card design) — right now `eventDate`/`eventLocation` only show once you open an announcement's modal, so there's no way to scan the grid for "what's happening this weekend" without opening cards one by one.
-- [ ] **"Add to calendar" link** on event-type announcements (anything with `eventDate` set) — a simple `.ics` or "Add to Google Calendar" link, natural pairing with the parish's existing Google Calendar-based Parish Schedule feature.
+- [ ] **"Add to calendar" link** on event-type announcements (anything with `eventDate` set) — a simple `.ics` or "Add to Google Calendar" link. Would also pair well with the `/schedule` page's `parishEvent` entries.
 - [ ] **Sort/filter by `eventDate`** as an alternative to the default pinned/publishedAt order — for "what's coming up" browsing rather than "what was posted recently."
 - [ ] **Search includes society name** — right now the search box covers title/excerpt/location/body only; finding a society's announcements only works via the dedicated Society filter dropdown, not by typing the society's name into search. Low priority since the filter already covers this.
 

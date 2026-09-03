@@ -10,10 +10,9 @@ When asked to create a new page or route (or when `/new-page-route` is invoked w
 
 2. **Determine the rendering strategy** using this project's rules:
    - **SSG** (no `revalidate`): About, Sacraments, Clergy, Societies, Contact — content changes infrequently, managed in Sanity.
-   - **ISR 10 min** (`revalidate: 600`): Announcements, Homilies, Gallery.
-   - **ISR 1 hour** (`revalidate: 3600`): Parish Schedule (Google Calendar).
+   - **ISR 10 min** (`revalidate: 600`): Announcements, Homilies, Gallery, Parish Schedule.
    - **ISR next midnight**: Daily Readings (Universalis) — calculate seconds until next midnight for `revalidate`.
-   - **ISR 5 min** (`revalidate: 300`): Livestream.
+   - **ISR 1 min** (`revalidate: 60`): Livestream.
 
 3. **Create the page file** at `app/(site)/<route>/page.tsx` (all public pages live under the `(site)` route group, sharing its Header/Footer layout). Apply these conventions:
    - Default to Server Components — no `'use client'` unless the page genuinely needs it.

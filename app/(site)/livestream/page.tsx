@@ -2,33 +2,36 @@ import type { Metadata } from 'next';
 import PageHeader from '@/components/ui/PageHeader';
 import Button from '@/components/ui/Button';
 import { getLivestreamStatus } from '@/lib/livestream';
-import { getSiteSettings } from '@/lib/site';
+import { getLagosToday, getScheduleData } from '@/lib/schedule';
+import { getScheduleWeek } from '@/lib/calendar';
 import styles from './page.module.scss';
 
-// ISR — live status revalidates every 5 minutes (YouTube Data API v3, server-side).
-export const revalidate = 300;
+// ISR — live status revalidates every minute (keyless YouTube scrape, server-side).
+export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: 'Livestream',
   description:
-    'Watch Mass live from the Catholic Church of the Ascension, Ikeja, Lagos — or replay the most recent recorded Mass.',
+    'Watch live from the Catholic Church of the Ascension, Ikeja, Lagos — Sunday Mass, ordinations, and parish celebrations — or replay the most recent broadcast.',
 };
 
 export default async function LivestreamPage(): Promise<React.JSX.Element> {
-  const [stream, siteSettings] = await Promise.all([
+  const today = getLagosToday();
+  const [stream, scheduleData] = await Promise.all([
     getLivestreamStatus(),
-    getSiteSettings(),
+    getScheduleData(today),
   ]);
+  const week = getScheduleWeek(scheduleData, today);
 
   return (
     <div className={styles.livestream}>
       <PageHeader
         eyebrow="Join Us From Anywhere"
-        title="Mass Livestream"
+        title="Parish Livestream"
         description={
           stream.isLive
-            ? 'We are live now — join the celebration of Holy Mass.'
-            : 'We are not live at the moment. Watch the most recent Mass below, and join us at the next scheduled livestream.'
+            ? 'We are live now — join us in prayer and worship.'
+            : 'We are not live at the moment. Watch the most recent broadcast below, and join us for the next celebration.'
         }
       />
 
@@ -40,7 +43,7 @@ export default async function LivestreamPage(): Promise<React.JSX.Element> {
           </p>
         ) : (
           <p className={`${styles.livestream__badge} ${styles['livestream__badge--recorded']}`}>
-            Most Recent Mass
+            Most Recent Broadcast
           </p>
         )}
         <div className={styles.livestream__frame}>
@@ -58,26 +61,27 @@ export default async function LivestreamPage(): Promise<React.JSX.Element> {
       <section className={styles.livestream__info}>
         <div className={styles['livestream__info-block']}>
           <p className={styles['livestream__info-label']}>When We Stream</p>
-          {siteSettings.massTimes
-            .filter((group) => group.heading !== 'Location')
-            .map((group) => (
-              <div key={group.heading} className={styles['livestream__mass-group']}>
-                <p className={styles['livestream__mass-heading']}>{group.heading}</p>
-                {group.times.map((time) => (
-                  <p key={time} className={styles['livestream__mass-time']}>
-                    {time}
-                  </p>
-                ))}
-              </div>
+          <div className={styles['livestream__mass-group']}>
+            <p className={styles['livestream__mass-heading']}>{week.sundayLabel}</p>
+            {week.sundayMasses.map((mass) => (
+              <p key={`${mass.title}-${mass.time}`} className={styles['livestream__mass-time']}>
+                {mass.title} · {mass.time}
+              </p>
             ))}
+          </div>
         </div>
         <div className={styles['livestream__info-block']}>
           <p className={styles['livestream__info-label']}>Joining Virtually</p>
           <p className={styles['livestream__info-text']}>
-            Prepare a quiet place, light a candle if you can, and unite your prayer with
-            the parish community. While a televised Mass does not replace the Sunday
-            obligation for those able to attend, it is a true means of grace for the
-            homebound and those far from home.
+            Find a quiet place, set aside what can wait, and join your prayer to the
+            community gathered in the church. However you are watching — Sunday Mass, an
+            ordination, a night of praise — you are welcome, and you are not praying alone.
+          </p>
+          <p className={styles['livestream__info-text']}>
+            For Sunday Mass in particular: a livestream does not fulfil the obligation to
+            attend in person for those who are able, but it is a true means of grace for
+            the homebound, the sick, and those far from home. Light a candle if you can,
+            and keep the prayerful attention you would bring to the pew.
           </p>
           <Button href="/schedule" variant="outline" size="sm">
             View Full Schedule →

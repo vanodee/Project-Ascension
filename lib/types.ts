@@ -174,10 +174,18 @@ export interface CalendarEvent {
   id: string;
   title: string;
   type: CalendarEventType;
+  /** Lagos calendar date, "YYYY-MM-DD" — the grouping/bucketing key for both views. */
+  date: string;
   start: string;
-  end: string;
+  /** Omitted when the source event has no set duration / end time. */
+  end?: string;
   location: string;
   description: string;
+  allDay?: boolean;
+  /** Present when a recurring occurrence was adjusted via a "modified" exception. */
+  note?: string;
+  /** Human hint for an event whose start follows another event, e.g. "After Sunday Second Mass". */
+  relativeTo?: string;
 }
 
 export interface LivestreamStatus {
@@ -185,12 +193,6 @@ export interface LivestreamStatus {
   videoId: string;
   title: string;
   viewerCount?: number;
-}
-
-export interface MassTimeGroup {
-  heading: string;
-  times: string[];
-  note: string;
 }
 
 export interface SiteSettings {
@@ -203,5 +205,4 @@ export interface SiteSettings {
   facebookUrl: string;
   instagramUrl: string;
   youtubeChannelId: string;
-  massTimes: MassTimeGroup[];
 }

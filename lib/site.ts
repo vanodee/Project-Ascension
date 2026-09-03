@@ -16,28 +16,6 @@ const FALLBACK_SITE_SETTINGS: SiteSettings = {
   facebookUrl: 'https://facebook.com/ascensioncatholicikeja',
   instagramUrl: 'https://instagram.com/ascensioncatholicikeja',
   youtubeChannelId: 'UCascensionikeja',
-  massTimes: [
-    {
-      heading: "This Sunday's Masses",
-      note: 'First Mass begins at the Chapel',
-      times: ['7:00 am • First Mass', '9:00 am • Second Mass'],
-    },
-    {
-      heading: 'Masses This Week',
-      note: 'First Mass begins at the Chapel',
-      times: ['7:00 am • Monday – Saturday', '12:00 pm • Monday – Saturday'],
-    },
-    {
-      heading: 'Confession',
-      note: 'And by appointment with any priest',
-      times: ['4:00 pm • Saturdays'],
-    },
-    {
-      heading: 'Location',
-      note: 'Near the International Airport main gate',
-      times: ['MMIA, Ikeja, Lagos.'],
-    },
-  ],
 };
 
 export async function getSiteSettings(): Promise<SiteSettings> {

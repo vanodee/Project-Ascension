@@ -9,6 +9,8 @@
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "seed": "tsx scripts/seed.ts"
   },
   "dependencies": {
@@ -31,6 +33,7 @@
     "sanity": "^6.12.0",
     "sass": "^1.89.0",
     "tsx": "^4.23.12",
-    "typescript": "^5.8.0"
+    "typescript": "^5.8.0",
+    "vitest": "^3.2.4"
   }
 }

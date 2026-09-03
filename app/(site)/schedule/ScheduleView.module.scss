@@ -17,27 +17,18 @@
 
   @include breakpoint($bp-lg) {
     flex-direction: row;
-    align-items: center;
+    align-items: flex-end;
     justify-content: space-between;
   }
 }
 
-.schedule__filters,
 .schedule__view-toggle {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-sm);
 }
 
-.schedule__view-toggle {
-  display: none;
-
-  @include breakpoint($bp-md) {
-    display: flex;
-  }
-}
-
-.schedule__filter {
+.schedule__view-btn {
   @include label-md;
   padding: var(--space-2xs) var(--space-md);
   border: 1px solid var(--button-ghost-inverse-border);
@@ -50,10 +41,59 @@
   }
 }
 
-.schedule__filter--active {
+.schedule__view-btn--active {
   background-color: var(--background-inverse);
   border-color: var(--background-inverse);
   color: var(--text-inverse);
+}
+
+// Event-type filter — a dropdown, matching the homily archive's select pattern.
+.schedule__filter-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.schedule__filter-label {
+  @include label-md;
+  color: var(--text-primary);
+}
+
+.schedule__select-wrap {
+  position: relative;
+  display: block;
+  min-width: 220px;
+}
+
+.schedule__select {
+  @include body-base;
+  width: 100%;
+  height: 44px;
+  padding-inline: var(--space-sm) calc(var(--space-sm) + 22px);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-base);
+  background-color: var(--background-page);
+  color: var(--text-primary);
+  box-sizing: border-box;
+  appearance: none;
+}
+
+.schedule__select-chevron {
+  position: absolute;
+  top: 50%;
+  right: var(--space-sm);
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-right: 1.5px solid var(--border-medium);
+  border-bottom: 1.5px solid var(--border-medium);
+  transform: translateY(-70%) rotate(45deg);
+  transition: transform 0.15s ease;
+  pointer-events: none;
+}
+
+.schedule__select-chevron--open {
+  transform: translateY(-30%) rotate(225deg);
 }
 
 // ---------- List view ----------
@@ -79,7 +119,8 @@
 
 .schedule__event {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
+  justify-content: space-between;
   gap: var(--space-md);
   width: 100%;
   padding: var(--space-md);
@@ -93,13 +134,6 @@
   }
 }
 
-.schedule__event-time {
-  @include label-md;
-  flex-shrink: 0;
-  width: 84px;
-  color: var(--border-medium);
-}
-
 .schedule__event-main {
   display: flex;
   flex-direction: column;
@@ -107,6 +141,13 @@
   flex: 1 1 auto;
   min-width: 0;
   color: var(--text-primary);
+}
+
+// Time sits above the title so a long relative label ("After Weekday Mass")
+// never has to share a line with it.
+.schedule__event-time {
+  @include label-md;
+  color: var(--border-medium);
 }
 
 .schedule__event-title {
@@ -127,25 +168,21 @@
   background-color: var(--decorative-watermark);
 }
 
-// Event-type colours follow the PRD's Google Calendar mapping.
-.schedule__badge--mass {
-  background-color: var(--liturgical-easter);
-}
+// Event-type colours follow the PRD's colour mapping. Shared by the list/detail
+// badges and the month-grid dots.
+$event-colours: (
+  mass: var(--liturgical-easter),
+  confession: #2e4359,
+  parish-event: var(--liturgical-ordinary),
+  meeting: var(--border-medium),
+  celebration: var(--liturgical-advent),
+);
 
-.schedule__badge--confession {
-  background-color: #2e4359;
-}
-
-.schedule__badge--parish-event {
-  background-color: var(--liturgical-ordinary);
-}
-
-.schedule__badge--meeting {
-  background-color: var(--border-medium);
-}
-
-.schedule__badge--celebration {
-  background-color: var(--liturgical-advent);
+@each $type, $colour in $event-colours {
+  .schedule__badge--#{$type},
+  .schedule__dot--#{$type} {
+    background-color: $colour;
+  }
 }
 
 .schedule__empty {
@@ -163,8 +200,36 @@
   gap: var(--space-md);
 }
 
+// Sits between the toolbar and the active view (month or list); the negative
+// bottom margin trims the parent's `xl` flex-gap down to a header-like `md`.
+.schedule__month-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-md);
+  margin-bottom: calc(var(--space-md) - var(--space-xl));
+}
+
+.schedule__month-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-base);
+  color: var(--border-medium);
+  transition: background-color 0.2s ease, color 0.2s ease;
+
+  &:hover {
+    background-color: rgba(213, 186, 148, 0.15);
+    color: var(--text-primary);
+  }
+}
+
 .schedule__month-label {
-  @include heading-2xl;
+  @include heading-xl;
+  min-width: 12ch;
+  text-align: center;
   color: var(--text-primary);
 }
 
@@ -177,7 +242,12 @@
 .schedule__month-weekday {
   @include label-md;
   padding: var(--space-xs);
+  text-align: center;
   color: var(--border-medium);
+
+  @include breakpoint($bp-md) {
+    text-align: left;
+  }
 }
 
 .schedule__month-grid {
@@ -189,10 +259,29 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-2xs);
-  min-height: 110px;
-  padding: var(--space-xs);
+  min-height: 64px;
+  padding: var(--space-2xs);
+  border: 0;
   border-right: 1px solid var(--border-subtle);
   border-bottom: 1px solid var(--border-subtle);
+  background-color: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+
+  @include breakpoint($bp-md) {
+    min-height: 110px;
+    padding: var(--space-xs);
+  }
+}
+
+.schedule__month-cell--active {
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: rgba(213, 186, 148, 0.15);
+  }
 }
 
 .schedule__month-cell--blank {
@@ -201,51 +290,61 @@
 
 .schedule__month-day {
   @include label-md;
+  align-self: flex-start;
   color: var(--text-primary);
 }
 
-.schedule__month-event {
-  @include body-sm-italic;
-  font-size: 12px;
-  overflow: hidden;
-  padding: 2px var(--space-2xs);
-  border-radius: var(--radius-base);
-  color: var(--text-inverse);
-  text-align: left;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.schedule__month-more {
-  @include body-sm-italic;
-  font-size: 12px;
-  color: var(--border-medium);
-}
-
-// ---------- Event detail modal ----------
-
-.schedule__modal {
-  position: fixed;
-  inset: 0;
-  z-index: 100;
+.schedule__month-cell--today .schedule__month-day {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--space-md);
-  background-color: rgba(47, 33, 15, 0.7);
+  width: 1.7em;
+  height: 1.7em;
+  border-radius: 999px;
+  background-color: var(--background-inverse);
+  color: var(--text-inverse);
 }
 
-.schedule__modal-inner {
+.schedule__month-dots {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: var(--space-sm);
-  width: min(520px, 100%);
-  padding: var(--space-xl);
-  border: 1px solid var(--border-default);
-  border-radius: var(--radius-base);
-  background-color: var(--background-page);
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 3px;
 }
+
+.schedule__dot {
+  // colour comes from the .schedule__dot--<type> modifier (see $event-colours);
+  // defined after that rule, so no base background-color here or it would win.
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+
+  @include breakpoint($bp-md) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.schedule__dot-letter {
+  display: none;
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--text-inverse);
+
+  @include breakpoint($bp-md) {
+    display: block;
+  }
+}
+
+// ---------- Overlay content ----------
+// The overlay shell (backdrop, panel, entry/exit animation, close button,
+// scroll-lock, focus-trap) lives in ScheduleOverlay + ScheduleOverlay.module.scss,
+// shared with the site's other overlays. Only the content styles are here.
 
 .schedule__modal-title {
   @include heading-xl;
@@ -254,7 +353,14 @@
 
 .schedule__modal-meta {
   @include body-base;
-  color: var(--border-medium);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-primary);
+}
+
+.schedule__modal-meta-icon {
+  flex-shrink: 0;
 }
 
 .schedule__modal-description {
@@ -262,16 +368,113 @@
   color: var(--text-primary);
 }
 
-.schedule__modal-close {
-  @include label-md;
-  align-self: flex-end;
-  padding: var(--space-2xs) var(--space-md);
-  border: 1px solid var(--border-default);
-  border-radius: var(--radius-base);
+.schedule__modal-note {
+  @include body-sm-italic;
+  padding: var(--space-sm) var(--space-md);
+  border-left: 2px solid var(--border-medium);
+  color: var(--text-secondary);
+}
+
+// Single-event modal (from list view)
+.schedule__event-modal {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-sm);
+}
+
+// Day-events modal (from month view)
+.schedule__day-modal-title {
+  @include heading-xl;
   color: var(--text-primary);
+}
+
+.schedule__day-modal-list {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.schedule__day-item {
+  border-top: 1px solid var(--border-subtle);
+
+  &:last-child {
+    border-bottom: 1px solid var(--border-subtle);
+  }
+}
+
+// Time stacked above the title at every width — relative labels ("After
+// Weekday Mass") are too long to sit inline.
+.schedule__day-item-header {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: start;
+  gap: var(--space-2xs) var(--space-sm);
+  width: 100%;
+  padding: var(--space-md) 0;
+  text-align: left;
+  color: var(--text-primary);
+  transition: color 0.2s ease;
 
   &:hover {
-    background-color: var(--background-inverse);
-    color: var(--text-inverse);
+    color: var(--border-medium);
+  }
+}
+
+.schedule__day-item-time {
+  @include label-md;
+  grid-column: 1;
+  grid-row: 1;
+  color: var(--border-medium);
+}
+
+.schedule__day-item-title {
+  @include heading-md;
+  grid-column: 1 / -1;
+  grid-row: 2;
+  min-width: 0;
+}
+
+.schedule__day-item-header .schedule__dot {
+  grid-column: 2;
+  grid-row: 1;
+  width: 10px;
+  height: 10px;
+  margin-top: 0.25em;
+}
+
+// Accordion — animate the height with a 0fr/1fr grid row, fade the body.
+.schedule__day-item-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.3s ease;
+}
+
+.schedule__day-item-panel--open {
+  grid-template-rows: 1fr;
+}
+
+.schedule__day-item-detail {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-xs);
+  min-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.schedule__day-item-panel--open .schedule__day-item-detail {
+  padding-bottom: var(--space-md);
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .schedule__day-item-panel,
+  .schedule__day-item-detail {
+    transition: none;
   }
 }

@@ -13,10 +13,10 @@ Catholic Church of the Ascension parish website — a greenfield Next.js project
 - **CMS:** Sanity. The Studio is **hosted by Sanity** at `ascension-parish.sanity.studio` (deployed via `npx sanity deploy`) — it is not embedded in the Next app. `sanity` + `@sanity/vision` are devDependencies (CLI/typegen tooling); `sanity.config.ts` and `sanity.cli.ts` are loaded only by the Sanity CLI. Redeploy the Studio after any schema or `sanity.config.ts` change; its bundle otherwise auto-updates.
 - **Media:** Sanity native asset pipeline (images, audio via `cdn.sanity.io`); YouTube (embedded video)
 - **Payments:** Paystack (popup JS, not redirect) — the `/give` route and its nav links are currently disabled (`notFound()` in `app/(site)/give/page.tsx`); remove the guard to re-enable
-- **Calendar:** Google Calendar API (public calendar, API key auth)
+- **Calendar:** Parish schedule managed in Sanity (`recurringEvent` + `parishEvent`, expanded to occurrences in `lib/calendar.ts`)
 - **Readings:** Universalis API (no auth required)
 - **Forms:** Tally.so (embed only, no backend)
-- **Livestream:** YouTube Data API v3 (server-side only)
+- **Livestream:** Keyless YouTube (server-side scrape of the channel `/live` page + `videos.xml` RSS feed; no Google Cloud project / API key)
 - **Email:** Resend (transactional — only if contact form goes native)
 - **Hosting:** Vercel
 
@@ -24,11 +24,12 @@ Catholic Church of the Ascension parish website — a greenfield Next.js project
 
 | Page | Strategy | Revalidation |
 |---|---|---|
-| Home, About, Sacraments, Clergy, Societies (list), Contact | SSG | Static |
+| About, Sacraments, Clergy, Societies (list) | SSG | Static |
 | Announcements, Homilies, Gallery, Societies (detail) | ISR | 10 minutes |
-| Parish Schedule (Google Calendar) | ISR | 1 hour |
+| Home, Contact | ISR | 10 min / 1 h; Mass-times blocks turn over at next Lagos midnight |
+| Parish Schedule | ISR | Next Lagos midnight (1 h backstop) |
 | Daily Readings (Universalis) | ISR | Next midnight |
-| Livestream | ISR | 5 minutes |
+| Livestream | ISR | 1 minute; Mass-times block turns over at next Lagos midnight |
 
 ## Coding Conventions
 
@@ -47,6 +48,8 @@ Catholic Church of the Ascension parish website — a greenfield Next.js project
 - `sacramentPage` — collection (7 pages: rcia, baptism, eucharist, confirmation, reconciliation, anointing, matrimony)
 - `galleryAlbum` — collection (required `society` reference; Sanity image assets; YouTube URL strings for video items; no `category` field)
 - `donationCategory` — config list
+- `recurringEvent` — collection (parish schedule: a repeating rule — `frequency` weekly/monthly, `daysOfWeek` or `monthlyOrdinal`+`monthlyWeekday`, optional `durationMinutes`, optional `startDate`/`endDate`, `active`; `overrides[]` array of `{date, mode: cancelled|modified, time?, location?, title?, note?}` for per-date exceptions. Start is either `startMode: 'fixed'` with `time` as a `"HH:MM"` Lagos string, or `startMode: 'follows'` with `anchorEvent` (reference) + `anchorRelation` (after|before|during) — the occurrence's start is derived from the anchor's occurrence on the same date). Expanded into occurrences by `lib/calendar.ts`.
+- `parishEvent` — collection (parish schedule: one-off dated event — `startDate`, optional `endDate` for multi-day, `allDay` toggle. Start is `startMode: 'fixed'` with `startTime`/`endTime` as `"HH:MM"` strings, or `startMode: 'follows'` with `anchorEvent` (reference to a `recurringEvent` or `parishEvent` on the same date) + `anchorRelation`)
 - `siteSettings` — singleton (parish name, contact info, social links, YouTube channel ID)
 
 ## Sanity Studio Deployment
@@ -70,8 +73,9 @@ whether the pushed commits touch `sanity/**`, `sanity.config.ts`, or
 | Paystack | Public key | Client-side (popup JS only) |
 | Universalis | None | Server-side fetch |
 | Tally.so | Embed ID | Client-side embed |
-| Google Calendar API | API Key | Server-side only |
-| YouTube Data API v3 | API Key | Server-side Route Handler only |
+| Parish schedule | None (Sanity content) | `lib/calendar.ts` |
+| YouTube (livestream) | None (public scrape + RSS) | Server-side fetch in `lib/livestream.ts` |
+| YouTube channel ID | Public | `NEXT_PUBLIC_YOUTUBE_CHANNEL_ID` |
 | Sanity | Project ID + Dataset = public; Token = private | Token server-side only |
 | Sanity Webhook | Shared secret | Server-side Route Handler only (`/api/revalidate`) |
 | Resend | API Key | Server-side only |
@@ -83,9 +87,6 @@ NEXT_PUBLIC_SANITY_PROJECT_ID=
 NEXT_PUBLIC_SANITY_DATASET=
 SANITY_API_TOKEN=
 NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY=
-GOOGLE_CALENDAR_API_KEY=
-GOOGLE_CALENDAR_ID=
-YOUTUBE_API_KEY=
 NEXT_PUBLIC_YOUTUBE_CHANNEL_ID=
 RESEND_API_KEY=
 SANITY_WEBHOOK_SECRET=

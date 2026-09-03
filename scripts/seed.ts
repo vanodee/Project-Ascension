@@ -683,6 +683,81 @@ async function seedDonationCategories(): Promise<void> {
   }
 }
 
+// Lagos "YYYY-MM-DD", N days from the seed run.
+function scheduleDate(offsetDays: number): string {
+  return new Date(Date.now() + offsetDays * 86_400_000).toLocaleDateString('en-CA', {
+    timeZone: 'Africa/Lagos',
+  });
+}
+
+async function seedSchedule(): Promise<void> {
+  console.log('Seeding schedule...');
+
+  const recurring: {
+    id: string;
+    title: string;
+    eventType: string;
+    location: string;
+    frequency: string;
+    description: string;
+    time?: string;
+    durationMinutes?: number;
+    daysOfWeek?: string[];
+    monthlyOrdinal?: string;
+    monthlyWeekday?: string;
+    startMode?: string;
+    anchorEvent?: { _type: 'reference'; _ref: string };
+    anchorRelation?: string;
+  }[] = [
+    { id: 'sunday-first-mass', title: 'Sunday First Mass', eventType: 'mass', location: 'Chapel', frequency: 'weekly', daysOfWeek: ['0'], time: '07:00', durationMinutes: 75, description: 'The first Sunday Mass, beginning at the Chapel.' },
+    { id: 'sunday-second-mass', title: 'Sunday Second Mass', eventType: 'mass', location: 'Main Church', frequency: 'weekly', daysOfWeek: ['0'], time: '09:00', durationMinutes: 90, description: 'The principal Sunday Mass with full choir.' },
+    { id: 'weekday-morning-mass', title: 'Morning Mass', eventType: 'mass', location: 'Chapel', frequency: 'weekly', daysOfWeek: ['1', '2', '3', '4', '5', '6'], time: '07:00', durationMinutes: 45, description: 'Daily morning Mass. All are welcome.' },
+    { id: 'weekday-midday-mass', title: 'Midday Mass', eventType: 'mass', location: 'Main Church', frequency: 'weekly', daysOfWeek: ['1', '2', '3', '4', '5', '6'], time: '12:00', durationMinutes: 45, description: 'Daily midday Mass.' },
+    { id: 'saturday-confession', title: 'Confessions', eventType: 'confession', location: 'Main Church', frequency: 'weekly', daysOfWeek: ['6'], time: '16:00', durationMinutes: 60, description: 'Saturday confessions. Also available by appointment with any priest.' },
+    { id: 'legion-of-mary', title: 'Legion of Mary', eventType: 'meeting', location: 'Room 2, Parish Hall', frequency: 'weekly', daysOfWeek: ['3'], time: '18:30', durationMinutes: 90, description: 'Weekly praesidium meeting of the Legion of Mary.' },
+    { id: 'choir-rehearsal', title: 'Choir Rehearsal', eventType: 'meeting', location: 'Parish Hall', frequency: 'weekly', daysOfWeek: ['4'], time: '17:00', durationMinutes: 120, description: 'Weekly rehearsal of the parish choir ahead of Sunday Mass.' },
+    { id: 'first-friday-adoration', title: 'First Friday Adoration', eventType: 'parish_event', location: 'Main Church', frequency: 'monthly', monthlyOrdinal: 'first', monthlyWeekday: '5', time: '17:00', durationMinutes: 120, description: 'First Friday Eucharistic Adoration, concluding with Benediction.' },
+    { id: 'sunday-rosary', title: 'Sunday Rosary', eventType: 'parish_event', location: 'Main Church', frequency: 'weekly', daysOfWeek: ['0'], startMode: 'follows', anchorEvent: { _type: 'reference', _ref: 'recurringEvent.sunday-first-mass' }, anchorRelation: 'before', description: 'The Holy Rosary, prayed before the first Sunday Mass.' },
+  ];
+
+  for (const { id, ...fields } of recurring) {
+    await client.createIfNotExists({
+      _id: `recurringEvent.${id}`,
+      _type: 'recurringEvent',
+      active: true,
+      overrides: [],
+      ...fields,
+    });
+    console.log(`  ${fields.title}`);
+  }
+
+  const oneOffs: {
+    id: string;
+    title: string;
+    eventType: string;
+    location: string;
+    startDate: string;
+    description: string;
+    endDate?: string;
+    allDay?: boolean;
+    startTime?: string;
+    endTime?: string;
+  }[] = [
+    { id: 'ordination-2026', title: 'Diaconate Ordination', eventType: 'celebration', location: 'Main Church', startDate: scheduleDate(4), startTime: '10:00', endTime: '13:00', description: 'Ordination to the Order of Deacons, celebrated by the Archbishop.' },
+    { id: 'corpus-christi-procession', title: 'Corpus Christi Procession', eventType: 'celebration', location: 'Parish Grounds', startDate: scheduleDate(11), startTime: '11:00', endTime: '13:30', description: 'Outdoor Eucharistic Procession after the 11 am Mass, with four altars of repose.' },
+    { id: 'harvest-retreat', title: 'Parish Harvest Retreat', eventType: 'parish_event', location: 'Parish Hall', startDate: scheduleDate(20), endDate: scheduleDate(21), allDay: true, description: 'A weekend of teaching, adoration, and reconciliation ahead of the Harvest Thanksgiving.' },
+  ];
+
+  for (const { id, ...fields } of oneOffs) {
+    await client.createIfNotExists({
+      _id: `parishEvent.${id}`,
+      _type: 'parishEvent',
+      ...fields,
+    });
+    console.log(`  ${fields.title}`);
+  }
+}
+
 async function seedSiteSettings(): Promise<void> {
   console.log('Seeding site settings...');
   await client.createIfNotExists({
@@ -697,36 +772,6 @@ async function seedSiteSettings(): Promise<void> {
     facebookUrl: 'https://facebook.com/ascensioncatholicikeja',
     instagramUrl: 'https://instagram.com/ascensioncatholicikeja',
     youtubeChannelId: 'UCascensionikeja',
-    massTimes: [
-      {
-        _type: 'object',
-        _key: key(),
-        heading: "This Sunday's Masses",
-        times: ['7:00 am • First Mass', '9:00 am • Second Mass'],
-        note: 'First Mass begins at the Chapel',
-      },
-      {
-        _type: 'object',
-        _key: key(),
-        heading: 'Masses This Week',
-        times: ['7:00 am • Monday – Saturday', '12:00 pm • Monday – Saturday'],
-        note: 'First Mass begins at the Chapel',
-      },
-      {
-        _type: 'object',
-        _key: key(),
-        heading: 'Confession',
-        times: ['4:00 pm • Saturdays'],
-        note: 'And by appointment with any priest',
-      },
-      {
-        _type: 'object',
-        _key: key(),
-        heading: 'Location',
-        times: ['MMIA, Ikeja, Lagos.'],
-        note: 'Near the International Airport main gate',
-      },
-    ],
   });
   console.log('  Site Settings');
 }
@@ -762,6 +807,7 @@ async function main(): Promise<void> {
   await seedHomilies(clergyIds);
   await seedGallery(societyIds);
   await seedDonationCategories();
+  await seedSchedule();
   await seedSiteSettings();
   await seedAboutPage();
   console.log('\nDone.');

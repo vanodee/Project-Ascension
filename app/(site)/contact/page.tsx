@@ -2,9 +2,14 @@ import type { Metadata } from 'next';
 import PageHeader from '@/components/ui/PageHeader';
 import TallyEmbed from '@/components/ui/TallyEmbed';
 import { getSiteSettings } from '@/lib/site';
+import { getLagosToday, getScheduleData } from '@/lib/schedule';
+import { getScheduleWeek } from '@/lib/calendar';
 import styles from './page.module.scss';
 
-// SSG — contact details change infrequently, managed in Sanity (siteSettings).
+// ISR — contact details are static, but the Mass Schedule block is date-relative
+// ("This Sunday · 7 Sep"). The Sanity fetch in getScheduleData carries a
+// next-midnight TTL; this is the segment backstop.
+export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: 'Contact Us',
@@ -13,7 +18,12 @@ export const metadata: Metadata = {
 };
 
 export default async function ContactPage(): Promise<React.JSX.Element> {
-  const siteSettings = await getSiteSettings();
+  const today = getLagosToday();
+  const [siteSettings, scheduleData] = await Promise.all([
+    getSiteSettings(),
+    getScheduleData(today),
+  ]);
+  const week = getScheduleWeek(scheduleData, today);
   return (
     <div className={styles.contact}>
       <PageHeader
@@ -44,18 +54,27 @@ export default async function ContactPage(): Promise<React.JSX.Element> {
 
             <div className={styles.contact__block}>
               <p className={styles['contact__block-label']}>Mass Schedule</p>
-              {siteSettings.massTimes
-                .filter((group) => group.heading !== 'Location')
-                .map((group) => (
-                  <div key={group.heading} className={styles['contact__mass-group']}>
-                    <p className={styles['contact__mass-heading']}>{group.heading}</p>
-                    {group.times.map((time) => (
-                      <p key={time} className={styles['contact__block-value']}>
-                        {time}
-                      </p>
-                    ))}
-                  </div>
+              <div className={styles['contact__mass-group']}>
+                <p className={styles['contact__mass-heading']}>{week.sundayLabel}</p>
+                {week.sundayMasses.map((mass) => (
+                  <p key={`${mass.title}-${mass.time}`} className={styles['contact__block-value']}>
+                    {mass.title} · {mass.time}
+                  </p>
                 ))}
+              </div>
+              <div className={styles['contact__mass-group']}>
+                <p className={styles['contact__mass-heading']}>This Week</p>
+                {week.weekdayMasses.map((mass) => (
+                  <p key={`${mass.title}-${mass.time}`} className={styles['contact__block-value']}>
+                    {mass.title} · {mass.time}
+                  </p>
+                ))}
+                {week.confession ? (
+                  <p className={styles['contact__block-value']}>
+                    {week.confession.title} · {week.confession.time}
+                  </p>
+                ) : null}
+              </div>
             </div>
           </section>
 

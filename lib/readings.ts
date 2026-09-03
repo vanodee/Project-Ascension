@@ -1,4 +1,5 @@
 import type { DailyReadings, PsalmLine, Reading } from './types';
+import { secondsUntilMidnight } from './format';
 import {
   getLiturgicalSeason,
   getSundayCycle,
@@ -196,17 +197,4 @@ export async function getDailyReadings(): Promise<DailyReadings> {
     if (lastSuccessfulData !== null) return lastSuccessfulData;
     throw err;
   }
-}
-
-// Seconds from now until Lagos midnight (UTC+1, no DST). Used for fetch-level ISR.
-export function secondsUntilMidnight(): number {
-  const lagosNow = getLagosDate();
-  const lagosMidnight = new Date(
-    Date.UTC(
-      lagosNow.getUTCFullYear(),
-      lagosNow.getUTCMonth(),
-      lagosNow.getUTCDate() + 1,
-    ),
-  );
-  return Math.max(60, Math.floor((lagosMidnight.getTime() - Date.now()) / 1000));
 }

@@ -25,6 +25,20 @@ export function formatDateTime(iso: string): string {
   return `${formatDate(iso)} • ${formatTime(iso)}`;
 }
 
+const MONTHS_SHORT = [
+  'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+  'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+];
+
+/** "7 Sep" — day of month + short month for the Lagos calendar date. */
+export function formatDayMonth(iso: string): string {
+  // en-CA gives "YYYY-MM-DD"; pick the month name from an explicit array so the
+  // output never drifts to "Sept" (en-GB) or "Sep 7" (en-US).
+  const parts = new Date(iso).toLocaleDateString('en-CA', { timeZone: LAGOS_TZ }).split('-');
+  const month = MONTHS_SHORT[Number(parts[1]) - 1] ?? '';
+  return `${Number(parts[2])} ${month}`.trim();
+}
+
 /** Formats a duration in seconds as "M:SS" (or "H:MM:SS" past an hour), e.g. 1084 -> "18:04". */
 export function formatDuration(seconds: number): string {
   if (!Number.isFinite(seconds) || seconds < 0) return '0:00';
@@ -48,4 +62,22 @@ export function dateBlockParts(iso: string): { weekday: string; day: string; mon
       .toLocaleDateString('en-NG', { timeZone: LAGOS_TZ, month: 'short' })
       .toUpperCase(),
   };
+}
+
+/** A Date whose UTC fields read as the current Lagos wall-clock (UTC+1, no DST). */
+function lagosNow(): Date {
+  return new Date(Date.now() + 60 * 60 * 1000);
+}
+
+/**
+ * Seconds from now until the next Lagos midnight, floored at 60. Used as a
+ * fetch-level ISR TTL so date-relative pages (readings, schedule) turn over at
+ * the start of the Lagos day.
+ */
+export function secondsUntilMidnight(): number {
+  const now = lagosNow();
+  const nextMidnight = new Date(
+    Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1),
+  );
+  return Math.max(60, Math.floor((nextMidnight.getTime() - Date.now()) / 1000));
 }

@@ -15,10 +15,10 @@ A modern, content-driven parish website providing parishioners with easy access 
 | CMS | Sanity (Studio + API) |
 | Media | Sanity CDN (images, audio) |
 | Payments | Paystack (popup JS) |
-| Calendar | Google Calendar API |
+| Calendar | Parish schedule managed in Sanity |
 | Daily Readings | Universalis API |
 | Forms | Tally.so (embed) |
-| Livestream | YouTube Data API v3 |
+| Livestream | YouTube (keyless — `/live` scrape + RSS) |
 | Email | Resend |
 | Hosting | Vercel |
 
@@ -36,9 +36,9 @@ A modern, content-driven parish website providing parishioners with easy access 
 | `/gallery` | Photo & video albums, searchable with a society filter | ISR (10 min) |
 | `/societies` | Parish societies directory, searchable with a type filter | SSG |
 | `/societies/[slug]` | Single society (hero, description, slogan, key info) | ISR (10 min) |
-| `/schedule` | Mass & event schedule | ISR (1 hr) |
+| `/schedule` | Mass & event schedule (Sanity `recurringEvent` + `parishEvent`) | ISR (10 min) |
 | `/readings` | Daily liturgical readings | ISR (next midnight) |
-| `/livestream` | Live Sunday Mass | ISR (5 min) |
+| `/livestream` | Parish livestream (keyless YouTube) | ISR (1 min) |
 | `/give` | Online giving (Paystack) — currently disabled (`notFound()`) and unlinked from nav | SSG |
 
 Content is edited in the **Sanity-hosted Studio** at
@@ -58,7 +58,7 @@ app/
 components/
   layout/         # Header, Footer
   ui/             # Reusable UI components (Button, AudioPlayer, etc.)
-lib/              # Data-fetching helpers (Sanity, Google Calendar, YouTube, etc.)
+lib/              # Data-fetching helpers (Sanity, Universalis, YouTube, schedule expansion, etc.)
 sanity/
   lib/            # Sanity client, image URL builder, GROQ queries
   schemas/        # Sanity document type definitions (compiled into the hosted Studio)
@@ -76,7 +76,7 @@ sanity.cli.ts     # Sanity CLI config (deploy target, studio host)
 
 - Node.js 18+
 - A Sanity project
-- API keys for Google Calendar, YouTube, Paystack, and Resend
+- API keys for Paystack and Resend (schedule is Sanity-managed; livestream needs only the public YouTube channel ID)
 
 ### Installation
 
@@ -94,9 +94,6 @@ NEXT_PUBLIC_SANITY_DATASET=
 SANITY_API_TOKEN=
 SANITY_WEBHOOK_SECRET=
 NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY=
-GOOGLE_CALENDAR_API_KEY=
-GOOGLE_CALENDAR_ID=
-YOUTUBE_API_KEY=
 NEXT_PUBLIC_YOUTUBE_CHANNEL_ID=
 RESEND_API_KEY=
 ```

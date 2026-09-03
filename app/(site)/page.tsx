@@ -4,6 +4,8 @@ import Link from 'next/link';
 import Button from '@/components/ui/Button';
 import SectionTitle from '@/components/ui/SectionTitle';
 import { getSiteSettings } from '@/lib/site';
+import { getLagosToday, getScheduleData } from '@/lib/schedule';
+import { getScheduleWeek } from '@/lib/calendar';
 import { getDailyReadings } from '@/lib/readings';
 import { getAnnouncements } from '@/lib/announcements';
 import { getHomilies } from '@/lib/homilies';
@@ -30,18 +32,22 @@ export async function generateMetadata(): Promise<Metadata> {
 const READING_ICONS: Record<string, string> = {
   'First Reading': '/icons/reading-bible.svg',
   'Responsorial Psalm': '/icons/reading-harp.svg',
-  'Second Reading': '/icons/reading-cross.svg',
+  'Second Reading': '/icons/reading-bible.svg',
 };
 
 export default async function HomePage(): Promise<React.JSX.Element> {
-  const [siteSettings, readings, announcements, homilies, clergy, albums] = await Promise.all([
-    getSiteSettings(),
-    getDailyReadings(),
-    getAnnouncements(),
-    getHomilies(),
-    getClergy(),
-    getAlbums(),
-  ]);
+  const today = getLagosToday();
+  const [siteSettings, scheduleData, readings, announcements, homilies, clergy, albums] =
+    await Promise.all([
+      getSiteSettings(),
+      getScheduleData(today),
+      getDailyReadings(),
+      getAnnouncements(),
+      getHomilies(),
+      getClergy(),
+      getAlbums(),
+    ]);
+  const week = getScheduleWeek(scheduleData, today);
 
   const gospel = readings.readings.find((r) => r.label === 'Gospel');
   const otherReadings = readings.readings.filter((r) => r.label !== 'Gospel');
@@ -99,18 +105,36 @@ export default async function HomePage(): Promise<React.JSX.Element> {
       </section>
 
       {/* ---------- Mass times strip ---------- */}
-      <section className={styles['mass-times']} aria-label="Mass times">
-        {siteSettings.massTimes.map((group) => (
-          <div key={group.heading} className={styles['mass-times__item']}>
-            <p className={styles['mass-times__heading']}>{group.heading}</p>
-            {group.times.map((time) => (
-              <p key={time} className={styles['mass-times__time']}>
-                {time}
-              </p>
-            ))}
-            <p className={styles['mass-times__note']}>{group.note}</p>
+      <section className={styles['mass-times']} aria-label="Mass and Confession times">
+        <div className={styles['mass-times__item']}>
+          <p className={styles['mass-times__heading']}>{week.sundayLabel}</p>
+          {week.sundayMasses.map((mass) => (
+            <p key={`${mass.title}-${mass.time}`} className={styles['mass-times__time']}>
+              {mass.title} · {mass.time}
+            </p>
+          ))}
+        </div>
+        <div className={styles['mass-times__item']}>
+          <p className={styles['mass-times__heading']}>This Week</p>
+          {week.weekdayMasses.map((mass) => (
+            <p key={`${mass.title}-${mass.time}`} className={styles['mass-times__time']}>
+              {mass.title} · {mass.time}
+            </p>
+          ))}
+        </div>
+        {week.confession ? (
+          <div className={styles['mass-times__item']}>
+            <p className={styles['mass-times__heading']}>Confession</p>
+            <p className={styles['mass-times__time']}>
+              {week.confession.label} · {week.confession.time}
+            </p>
           </div>
-        ))}
+        ) : null}
+        <div className={styles['mass-times__item']}>
+          <p className={styles['mass-times__heading']}>Location</p>
+          <p className={styles['mass-times__time']}>{siteSettings.location}</p>
+          <p className={styles['mass-times__note']}>{siteSettings.address}</p>
+        </div>
       </section>
 
       {/* ---------- Quick updates ---------- */}

@@ -1,10 +1,12 @@
 import type { Metadata } from 'next';
 import PageHeader from '@/components/ui/PageHeader';
-import { getUpcomingEvents } from '@/lib/calendar';
+import { getLagosToday, getScheduleData } from '@/lib/schedule';
 import ScheduleView from './ScheduleView';
 import styles from './page.module.scss';
 
-// ISR — parish calendar revalidates every hour (Google Calendar API).
+// ISR backstop only — `getScheduleData`'s Sanity fetch carries a
+// `secondsUntilMidnight()` TTL, so the schedule turns over at Lagos midnight
+// (and on the webhook when a recurringEvent / parishEvent is edited).
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
@@ -14,7 +16,8 @@ export const metadata: Metadata = {
 };
 
 export default async function SchedulePage(): Promise<React.JSX.Element> {
-  const events = await getUpcomingEvents();
+  const today = getLagosToday();
+  const data = await getScheduleData(today);
 
   return (
     <div className={styles.schedule}>
@@ -23,7 +26,7 @@ export default async function SchedulePage(): Promise<React.JSX.Element> {
         title="Parish Schedule"
         description="Masses, confessions, devotions, meetings, and celebrations — everything happening in the parish."
       />
-      <ScheduleView events={events} />
+      <ScheduleView data={data} today={today} />
     </div>
   );
 }
