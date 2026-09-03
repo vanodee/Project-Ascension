@@ -89,7 +89,6 @@ _Evergreen:_
 - [ ] **Weekly bulletin / newsletter** link or download, if the parish produces one.
 - [ ] **"Need a priest?"** — sacramental emergencies, hospital/home visits →
   `/contact`.
-- [ ] **Giving** — when `/give` is re-enabled.
 
 Coherent trio if keeping three cards: **Livestream · This Week's events · Latest
 homily** — all backed by existing data, none repeating another section.
@@ -124,7 +123,7 @@ homily** — all backed by existing data, none repeating another section.
   (Readings / Announcements / This Week or Homily). Deletes a whole section; stops
   the homepage repeating itself.
 - [ ] **Quick-links tile row** — Readings · Schedule · Livestream · Homilies ·
-  Societies · Give. Pure wayfinding, no imagery, strong on mobile.
+  Societies. Pure wayfinding, no imagery, strong on mobile.
 - [ ] **Horizontal photo rail** — "Life at Ascension," scroll-snapping recent
   gallery photos → `/gallery`. Solves imagery but duplicates the Gallery section
   unless that's also cut or moved.
