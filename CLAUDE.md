@@ -79,6 +79,21 @@ whether the pushed commits touch `sanity/**`, `sanity.config.ts`, or
   (`deployment.autoUpdates`).
 - Requires `npx sanity login` as an account with access to project `p3p9t4z1`.
 
+## Content Manager's Guide
+
+`content-manager-guide.md` (repo root, **git-ignored**) is a plain-language manual
+for the non-technical parish content manager, covering every Sanity document type,
+how to manage it, and its gotchas. Because it is git-ignored it will not show in
+`git status` — check it deliberately.
+
+**On every "commit and push" request, check whether the pushed commits touch
+`sanity/schemas/**`, `sanity.config.ts`, `sanity/lib/queries.ts`, `lib/calendar.ts`,
+or `app/api/revalidate/route.ts`; if so, update the matching section of
+`content-manager-guide.md` in the same commit** (schema field add/remove/rename,
+dropdown option changes, validation changes, Studio menu/singleton changes, query
+filters that hide content or change ordering, schedule-expansion changes, or
+revalidation-timing changes). Note the update in the commit message.
+
 ## Integration Auth — Where Keys Live
 
 | Service | Key Type | Location |
