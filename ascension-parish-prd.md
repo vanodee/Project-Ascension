@@ -513,9 +513,8 @@ schemas are registered in `sanity/schemas/index.ts`. **After any change to
 | **Vercel** | Hosting | Platform account | Project settings |
 
 All secrets are environment variables — never committed. `.env.local` locally;
-Vercel project settings in production. `NEXT_PUBLIC_SITE_URL` is optional and
-set only once the parish moves to a custom domain (see `CLAUDE.md` → "Going live
-on a custom domain").
+Vercel project settings in production. `NEXT_PUBLIC_SITE_URL` is set to the
+production domain `https://www.ccoaikeja.org` (see `CLAUDE.md` → "Custom domain").
 
 ---
 
@@ -537,7 +536,8 @@ on a custom domain").
 - `app/sitemap.ts` generates `/sitemap.xml` (static routes + Sanity slugs);
   `app/robots.ts` generates `/robots.txt`
 - Both resolve the canonical origin via `lib/siteUrl.ts`
-  (`NEXT_PUBLIC_SITE_URL` → `VERCEL_PROJECT_PRODUCTION_URL` → localhost)
+  (`NEXT_PUBLIC_SITE_URL` → `VERCEL_PROJECT_PRODUCTION_URL` → localhost); production
+  is `https://www.ccoaikeja.org`
 - **Not yet done:** JSON-LD structured data for the parish as a `Church` /
   `LocalBusiness` entity; a purpose-built 1200×630 OpenGraph image
   (currently a 500×500 logo)
@@ -637,7 +637,7 @@ Explicitly not part of this project:
 
 | # | Question | Owner | Status |
 |---|---|---|---|
-| 1 | Confirm the production custom domain (www vs apex) so `NEXT_PUBLIC_SITE_URL`, the Sanity webhook URL, and Sanity CORS can be finalised | Parish Communications / Dev | **Open — blocking full SEO setup** |
+| 1 | ~~Confirm the production custom domain~~ — resolved: `www.ccoaikeja.org` (apex redirects to www). `NEXT_PUBLIC_SITE_URL` set; platform-side setup (Vercel Domains/DNS, Sanity CORS + webhook URL, Search Console) tracked in the go-live checklist | Parish Communications / Dev | **Closed 2026-09-07** |
 | 2 | Who is the designated Sanity Publisher / Media Reviewer? | Parish Admin | Open |
 | 3 | Verify the livestream live-detection markers against a real parish broadcast (note in `lib/livestream.ts`) | Dev | Open |
 | 4 | Upload real homily audio in the Studio (`audioFile` is empty per document) | Parish Communications | Open |

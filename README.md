@@ -105,8 +105,9 @@ NEXT_PUBLIC_SANITY_DATASET=
 SANITY_API_TOKEN=
 SANITY_WEBHOOK_SECRET=
 NEXT_PUBLIC_YOUTUBE_CHANNEL_ID=
-# Optional — set only once the parish is on its own domain (falls back to the
-# Vercel production URL otherwise). See CLAUDE.md → "Going live on a custom domain".
+# Canonical production origin. Production value: https://www.ccoaikeja.org
+# (falls back to the Vercel production URL when unset, e.g. preview builds).
+# See CLAUDE.md → "Going live on a custom domain".
 NEXT_PUBLIC_SITE_URL=
 ```
 
@@ -168,7 +169,9 @@ npm test            # vitest run
 
 ## Deployment
 
-The site is deployed on **Vercel**. Pushing to `master` triggers a production build automatically.
+The site is deployed on **Vercel** and served at **https://www.ccoaikeja.org**
+(the apex `ccoaikeja.org` 308-redirects to `www`). Pushing to `master` triggers a
+production build automatically.
 
 ## License
 

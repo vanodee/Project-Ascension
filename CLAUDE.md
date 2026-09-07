@@ -114,28 +114,27 @@ NEXT_PUBLIC_SANITY_DATASET=
 SANITY_API_TOKEN=
 NEXT_PUBLIC_YOUTUBE_CHANNEL_ID=
 SANITY_WEBHOOK_SECRET=
-# Optional — set only once the parish is on its own domain (see below).
+# Canonical production origin — https://www.ccoaikeja.org (see below).
 NEXT_PUBLIC_SITE_URL=
 ```
 
-## Going live on a custom domain
+## Custom domain
+
+Production domain: **`https://www.ccoaikeja.org`** (canonical). The apex
+`ccoaikeja.org` 308-redirects to `www`.
 
 The canonical origin (metadataBase, `sitemap.xml`, `robots.txt`, OpenGraph URLs)
 is resolved in `lib/siteUrl.ts`: `NEXT_PUBLIC_SITE_URL` → `VERCEL_PROJECT_PRODUCTION_URL`
-→ `http://localhost:3000`. While the domain is undecided, reviews run on the
-Vercel URL and nothing needs setting.
+→ `http://localhost:3000`. `NEXT_PUBLIC_SITE_URL=https://www.ccoaikeja.org` is set
+in Vercel (Production) and `.env.local`; preview deployments fall through to the
+Vercel URL, which is correct for them.
 
-**When the parish confirms a production domain, ask the user to confirm the exact
-URL, then:**
-
-- Set `NEXT_PUBLIC_SITE_URL` (e.g. `https://www.parish.org`) in Vercel (Production)
-  and in `.env.local`.
-- Add the domain in Vercel → Project → Domains; pick the canonical host (www vs apex)
-  and 308-redirect the other.
-- Update `siteSettings` / any hard-coded parish URL references in Sanity.
-- Resubmit `sitemap.xml` in Google Search Console for the new property; verify the
-  new domain there.
-- Check the `metadataBase` / OG tags resolve to the new origin on a deployed page.
+**Platform-side setup (done outside the codebase — see the go-live checklist the
+dev handed over):** Vercel Domains (add `www` + apex, apex→www 308), DNS records
+at the registrar, Sanity CORS origin + webhook target URL, Google Search Console
+property + sitemap submission, `siteSettings` and any parish URL references in
+Sanity, and a deployed-page check that `metadataBase` / OG tags resolve to
+`https://www.ccoaikeja.org`.
 
 ## Out of Scope (v1.0)
 
