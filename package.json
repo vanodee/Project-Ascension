@@ -18,6 +18,8 @@
     "@portabletext/types": "^4.0.2",
     "@sanity/client": "^7.23.0",
     "@sanity/image-url": "^2.1.1",
+    "@vercel/analytics": "^2.0.1",
+    "@vercel/speed-insights": "^2.0.0",
     "next": "^16.3.1",
     "next-sanity": "^13.3.3",
     "react": "^19.2.8",

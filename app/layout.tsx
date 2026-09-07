@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import { Cinzel, Lora } from 'next/font/google';
+import { Analytics } from '@vercel/analytics/next';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import { getSiteSettings } from '@/lib/site';
 import { SITE_URL } from '@/lib/siteUrl';
 import '@/styles/globals.scss';
@@ -70,7 +72,11 @@ export default function RootLayout({
 }: Readonly<{ children: ReactNode }>): React.JSX.Element {
   return (
     <html lang="en" data-scroll-behavior="smooth" className={`${cinzel.variable} ${lora.variable}`}>
-      <body>{children}</body>
+      <body>
+        {children}
+        <Analytics />
+        <SpeedInsights />
+      </body>
     </html>
   );
 }
