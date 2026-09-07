@@ -49,8 +49,8 @@ export default async function HomePage(): Promise<React.JSX.Element> {
     ]);
   const week = getScheduleWeek(scheduleData, today);
 
-  const gospel = readings.readings.find((r) => r.label === 'Gospel');
-  const otherReadings = readings.readings.filter((r) => r.label !== 'Gospel');
+  const gospel = readings?.readings.find((r) => r.label === 'Gospel');
+  const otherReadings = readings?.readings.filter((r) => r.label !== 'Gospel') ?? [];
   const latestHomily = homilies[0];
   const featuredAnnouncement = announcements[0];
   const listedAnnouncements = announcements.slice(1, 4);
@@ -194,85 +194,87 @@ export default async function HomePage(): Promise<React.JSX.Element> {
 
       {/* ---------- Readings & Announcements ---------- */}
       <section className={styles['readings-announcements']}>
-        <div className={styles.readings}>
-          <SectionTitle eyebrow="Liturgy of the Word" title="Today’s Readings" />
+        {readings ? (
+          <div className={styles.readings}>
+            <SectionTitle eyebrow="Liturgy of the Word" title="Today’s Readings" />
 
-          <div className={styles['readings__liturgy-header']}>
-            <div className={styles['readings__solemnity-info']}>
-              <div className={styles['readings__day-cell']}>
-                {readings.celebrations.map((cel) => (
-                  <p key={cel} className={styles['readings__day-celebration']}>{cel}</p>
-                ))}
-              </div>
-              <div
-                className={styles['readings__season-badge']}
-                style={{ backgroundColor: `var(${readings.colourVar})` }}
-              >
-                <Image src="/icons/season-badge.svg" alt="" width={20} height={28} />
-                <div>
-                  <p className={styles['readings__season-badge-name']}>{readings.season}</p>
-                  <p className={styles['readings__season-badge-year']}>{readings.lectionaryYear}</p>
+            <div className={styles['readings__liturgy-header']}>
+              <div className={styles['readings__solemnity-info']}>
+                <div className={styles['readings__day-cell']}>
+                  {readings.celebrations.map((cel) => (
+                    <p key={cel} className={styles['readings__day-celebration']}>{cel}</p>
+                  ))}
                 </div>
-              </div>
-            </div>
-
-            {gospel ? (
-              <div className={styles['readings__gospel-card']}>
-                <div className={styles['readings__gospel-image']}>
-                  <Image
-                    src="/images/gospel_image.png"
-                    alt="Icon of Christ teaching"
-                    fill
-                    sizes="(min-width: 768px) 330px, 100vw"
-                    className={styles['readings__gospel-photo']}
-                  />
-                </div>
-                <div className={styles['readings__gospel-info']}>
-                  <span className={styles['readings__gospel-icon']}>
-                    <Image src="/icons/reading-cross.svg" alt="" width={72} height={72} />
-                  </span>
-                  <div className={styles['readings__gospel-text']}>
-                    <p className={styles['readings__gospel-label']}>Gospel</p>
-                    <p className={styles['readings__gospel-reference']}>{gospel.reference}</p>
-                    <p className={styles['readings__gospel-excerpt']}>{gospel.excerpt}</p>
+                <div
+                  className={styles['readings__season-badge']}
+                  style={{ backgroundColor: `var(${readings.colourVar})` }}
+                >
+                  <Image src="/icons/season-badge.svg" alt="" width={20} height={28} />
+                  <div>
+                    <p className={styles['readings__season-badge-name']}>{readings.season}</p>
+                    <p className={styles['readings__season-badge-year']}>{readings.lectionaryYear}</p>
                   </div>
                 </div>
               </div>
-            ) : null}
-          </div>
 
-          <div className={styles['readings__other-readings']}>
-            {otherReadings.map((reading) => (
-              <div key={reading.label} className={styles['readings__reading-row']}>
-                <span className={styles['readings__reading-icon']}>
-                  <Image
-                    src={READING_ICONS[reading.label] ?? '/icons/reading-bible.svg'}
-                    alt=""
-                    width={100}
-                    height={100}
-                  />
-                </span>
-                <div className={styles['readings__reading-info']}>
-                  <p className={styles['readings__reading-label']}>{reading.label}</p>
-                  <p className={styles['readings__reading-reference']}>{reading.reference}</p>
-                  <p
-                    className={
-                      reading.label === 'Responsorial Psalm'
-                        ? styles['readings__reading-chorus']
-                        : styles['readings__reading-excerpt']
-                    }
-                  >
-                    {reading.excerpt}
-                  </p>
+              {gospel ? (
+                <div className={styles['readings__gospel-card']}>
+                  <div className={styles['readings__gospel-image']}>
+                    <Image
+                      src="/images/gospel_image.png"
+                      alt="Icon of Christ teaching"
+                      fill
+                      sizes="(min-width: 768px) 330px, 100vw"
+                      className={styles['readings__gospel-photo']}
+                    />
+                  </div>
+                  <div className={styles['readings__gospel-info']}>
+                    <span className={styles['readings__gospel-icon']}>
+                      <Image src="/icons/reading-cross.svg" alt="" width={72} height={72} />
+                    </span>
+                    <div className={styles['readings__gospel-text']}>
+                      <p className={styles['readings__gospel-label']}>Gospel</p>
+                      <p className={styles['readings__gospel-reference']}>{gospel.reference}</p>
+                      <p className={styles['readings__gospel-excerpt']}>{gospel.excerpt}</p>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ) : null}
+            </div>
 
-          <Button href="/readings" variant="outline" size="sm">
-            Full Readings →
-          </Button>
-        </div>
+            <div className={styles['readings__other-readings']}>
+              {otherReadings.map((reading) => (
+                <div key={reading.label} className={styles['readings__reading-row']}>
+                  <span className={styles['readings__reading-icon']}>
+                    <Image
+                      src={READING_ICONS[reading.label] ?? '/icons/reading-bible.svg'}
+                      alt=""
+                      width={100}
+                      height={100}
+                    />
+                  </span>
+                  <div className={styles['readings__reading-info']}>
+                    <p className={styles['readings__reading-label']}>{reading.label}</p>
+                    <p className={styles['readings__reading-reference']}>{reading.reference}</p>
+                    <p
+                      className={
+                        reading.label === 'Responsorial Psalm'
+                          ? styles['readings__reading-chorus']
+                          : styles['readings__reading-excerpt']
+                      }
+                    >
+                      {reading.excerpt}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <Button href="/readings" variant="outline" size="sm">
+              Full Readings →
+            </Button>
+          </div>
+        ) : null}
 
         <HomeAnnouncementsSection
           featuredAnnouncement={featuredAnnouncement}

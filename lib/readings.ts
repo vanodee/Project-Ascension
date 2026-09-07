@@ -132,6 +132,97 @@ function buildReading(
   };
 }
 
+// Universalis serves the JSONP body in a partly-compressed form: some string
+// values are not plain JSON strings but tiny JS expressions — a string literal
+// followed by a left-to-right chain of `.split("<from>").join("<to>")` calls.
+// The replacements themselves seed characters that later calls in the same chain
+// expand, so order matters. A browser evals the JSONP and gets the finished text
+// for free; server-side we expand it ourselves and rewrite each expression as a
+// plain JSON string, yielding valid JSON. Payloads that are already plain JSON
+// pass through unchanged (each string literal is just re-serialised as itself).
+// Exported for unit testing.
+export function decompressUniversalisPayload(src: string): string {
+  let out = '';
+  let i = 0;
+
+  const readString = (start: number): { value: string; end: number } => {
+    let s = '';
+    let j = start + 1; // src[start] is the opening quote
+    while (j < src.length) {
+      const c = src[j];
+      if (c === '\\') {
+        const next = src[j + 1];
+        switch (next) {
+          case '"': s += '"'; break;
+          case '\\': s += '\\'; break;
+          case '/': s += '/'; break;
+          case 'n': s += '\n'; break;
+          case 't': s += '\t'; break;
+          case 'r': s += '\r'; break;
+          case 'b': s += '\b'; break;
+          case 'f': s += '\f'; break;
+          case 'u':
+            s += String.fromCharCode(parseInt(src.slice(j + 2, j + 6), 16));
+            j += 6;
+            continue;
+          default:
+            s += next ?? '';
+        }
+        j += 2;
+        continue;
+      }
+      if (c === '"') return { value: s, end: j + 1 };
+      s += c;
+      j += 1;
+    }
+    return { value: s, end: src.length };
+  };
+
+  const skipWs = (j: number): number => {
+    while (j < src.length && /\s/.test(src[j] ?? '')) j += 1;
+    return j;
+  };
+
+  const readSplitJoin = (
+    pos: number,
+  ): { from: string; to: string; end: number } | null => {
+    let j = skipWs(pos);
+    if (!src.startsWith('.split(', j)) return null;
+    j = skipWs(j + '.split('.length);
+    if (src[j] !== '"') return null;
+    const from = readString(j);
+    j = skipWs(from.end);
+    if (src[j] !== ')') return null;
+    j = skipWs(j + 1);
+    if (!src.startsWith('.join(', j)) return null;
+    j = skipWs(j + '.join('.length);
+    if (src[j] !== '"') return null;
+    const to = readString(j);
+    j = skipWs(to.end);
+    if (src[j] !== ')') return null;
+    return { from: from.value, to: to.value, end: j + 1 };
+  };
+
+  while (i < src.length) {
+    if (src[i] !== '"') {
+      out += src[i];
+      i += 1;
+      continue;
+    }
+    const lit = readString(i);
+    i = lit.end;
+    let value = lit.value;
+    for (;;) {
+      const sj = readSplitJoin(i);
+      if (!sj) break;
+      value = value.split(sj.from).join(sj.to);
+      i = sj.end;
+    }
+    out += JSON.stringify(value);
+  }
+  return out;
+}
+
 async function fetchPayload(dateParam: string): Promise<UniversalisPayload> {
   const url = `https://universalis.com/africa.nigeria/${dateParam}/jsonpmass.js`;
   const res = await fetch(url, {
@@ -141,10 +232,10 @@ async function fetchPayload(dateParam: string): Promise<UniversalisPayload> {
 
   const raw = await res.text();
   // Strip JSONP wrapper: universalisCallback({...});
-  const match = /^universalisCallback\(([\s\S]*)\);?\s*$/.exec(raw);
+  const match = /^universalisCallback\(([\s\S]*?)\);?\s*$/.exec(raw.trim());
   if (!match?.[1]) throw new Error('Unexpected Universalis response shape');
 
-  return JSON.parse(match[1]) as UniversalisPayload;
+  return JSON.parse(decompressUniversalisPayload(match[1])) as UniversalisPayload;
 }
 
 function mapToDailyReadings(
@@ -183,7 +274,11 @@ function mapToDailyReadings(
   };
 }
 
-export async function getDailyReadings(): Promise<DailyReadings> {
+// Returns null when Universalis is unreachable or returns something we can't
+// parse and there is no earlier success to fall back on. Callers must treat the
+// readings as optional — a third-party liturgy feed being down must never fail
+// the build or a page render.
+export async function getDailyReadings(): Promise<DailyReadings | null> {
   const lagosDate = getLagosDate();
   const dateParam = toDateParam(lagosDate);
 
@@ -194,7 +289,6 @@ export async function getDailyReadings(): Promise<DailyReadings> {
     return result;
   } catch (err) {
     console.error('[universalis] fetch error:', err);
-    if (lastSuccessfulData !== null) return lastSuccessfulData;
-    throw err;
+    return lastSuccessfulData;
   }
 }

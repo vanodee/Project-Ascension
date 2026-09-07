@@ -25,6 +25,26 @@ const READING_ICONS: Record<string, string> = {
 export default async function ReadingsPage(): Promise<React.JSX.Element> {
   const daily = await getDailyReadings();
 
+  if (!daily) {
+    return (
+      <div className={styles.readings}>
+        <PageHeader
+          eyebrow="Liturgy of the Word"
+          title="Daily Readings"
+          description="The readings proclaimed at Mass today, given for the prayer and nourishment of the whole Church."
+        />
+        <p className={styles.readings__unavailable}>
+          Today’s readings could not be loaded just now. Please check back shortly, or
+          read them at{' '}
+          <a href="https://universalis.com/mass.htm" rel="noopener noreferrer">
+            universalis.com
+          </a>
+          .
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className={styles.readings}>
       <PageHeader

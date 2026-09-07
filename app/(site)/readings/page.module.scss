@@ -30,6 +30,17 @@
   text-align: right;
 }
 
+.readings__unavailable {
+  color: var(--text-secondary);
+  line-height: 1.7;
+  padding-block: var(--space-lg);
+
+  a {
+    color: var(--text-primary);
+    text-decoration: underline;
+  }
+}
+
 .readings__banner-day {
   display: grid;
   grid-auto-rows: 1fr;
