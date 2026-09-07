@@ -43,13 +43,19 @@ Catholic Church of the Ascension parish website — a greenfield Next.js project
 
 ## App-Level Files (`app/`)
 
-- `layout.tsx` — root `<html>`, fonts, and `generateMetadata` (title template, `metadataBase` from `lib/siteUrl.ts`, canonical, robots, OpenGraph/Twitter). No header/footer here.
-- `(site)/layout.tsx` — the public shell: `Header` + `Footer`, fed by `getSiteSettings()`.
+- `layout.tsx` — root `<html>`, fonts, `viewport` (theme-color, `color-scheme`), and `generateMetadata` (title template, `metadataBase` from `lib/siteUrl.ts`, robots, `publisher`, and the **baseline** OpenGraph/Twitter for routes that don't build their own). No header/footer here. **No sitewide `canonical`** — that would leak to every route.
+- `(site)/layout.tsx` — the public shell: `Header` + `Footer`, fed by `getSiteSettings()`. Also emits the sitewide JSON-LD (`webSiteLd` + `parishOrganizationLd`).
 - `not-found.tsx` — root 404 + catch-all for unmatched URLs. Parish logo + "Return to homepage", **no site chrome** (renders in the root layout only).
 - `(site)/error.tsx` — error boundary for every public page, inside the site chrome; uses Next 16's `retry` prop (not `reset`).
 - `global-error.tsx` — last-resort boundary if the root layout itself throws; ships its own `<html>`/`<body>`.
-- `sitemap.ts` / `robots.ts` — generate `/sitemap.xml` (static routes + Sanity slugs) and `/robots.txt`, both keyed to `lib/siteUrl.ts`. Add new static routes to `sitemap.ts`'s `STATIC_ROUTES`.
+- `sitemap.ts` / `robots.ts` — generate `/sitemap.xml` (static routes + Sanity slugs, `lastModified` from each doc's `_updatedAt`) and `/robots.txt`, both keyed to `lib/siteUrl.ts`. Add new static routes to `sitemap.ts`'s `STATIC_ROUTES`.
 - `manifest.ts` — PWA web manifest.
+- `opengraph-image.png` / `twitter-image.png` live in `public/` (not the `app/` file convention) — `lib/metadata.ts` references them by stable path so a route can override per-page without Next's fuzzy cross-segment image merge.
+
+### Per-page metadata & SEO
+
+- **Every route's `metadata` / `generateMetadata` goes through `buildPageMetadata()` in `lib/metadata.ts`.** It sets a self-referential `alternates.canonical` plus a complete per-route `openGraph` / `twitter` block. Next merges these wholesale parent→child, so a route that sets only `title` inherits the parent's canonical and OG title — hence the helper. Home passes `absoluteTitle: true`.
+- Structured data (JSON-LD) builders live in `lib/structuredData.ts`, rendered by `components/seo/JsonLd.tsx`. Sitewide `Church` + `WebSite` in `(site)/layout.tsx`; `BreadcrumbList` on the three detail routes; `ContactPage` on `/contact`. Nodes cross-reference by `@id` (`#parish`, `#website`).
 - `api/revalidate/route.ts` — Sanity on-publish webhook → on-demand ISR.
 
 ## Sanity Schema Document Types
@@ -63,7 +69,7 @@ Catholic Church of the Ascension parish website — a greenfield Next.js project
 - `galleryAlbum` — collection (required `society` reference; `media[]` is `imageItem` only — Sanity image assets with alt + caption; no `category` field. Video support was scoped for v1 but never built and has been removed from the schema — see `qol-ideas.md`)
 - `recurringEvent` — collection (parish schedule: a repeating rule — `frequency` weekly/monthly, `daysOfWeek` or `monthlyOrdinal`+`monthlyWeekday`, optional `durationMinutes`, optional `startDate`/`endDate`, `active`; `overrides[]` array of `{date, mode: cancelled|modified, time?, location?, title?, note?}` for per-date exceptions. Start is either `startMode: 'fixed'` with `time` as a `"HH:MM"` Lagos string, or `startMode: 'follows'` with `anchorEvent` (reference) + `anchorRelation` (after|before|during) — the occurrence's start is derived from the anchor's occurrence on the same date). Expanded into occurrences by `lib/calendar.ts`.
 - `parishEvent` — collection (parish schedule: one-off dated event — `startDate`, optional `endDate` for multi-day, `allDay` toggle. Start is `startMode: 'fixed'` with `startTime`/`endTime` as `"HH:MM"` strings, or `startMode: 'follows'` with `anchorEvent` (reference to a `recurringEvent` or `parishEvent` on the same date) + `anchorRelation`)
-- `siteSettings` — singleton (parish name, contact info, social links, YouTube channel ID)
+- `siteSettings` — singleton (parish name, contact info, social links, YouTube channel ID; plus a "Location & identity" fieldset — `streetAddress`/`addressLocality`/`addressRegion`/`postalCode`/`addressCountry`, `latitude`/`longitude`, `logo`, `foundingYear`, `diocese` — that feeds the JSON-LD in `lib/structuredData.ts`. Keep the structured parts consistent with the free-text `address`.)
 
 ## Sanity Studio Deployment
 

@@ -27,6 +27,7 @@ interface GalleryAlbumDoc {
   title: string;
   slug: string;
   eventDate: string;
+  updatedAt: string;
   description: string;
   coverImage: SanityImageSource;
   society: SocietyDoc;
@@ -46,6 +47,7 @@ function toGalleryAlbum(doc: GalleryAlbumDoc): GalleryAlbum {
     slug: doc.slug,
     title: doc.title,
     eventDate: doc.eventDate,
+    updatedAt: doc.updatedAt,
     coverImage: imageUrl(doc.coverImage, 1200),
     description: doc.description,
     society: {

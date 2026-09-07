@@ -1,17 +1,18 @@
-import type { Metadata } from 'next';
 import PageHeader from '@/components/ui/PageHeader';
 import { getAnnouncements } from '@/lib/announcements';
+import { buildPageMetadata } from '@/lib/metadata';
 import AnnouncementsGrid from './AnnouncementsGrid';
 import styles from './page.module.scss';
 
 // ISR — announcements are timely content; revalidate every 10 minutes.
 export const revalidate = 600;
 
-export const metadata: Metadata = {
+export const metadata = buildPageMetadata({
+  path: '/announcements',
   title: 'Announcements',
   description:
     'Parish notices, news, and updates from the Catholic Church of the Ascension, Ikeja, Lagos.',
-};
+});
 
 export default async function AnnouncementsPage(): Promise<React.JSX.Element> {
   const announcements = await getAnnouncements();

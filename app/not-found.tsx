@@ -6,6 +6,7 @@ import styles from './not-found.module.scss';
 // Root not-found — also the catch-all for unmatched URLs. Rendered inside the
 // root layout only (no site header/footer) per design.
 
+// Next already emits `noindex` for the not-found route; no `robots` override needed.
 export const metadata: Metadata = {
   title: 'Page Not Found',
 };

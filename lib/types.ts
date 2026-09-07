@@ -35,6 +35,8 @@ export interface Society {
   color: string;
   societyType: SocietyType;
   logo: string;
+  /** Sanity `_updatedAt` — present on list fetches (used by the sitemap), absent on dereferenced society refs. */
+  updatedAt?: string;
 }
 
 export interface SocietySlogan {
@@ -98,6 +100,8 @@ export interface GalleryAlbum {
   slug: string;
   title: string;
   eventDate: string;
+  /** Sanity `_updatedAt`, ISO string — feeds the sitemap's `lastModified`. */
+  updatedAt: string;
   coverImage: string;
   description: string;
   society: Society;
@@ -122,6 +126,8 @@ export interface SacramentPage {
   heroImageAspectRatio: number;
   body: PortableTextBlock[];
   tallyFormId?: string;
+  /** Sanity `_updatedAt`, ISO string — feeds the sitemap's `lastModified`. */
+  updatedAt: string;
 }
 
 export interface AboutMilestone {
@@ -214,4 +220,16 @@ export interface SiteSettings {
   facebookUrl: string;
   instagramUrl: string;
   youtubeChannelId: string;
+  // Structured location & identity — feeds the JSON-LD in lib/structuredData.ts.
+  streetAddress: string;
+  addressLocality: string;
+  addressRegion: string;
+  postalCode?: string;
+  addressCountry: string;
+  latitude?: number;
+  longitude?: number;
+  /** Resolved Sanity CDN URL for the parish crest, or null when unset. */
+  logo: string | null;
+  foundingYear?: string;
+  diocese: string;
 }

@@ -178,6 +178,25 @@
 
 .quick-updates__bg {
   object-fit: cover;
+  object-position: top;
+  transform-origin: top;
+  transition: transform 0.4s ease;
+}
+
+.quick-updates__card:hover .quick-updates__bg,
+.quick-updates__card:focus-within .quick-updates__bg {
+  transform: scale(1.05);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .quick-updates__bg {
+    transition: none;
+  }
+
+  .quick-updates__card:hover .quick-updates__bg,
+  .quick-updates__card:focus-within .quick-updates__bg {
+    transform: none;
+  }
 }
 
 .quick-updates__panel {
@@ -210,12 +229,24 @@
   @include label-md;
 }
 
+// Clamps below are a hard backstop: the copy is written to fit, but CMS-driven
+// values (the homily title) must never grow the panel past the card.
 .quick-updates__title {
   @include heading-md;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
 }
 
 .quick-updates__text {
   @include body-base-italic;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+  overflow: hidden;
 }
 
 .quick-updates__panel > :last-child {

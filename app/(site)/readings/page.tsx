@@ -1,19 +1,20 @@
-import type { Metadata } from 'next';
 import Image from 'next/image';
 import PageHeader from '@/components/ui/PageHeader';
 import { getDailyReadings } from '@/lib/readings';
 import { formatDate } from '@/lib/format';
+import { buildPageMetadata } from '@/lib/metadata';
 import styles from './page.module.scss';
 
 // ISR safety valve: the fetch in getDailyReadings uses next.revalidate = secondsUntilMidnight(),
 // so the data cache turns over at Lagos midnight. This segment-level value is a backstop only.
 export const revalidate = 3600;
 
-export const metadata: Metadata = {
+export const metadata = buildPageMetadata({
+  path: '/readings',
   title: 'Daily Readings',
   description:
     'The Roman Catholic daily Mass readings — first reading, psalm, second reading, and Gospel — from the Universalis liturgical calendar.',
-};
+});
 
 const READING_ICONS: Record<string, string> = {
   'First Reading': '/icons/reading-bible.svg',

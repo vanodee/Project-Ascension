@@ -2,7 +2,10 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import Button from '@/components/ui/Button';
+import JsonLd from '@/components/seo/JsonLd';
 import { getAlbums, getAlbum } from '@/lib/gallery';
+import { buildPageMetadata } from '@/lib/metadata';
+import { breadcrumbLd } from '@/lib/structuredData';
 import AlbumHero from './AlbumHero';
 import AlbumLightbox from './AlbumLightbox';
 import styles from './page.module.scss';
@@ -23,10 +26,13 @@ export async function generateMetadata({ params }: AlbumRouteParams): Promise<Me
   const { slug } = await params;
   const album = await getAlbum(slug);
   if (!album) return {};
-  return {
+  return buildPageMetadata({
+    path: `/gallery/${slug}`,
     title: `${album.title} — Gallery`,
     description: album.description,
-  };
+    image: album.coverImage,
+    imageAlt: album.title,
+  });
 }
 
 export default async function AlbumPage({
@@ -38,6 +44,13 @@ export default async function AlbumPage({
 
   return (
     <div className={styles.album}>
+      <JsonLd
+        data={breadcrumbLd([
+          { name: 'Home', path: '/' },
+          { name: 'Gallery', path: '/gallery' },
+          { name: album.title, path: `/gallery/${slug}` },
+        ])}
+      />
       <AlbumHero album={album} />
 
       <div className={styles.album__content}>

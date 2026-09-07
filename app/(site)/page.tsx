@@ -1,4 +1,3 @@
-import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import Button from '@/components/ui/Button';
@@ -11,23 +10,21 @@ import { getAnnouncements } from '@/lib/announcements';
 import { getHomilies } from '@/lib/homilies';
 import { getClergy } from '@/lib/clergy';
 import { getAlbums } from '@/lib/gallery';
-import { formatDuration } from '@/lib/format';
-import { toPlainText } from '@/lib/portableText';
-import HomeAnnouncementCard from './HomeAnnouncementCard';
+import { formatDate } from '@/lib/format';
+import { buildPageMetadata } from '@/lib/metadata';
 import HomeAnnouncementsSection from './HomeAnnouncementsSection';
 import styles from './page.module.scss';
 
 // Announcements and homilies feed the homepage — ISR every 10 minutes.
 export const revalidate = 600;
 
-export async function generateMetadata(): Promise<Metadata> {
-  const siteSettings = await getSiteSettings();
-  return {
-    title: `${siteSettings.parishName}`,
-    description:
-      'A community of faith, worship, and service in the heart of Ikeja, Lagos. Mass times, daily readings, announcements, homilies, and more.',
-  };
-}
+export const metadata = buildPageMetadata({
+  path: '/',
+  title: 'Catholic Church of the Ascension — MMIA, Ikeja, Lagos',
+  absoluteTitle: true,
+  description:
+    'A community of faith, worship, and service in the heart of Ikeja, Lagos. Mass times, daily readings, announcements, homilies, and more.',
+});
 
 const READING_ICONS: Record<string, string> = {
   'First Reading': '/icons/reading-bible.svg',
@@ -54,9 +51,6 @@ export default async function HomePage(): Promise<React.JSX.Element> {
   const latestHomily = homilies[0];
   const featuredAnnouncement = announcements[0];
   const listedAnnouncements = announcements.slice(1, 4);
-  const cardAnnouncement =
-    announcements.find((a) => a.slug === 'corpus-christi-procession') ?? announcements[0];
-  const priests = clergy.filter((member) => member.role === 'priest');
   const clergyCards = clergy.slice(0, 4);
   const galleryAlbums = albums.slice(0, 5);
 
@@ -137,10 +131,10 @@ export default async function HomePage(): Promise<React.JSX.Element> {
       </section>
 
       {/* ---------- Quick updates ---------- */}
-      <section className={styles['quick-updates']} aria-label="Parish updates">
+      <section className={styles['quick-updates']} aria-label="Explore the parish">
         <article className={styles['quick-updates__card']}>
           <Image
-            src="/images/card-sunday.png"
+            src="/images/img_card1.png"
             alt=""
             fill
             sizes="(min-width: 1024px) 33vw, 100vw"
@@ -148,12 +142,11 @@ export default async function HomePage(): Promise<React.JSX.Element> {
           />
           <div className={styles['quick-updates__panel']}>
             <div className={styles['quick-updates__info']}>
-              <p className={styles['quick-updates__label']}>This Sunday</p>
-              <h3 className={styles['quick-updates__title']}>The Most Holy Trinity</h3>
+              <p className={styles['quick-updates__label']}>Upcoming</p>
+              <h3 className={styles['quick-updates__title']}>The Parish Calendar</h3>
               <p className={styles['quick-updates__text']}>
-                Join us for the Solemnity of the Most Holy Trinity.{' '}
-                {priests[0]?.name ?? 'Our clergy'} will preside at the 11 o&apos;clock
-                Mass. All are welcome to the table of the Lord.
+                Sunday and weekday Mass times, confessions, novenas, and every feast
+                and parish celebration. The full schedule is always kept current.
               </p>
             </div>
             <Button href="/schedule" variant="ghost-inverse" size="sm">
@@ -165,7 +158,7 @@ export default async function HomePage(): Promise<React.JSX.Element> {
         {latestHomily ? (
           <article className={styles['quick-updates__card']}>
             <Image
-              src="/images/card-homily.png"
+              src="/images/img_card2.png"
               alt=""
               fill
               sizes="(min-width: 1024px) 33vw, 100vw"
@@ -176,20 +169,49 @@ export default async function HomePage(): Promise<React.JSX.Element> {
                 <p className={styles['quick-updates__label']}>Latest Homily</p>
                 <h3 className={styles['quick-updates__title']}>{latestHomily.title}</h3>
                 <p className={styles['quick-updates__text']}>
-                  {latestHomily.authorName} reflects on{' '}
-                  {latestHomily.scriptureReferences.join('; ')};{' '}
-                  {toPlainText(latestHomily.body.slice(0, 1)).replace(/\.$/, '')}. Duration:{' '}
-                  {formatDuration(latestHomily.audioDurationSeconds)} minutes.
+                  Preached {formatDate(latestHomily.publishedAt)} by {latestHomily.authorName}.{' '}
+                  {latestHomily.audioUrl
+                    ? 'Press play for the full reflection.'
+                    : 'Read the full reflection.'}
                 </p>
               </div>
-              <Button href={`/homilies?play=${latestHomily.slug}`} variant="ghost-inverse" size="sm">
-                Listen Now →
+              <Button
+                href={
+                  latestHomily.audioUrl
+                    ? `/homilies?play=${latestHomily.slug}`
+                    : `/homilies?read=${latestHomily.slug}`
+                }
+                variant="ghost-inverse"
+                size="sm"
+              >
+                {latestHomily.audioUrl ? 'Listen Now →' : 'Read Homily →'}
               </Button>
             </div>
           </article>
         ) : null}
 
-        {cardAnnouncement ? <HomeAnnouncementCard announcement={cardAnnouncement} /> : null}
+        <article className={styles['quick-updates__card']}>
+          <Image
+            src="/images/img_card3.png"
+            alt=""
+            fill
+            sizes="(min-width: 1024px) 33vw, 100vw"
+            className={styles['quick-updates__bg']}
+          />
+          <div className={styles['quick-updates__panel']}>
+            <div className={styles['quick-updates__info']}>
+              <p className={styles['quick-updates__label']}>Societies &amp; Zones</p>
+              <h3 className={styles['quick-updates__title']}>Find Your Place in the Parish</h3>
+              <p className={styles['quick-updates__text']}>
+                From the parish zones to the choirs, guilds, and devotional societies,
+                there is a community here ready to welcome you.
+              </p>
+            </div>
+            <Button href="/societies" variant="ghost-inverse" size="sm">
+              Explore Societies →
+            </Button>
+          </div>
+        </article>
       </section>
 
       {/* ---------- Readings & Announcements ---------- */}

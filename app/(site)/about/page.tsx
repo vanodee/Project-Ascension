@@ -1,16 +1,17 @@
-import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { PortableText } from '@portabletext/react';
 import PageHeader from '@/components/ui/PageHeader';
 import { getAboutPage } from '@/lib/about';
+import { buildPageMetadata } from '@/lib/metadata';
 import styles from './page.module.scss';
 
-export const metadata: Metadata = {
+export const metadata = buildPageMetadata({
+  path: '/about',
   title: 'About Us',
   description:
     'The history and mission of the Catholic Church of the Ascension, MMIA, Ikeja, Lagos — a parish of the Catholic Archdiocese of Lagos.',
-};
+});
 
 export default async function AboutPage(): Promise<React.JSX.Element> {
   const aboutPage = await getAboutPage();

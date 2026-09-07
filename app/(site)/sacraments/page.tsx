@@ -1,18 +1,19 @@
-import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import PageHeader from '@/components/ui/PageHeader';
 import Button from '@/components/ui/Button';
 import { getSacraments } from '@/lib/sacraments';
+import { buildPageMetadata } from '@/lib/metadata';
 import styles from './page.module.scss';
 
 // SSG — content changes infrequently, managed in Sanity (sacramentPage collection).
 
-export const metadata: Metadata = {
+export const metadata = buildPageMetadata({
+  path: '/sacraments',
   title: 'Sacraments',
   description:
     'The seven sacraments celebrated at the Catholic Church of the Ascension — and the RCIA pathway for those called to the Catholic faith.',
-};
+});
 
 export default async function SacramentsPage(): Promise<React.JSX.Element> {
   const sacraments = await getSacraments();

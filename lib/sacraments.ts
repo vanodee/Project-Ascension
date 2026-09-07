@@ -14,6 +14,7 @@ interface SacramentPageDoc {
   heroImageAspectRatio: number | null;
   body: PortableTextBlock[];
   tallyFormId?: string;
+  updatedAt: string;
 }
 
 function toSacramentPage(doc: SacramentPageDoc): SacramentPage {
@@ -26,6 +27,7 @@ function toSacramentPage(doc: SacramentPageDoc): SacramentPage {
     heroImageAspectRatio: doc.heroImageAspectRatio ?? 16 / 9,
     body: doc.body,
     ...(doc.tallyFormId ? { tallyFormId: doc.tallyFormId } : {}),
+    updatedAt: doc.updatedAt,
   };
 }
 

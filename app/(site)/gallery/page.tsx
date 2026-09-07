@@ -1,17 +1,18 @@
-import type { Metadata } from 'next';
 import PageHeader from '@/components/ui/PageHeader';
 import { getAlbums } from '@/lib/gallery';
+import { buildPageMetadata } from '@/lib/metadata';
 import GalleryGrid from './GalleryGrid';
 import styles from './page.module.scss';
 
 // ISR — revalidate every 10 minutes.
 export const revalidate = 600;
 
-export const metadata: Metadata = {
+export const metadata = buildPageMetadata({
+  path: '/gallery',
   title: 'Gallery',
   description:
-    'Photos and videos from the life of the Catholic Church of the Ascension, Ikeja, Lagos — liturgies, celebrations, and outreach.',
-};
+    'Photos from the life of the Catholic Church of the Ascension, Ikeja, Lagos — liturgies, celebrations, and outreach.',
+});
 
 export default async function GalleryPage(): Promise<React.JSX.Element> {
   const albums = await getAlbums();

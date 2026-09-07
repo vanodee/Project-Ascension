@@ -1,14 +1,15 @@
-import type { Metadata } from 'next';
 import PageHeader from '@/components/ui/PageHeader';
 import { getSocieties } from '@/lib/societies';
+import { buildPageMetadata } from '@/lib/metadata';
 import SocietiesGrid from './SocietiesGrid';
 import styles from './page.module.scss';
 
-export const metadata: Metadata = {
+export const metadata = buildPageMetadata({
+  path: '/societies',
   title: 'Our Societies',
   description:
     'The groups, ministries, and movements that make up the life of our parish — united in faith, service, and fellowship.',
-};
+});
 
 export default async function SocietiesPage(): Promise<React.JSX.Element> {
   const societies = await getSocieties();

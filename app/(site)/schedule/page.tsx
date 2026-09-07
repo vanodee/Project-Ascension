@@ -1,6 +1,6 @@
-import type { Metadata } from 'next';
 import PageHeader from '@/components/ui/PageHeader';
 import { getLagosToday, getScheduleData } from '@/lib/schedule';
+import { buildPageMetadata } from '@/lib/metadata';
 import ScheduleView from './ScheduleView';
 import styles from './page.module.scss';
 
@@ -9,11 +9,12 @@ import styles from './page.module.scss';
 // (and on the webhook when a recurringEvent / parishEvent is edited).
 export const revalidate = 3600;
 
-export const metadata: Metadata = {
+export const metadata = buildPageMetadata({
+  path: '/schedule',
   title: 'Parish Schedule',
   description:
     'Upcoming Masses, confessions, novenas, meetings, and events at the Catholic Church of the Ascension, Ikeja, Lagos.',
-};
+});
 
 export default async function SchedulePage(): Promise<React.JSX.Element> {
   const today = getLagosToday();

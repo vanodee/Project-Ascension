@@ -3,8 +3,11 @@ import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { PortableText } from '@portabletext/react';
 import Button from '@/components/ui/Button';
+import JsonLd from '@/components/seo/JsonLd';
 import { getSocieties, getSociety } from '@/lib/societies';
 import { paragraphComponents } from '@/lib/portableText';
+import { buildPageMetadata } from '@/lib/metadata';
+import { breadcrumbLd } from '@/lib/structuredData';
 import SocietyHero from './SocietyHero';
 import styles from './page.module.scss';
 
@@ -24,11 +27,13 @@ export async function generateMetadata({ params }: SocietyRouteParams): Promise<
   const { slug } = await params;
   const society = await getSociety(slug);
   if (!society) return {};
-  return {
+  // OG image left as the site-wide card — a bare society logo reads poorly at 1.91:1.
+  return buildPageMetadata({
+    path: `/societies/${slug}`,
     title: `${society.name} — Societies`,
     description:
       society.subtitle ?? `Learn more about ${society.name} at the Catholic Church of the Ascension.`,
-  };
+  });
 }
 
 export default async function SocietyDetailPage({
@@ -43,6 +48,13 @@ export default async function SocietyDetailPage({
 
   return (
     <div className={styles.society}>
+      <JsonLd
+        data={breadcrumbLd([
+          { name: 'Home', path: '/' },
+          { name: 'Societies', path: '/societies' },
+          { name: society.name, path: `/societies/${slug}` },
+        ])}
+      />
       <SocietyHero society={society} />
 
       <div className={styles['society__content']}>

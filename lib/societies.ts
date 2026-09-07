@@ -12,6 +12,7 @@ interface SocietyDoc {
   color: string;
   societyType: Society['societyType'];
   logo: SanityImageSource;
+  updatedAt?: string;
 }
 
 interface SocietyDetailDoc extends SocietyDoc {
@@ -48,6 +49,7 @@ export async function getSocieties(): Promise<Society[]> {
       color: doc.color,
       societyType: doc.societyType,
       logo: imageUrl(doc.logo, 600),
+      ...(doc.updatedAt ? { updatedAt: doc.updatedAt } : {}),
     }))
     .sort(
       (a, b) =>

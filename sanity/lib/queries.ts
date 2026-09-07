@@ -82,6 +82,7 @@ export const GALLERY_ALBUMS_QUERY = /* groq */ `
     title,
     "slug": slug.current,
     eventDate,
+    "updatedAt": _updatedAt,
     description,
     coverImage,
     society-> { "slug": slug.current, name, shortName, color, societyType, logo },
@@ -99,6 +100,7 @@ export const GALLERY_ALBUM_QUERY = /* groq */ `
     title,
     "slug": slug.current,
     eventDate,
+    "updatedAt": _updatedAt,
     description,
     coverImage,
     society-> { "slug": slug.current, name, shortName, color, societyType, logo },
@@ -118,7 +120,8 @@ export const SOCIETIES_QUERY = /* groq */ `
     shortName,
     color,
     societyType,
-    logo
+    logo,
+    "updatedAt": _updatedAt
   }
 `;
 
@@ -150,7 +153,8 @@ export const SACRAMENT_PAGES_QUERY = /* groq */ `
     heroImage,
     "heroImageAspectRatio": heroImage.asset->metadata.dimensions.aspectRatio,
     body,
-    tallyFormId
+    tallyFormId,
+    "updatedAt": _updatedAt
   }
 `;
 
@@ -164,7 +168,17 @@ export const SITE_SETTINGS_QUERY = /* groq */ `
     email,
     facebookUrl,
     instagramUrl,
-    youtubeChannelId
+    youtubeChannelId,
+    streetAddress,
+    addressLocality,
+    addressRegion,
+    postalCode,
+    addressCountry,
+    latitude,
+    longitude,
+    logo,
+    foundingYear,
+    diocese
   }
 `;
 

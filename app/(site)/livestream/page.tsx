@@ -1,19 +1,20 @@
-import type { Metadata } from 'next';
 import PageHeader from '@/components/ui/PageHeader';
 import Button from '@/components/ui/Button';
 import { getLivestreamStatus } from '@/lib/livestream';
 import { getLagosToday, getScheduleData } from '@/lib/schedule';
 import { getScheduleWeek } from '@/lib/calendar';
+import { buildPageMetadata } from '@/lib/metadata';
 import styles from './page.module.scss';
 
 // ISR — live status revalidates every minute (keyless YouTube scrape, server-side).
 export const revalidate = 60;
 
-export const metadata: Metadata = {
+export const metadata = buildPageMetadata({
+  path: '/livestream',
   title: 'Livestream',
   description:
     'Watch live from the Catholic Church of the Ascension, Ikeja, Lagos — Sunday Mass, ordinations, and parish celebrations — or replay the most recent broadcast.',
-};
+});
 
 export default async function LivestreamPage(): Promise<React.JSX.Element> {
   const today = getLagosToday();

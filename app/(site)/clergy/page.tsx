@@ -1,16 +1,17 @@
-import type { Metadata } from 'next';
 import PageHeader from '@/components/ui/PageHeader';
 import { getClergy } from '@/lib/clergy';
+import { buildPageMetadata } from '@/lib/metadata';
 import ClergyGrid from './ClergyGrid';
 import styles from './page.module.scss';
 
 // SSG — clergy profiles change infrequently, managed in Sanity (clergyMember).
 
-export const metadata: Metadata = {
+export const metadata = buildPageMetadata({
+  path: '/clergy',
   title: 'Our Clergy',
   description:
     'Meet the priests, reverend sisters, and catechists of the Catholic Church of the Ascension, Ikeja, Lagos.',
-};
+});
 
 export default async function ClergyPage(): Promise<React.JSX.Element> {
   const members = await getClergy();

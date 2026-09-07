@@ -1,9 +1,11 @@
-import type { Metadata } from 'next';
 import PageHeader from '@/components/ui/PageHeader';
 import TallyEmbed from '@/components/ui/TallyEmbed';
+import JsonLd from '@/components/seo/JsonLd';
 import { getSiteSettings } from '@/lib/site';
 import { getLagosToday, getScheduleData } from '@/lib/schedule';
 import { getScheduleWeek } from '@/lib/calendar';
+import { buildPageMetadata } from '@/lib/metadata';
+import { contactPageLd } from '@/lib/structuredData';
 import styles from './page.module.scss';
 
 // ISR — contact details are static, but the Mass Schedule block is date-relative
@@ -11,11 +13,12 @@ import styles from './page.module.scss';
 // next-midnight TTL; this is the segment backstop.
 export const revalidate = 3600;
 
-export const metadata: Metadata = {
+export const metadata = buildPageMetadata({
+  path: '/contact',
   title: 'Contact Us',
   description:
     'Contact the Catholic Church of the Ascension, MMIA, Ikeja, Lagos — address, phone, email, Mass schedule, and contact form.',
-};
+});
 
 export default async function ContactPage(): Promise<React.JSX.Element> {
   const today = getLagosToday();
@@ -26,6 +29,7 @@ export default async function ContactPage(): Promise<React.JSX.Element> {
   const week = getScheduleWeek(scheduleData, today);
   return (
     <div className={styles.contact}>
+      <JsonLd data={contactPageLd()} />
       <PageHeader
         eyebrow="We Would Love to Hear From You"
         title="Contact Us"

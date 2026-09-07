@@ -5,8 +5,11 @@ import { PortableText } from '@portabletext/react';
 import Button from '@/components/ui/Button';
 import PageHeader from '@/components/ui/PageHeader';
 import TallyEmbed from '@/components/ui/TallyEmbed';
+import JsonLd from '@/components/seo/JsonLd';
 import { getSacraments, getSacrament } from '@/lib/sacraments';
 import { paragraphComponents } from '@/lib/portableText';
+import { buildPageMetadata } from '@/lib/metadata';
+import { breadcrumbLd } from '@/lib/structuredData';
 import styles from './page.module.scss';
 
 // SSG — all 7 sacrament pages pre-rendered at build time.
@@ -24,10 +27,13 @@ export async function generateMetadata({ params }: SacramentRouteParams): Promis
   const { slug } = await params;
   const sacrament = await getSacrament(slug);
   if (!sacrament) return {};
-  return {
+  return buildPageMetadata({
+    path: `/sacraments/${slug}`,
     title: sacrament.title,
     description: sacrament.summary,
-  };
+    image: sacrament.heroImage,
+    imageAlt: sacrament.title,
+  });
 }
 
 export default async function SacramentDetailPage({
@@ -39,6 +45,13 @@ export default async function SacramentDetailPage({
 
   return (
     <article className={styles.sacrament}>
+      <JsonLd
+        data={breadcrumbLd([
+          { name: 'Home', path: '/' },
+          { name: 'Sacraments', path: '/sacraments' },
+          { name: sacrament.title, path: `/sacraments/${slug}` },
+        ])}
+      />
       <PageHeader
         eyebrow={sacrament.label}
         title={sacrament.title}

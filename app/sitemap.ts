@@ -46,7 +46,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     for (const s of sacraments) {
       entries.push({
         url: `${SITE_URL}/sacraments/${s.sacrament}`,
-        lastModified: now,
+        lastModified: s.updatedAt ? new Date(s.updatedAt) : now,
         changeFrequency: 'monthly',
         priority: 0.5,
       });
@@ -54,7 +54,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     for (const s of societies) {
       entries.push({
         url: `${SITE_URL}/societies/${s.slug}`,
-        lastModified: now,
+        lastModified: s.updatedAt ? new Date(s.updatedAt) : now,
         changeFrequency: 'monthly',
         priority: 0.5,
       });
@@ -62,7 +62,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     for (const a of albums) {
       entries.push({
         url: `${SITE_URL}/gallery/${a.slug}`,
-        lastModified: now,
+        lastModified: a.updatedAt ? new Date(a.updatedAt) : now,
         changeFrequency: 'yearly',
         priority: 0.4,
       });
