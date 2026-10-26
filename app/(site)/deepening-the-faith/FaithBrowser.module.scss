@@ -157,8 +157,10 @@
   color: var(--text-secondary);
 }
 
+// Type scale under the 48px hero: section titles (h2) display-md 32px →
+// card titles (h3) display-sm 24px → row titles heading-md 20px.
 .featured__card-title {
-  @include display-md;
+  @include display-sm;
   color: var(--text-primary);
   text-transform: uppercase;
 }
@@ -434,7 +436,7 @@
 }
 
 .month__name {
-  @include display-lg;
+  @include display-sm;
   color: var(--text-primary);
 }
 

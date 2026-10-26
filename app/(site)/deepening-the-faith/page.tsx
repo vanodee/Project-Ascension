@@ -32,12 +32,14 @@ export default async function DeepeningTheFaithPage(): Promise<React.JSX.Element
         description="A monthly theme. A weekly teaching. A faith lived beyond Sunday Mass."
       />
 
-      <FaithBrowser
-        featured={pickFeatured(months, reflections, today)}
-        archive={archive}
-        initialMonthKey={defaultMonthKey(archive, today)}
-        reflections={reflections}
-      />
+      <div className={styles.faith__content}>
+        <FaithBrowser
+          featured={pickFeatured(months, reflections, today)}
+          archive={archive}
+          initialMonthKey={defaultMonthKey(archive, today)}
+          reflections={reflections}
+        />
+      </div>
     </div>
   );
 }

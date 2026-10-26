@@ -91,6 +91,17 @@
 
 // ---------- Display (Cinzel) ----------
 
+@mixin display-sm {
+  font-family: var(--font-cinzel), serif;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1.2;
+
+  @include breakpoint($bp-md) {
+    font-size: 24px;
+  }
+}
+
 @mixin display-md {
   font-family: var(--font-cinzel), serif;
   font-size: 24px;

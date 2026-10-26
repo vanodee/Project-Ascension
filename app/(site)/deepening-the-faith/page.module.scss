@@ -7,3 +7,12 @@
   gap: var(--space-2xl);
   width: 100%;
 }
+
+.faith__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xl);
+  width: 100%;
+
+  @include content-inset;
+}
