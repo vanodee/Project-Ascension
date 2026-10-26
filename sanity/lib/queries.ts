@@ -235,3 +235,28 @@ export const ABOUT_PAGE_QUERY = /* groq */ `
     milestones[] { _key, year, title, tag, description }
   }
 `;
+
+export const FAITH_MONTHS_QUERY = /* groq */ `
+  *[_type == "faithMonth" && defined(year) && defined(month)]
+    | order(year desc, month desc) {
+    year,
+    month,
+    theme
+  }
+`;
+
+// Reflections stay hidden until their own date (Lagos) — `$today` is "YYYY-MM-DD".
+export const FAITH_REFLECTIONS_QUERY = /* groq */ `
+  *[_type == "faithReflection" && defined(date) && date <= $today && defined(month->year)]
+    | order(date desc) {
+    "slug": slug.current,
+    date,
+    "year": month->year,
+    "month": month->month,
+    topic,
+    biblicalReferences,
+    questions,
+    teaching,
+    suggestedTask
+  }
+`;

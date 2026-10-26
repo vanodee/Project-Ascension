@@ -31,6 +31,7 @@ Catholic Church of the Ascension parish website — a greenfield Next.js project
 | Home, Contact | ISR | 10 min / 1 h; Mass-times blocks turn over at next Lagos midnight |
 | Parish Schedule | ISR | Next Lagos midnight (1 h backstop) |
 | Daily Readings (Universalis) | ISR | Next Lagos midnight (1 h backstop) |
+| Deepening the Faith | ISR | Next Lagos midnight (1 h backstop) — a reflection appears on its own date |
 | Livestream | ISR | 1 minute; Mass-times block turns over at next Lagos midnight |
 
 ## Coding Conventions
@@ -74,6 +75,8 @@ Catholic Church of the Ascension parish website — a greenfield Next.js project
 - `galleryAlbum` — collection (required `society` reference; `media[]` is `imageItem` only — Sanity image assets with alt + caption; no `category` field. Video support was scoped for v1 but never built and has been removed from the schema — see `qol-ideas.md`)
 - `recurringEvent` — collection (parish schedule: a repeating rule — `frequency` weekly/monthly, `daysOfWeek` or `monthlyOrdinal`+`monthlyWeekday`, optional `durationMinutes`, optional `startDate`/`endDate`, `active`; `overrides[]` array of `{date, mode: cancelled|modified, time?, location?, title?, note?}` for per-date exceptions. Start is either `startMode: 'fixed'` with `time` as a `"HH:MM"` Lagos string, or `startMode: 'follows'` with `anchorEvent` (reference) + `anchorRelation` (after|before|during) — the occurrence's start is derived from the anchor's occurrence on the same date). Expanded into occurrences by `lib/calendar.ts`.
 - `parishEvent` — collection (parish schedule: one-off dated event — `startDate`, optional `endDate` for multi-day, `allDay` toggle. Start is `startMode: 'fixed'` with `startTime`/`endTime` as `"HH:MM"` strings, or `startMode: 'follows'` with `anchorEvent` (reference to a `recurringEvent` or `parishEvent` on the same date) + `anchorRelation`)
+- `faithMonth` — collection (Deepening the Faith monthly theme: `year`, `month` 1–12, `theme`)
+- `faithReflection` — collection (Deepening the Faith weekly write-up: required `month` reference to `faithMonth` — validated so `date` falls inside it — `date` (usually a Sunday; hidden on the site until that Lagos date), `topic`, `slug`, `biblicalReferences[]`, `questions[]`, `teaching` Portable Text (bold/italic only), `suggestedTask`. Rendered at `/deepening-the-faith` — the archive helpers are pure in `lib/faithArchive.ts`, the fetch in `lib/deepeningTheFaith.ts`; the detail view is a modal deep-linked via `?reflection=<slug>`, no `[slug]` route)
 - `siteSettings` — singleton (parish name, contact info, social links, YouTube channel ID; plus a "Location & identity" fieldset — `streetAddress`/`addressLocality`/`addressRegion`/`postalCode`/`addressCountry`, `latitude`/`longitude`, `logo`, `foundingYear`, `diocese` — that feeds the JSON-LD in `lib/structuredData.ts`. Keep the structured parts consistent with the free-text `address`.)
 
 ## Sanity Studio Deployment

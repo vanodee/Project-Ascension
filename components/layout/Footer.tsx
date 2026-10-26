@@ -33,6 +33,7 @@ function buildLinkGroups(siteSettings: SiteSettings): FooterGroup[] {
         { href: '/readings', label: 'Daily Readings' },
         { href: '/schedule', label: 'Mass Schedule' },
         { href: '/homilies', label: 'Homilies' },
+        { href: '/deepening-the-faith', label: 'Deepening the Faith' },
         { href: '/livestream', label: 'Watch Live' },
         { href: '/announcements', label: 'Announcements' },
       ],

@@ -32,6 +32,7 @@ const NAV_LEFT: NavItem[] = [
       { href: '/readings', label: 'Daily Readings' },
       { href: '/schedule', label: 'Parish Schedule' },
       { href: '/livestream', label: 'Livestream' },
+      { href: '/deepening-the-faith', label: 'Deepening the Faith' },
     ],
   },
   {

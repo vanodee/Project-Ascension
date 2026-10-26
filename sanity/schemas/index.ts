@@ -8,6 +8,8 @@ import aboutPage from './aboutPage'
 import siteSettings from './siteSettings'
 import recurringEvent from './recurringEvent'
 import parishEvent from './parishEvent'
+import faithMonth from './faithMonth'
+import faithReflection from './faithReflection'
 
 export const schemaTypes = [
   clergyMember,
@@ -20,4 +22,6 @@ export const schemaTypes = [
   siteSettings,
   recurringEvent,
   parishEvent,
+  faithMonth,
+  faithReflection,
 ]

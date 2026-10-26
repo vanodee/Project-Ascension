@@ -35,6 +35,16 @@ export default defineConfig({
                     S.documentTypeListItem('parishEvent').title('One-off Events'),
                   ]),
               ),
+            S.listItem()
+              .title('Deepening the Faith')
+              .child(
+                S.list()
+                  .title('Deepening the Faith')
+                  .items([
+                    S.documentTypeListItem('faithMonth').title('Monthly Themes'),
+                    S.documentTypeListItem('faithReflection').title('Weekly Reflections'),
+                  ]),
+              ),
             S.divider(),
             S.listItem()
               .title('About Page')

@@ -31,6 +31,10 @@ export function pathsToRevalidate(type: string, slug?: string): string[] {
       // Mass/Confession times are derived from the schedule on the home, contact,
       // and livestream pages too.
       return ['/schedule', '/', '/contact', '/livestream'];
+    case 'faithMonth':
+    case 'faithReflection':
+      // Reflections open in a modal on the index — no per-slug route.
+      return ['/deepening-the-faith'];
     case 'aboutPage':
       return ['/about'];
     default:

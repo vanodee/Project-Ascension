@@ -1,0 +1,548 @@
+@use '../../../styles/tokens' as *;
+@use '../../../styles/mixins' as *;
+
+%sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.empty {
+  @include body-base-italic;
+  color: var(--text-secondary);
+  text-align: center;
+  padding: var(--space-xl) 0;
+}
+
+// ---------- Featured (this week's teaching) ----------
+
+.featured {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  padding: 0 var(--space-md) var(--space-md);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-base);
+
+  @include breakpoint($bp-md) {
+    padding: 0 var(--space-lg) var(--space-lg);
+  }
+}
+
+// Below $bp-lg the panel stacks (logo above the preview), so everything centres.
+.featured__theme {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+  padding-block: 20px;
+  border-bottom: 1px solid var(--border-medium);
+  text-align: center;
+
+  @include breakpoint($bp-lg) {
+    flex-direction: row;
+    gap: var(--space-xl);
+    text-align: left;
+  }
+}
+
+.featured__theme-context {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex-shrink: 0;
+  color: var(--text-secondary);
+
+  @include breakpoint($bp-lg) {
+    width: 200px;
+    border-right: 1px solid var(--border-medium);
+  }
+}
+
+.featured__theme-month {
+  @include label-base;
+}
+
+.featured__theme-caption {
+  @include body-sm-italic;
+}
+
+.featured__theme-title {
+  @include display-md;
+  flex: 1;
+  min-width: 0;
+  color: var(--text-primary);
+  text-transform: uppercase;
+}
+
+.featured__body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-lg);
+
+  @include breakpoint($bp-lg) {
+    flex-direction: row;
+    gap: var(--space-xl);
+  }
+}
+
+.featured__logo {
+  flex-shrink: 0;
+  width: 180px;
+  height: auto;
+
+  @include breakpoint($bp-lg) {
+    width: 309px;
+  }
+}
+
+.featured__preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+  text-align: center;
+
+  @include breakpoint($bp-lg) {
+    align-items: stretch;
+    text-align: left;
+  }
+}
+
+.featured__status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-md);
+  color: var(--text-primary);
+
+  @include breakpoint($bp-lg) {
+    justify-content: flex-start;
+  }
+}
+
+.featured__badge {
+  @include label-md;
+  padding-right: var(--space-md);
+  border-right: 1px solid var(--background-inverse);
+}
+
+.featured__date {
+  @include body-sm;
+}
+
+.featured__card {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding: var(--space-lg);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-base);
+  background-color: var(--background-surface);
+}
+
+.featured__card-refs {
+  @include body-sm-italic;
+  color: var(--text-secondary);
+}
+
+.featured__card-title {
+  @include display-md;
+  color: var(--text-primary);
+  text-transform: uppercase;
+}
+
+.featured__card-excerpt {
+  @include body-base-italic;
+  color: var(--text-primary);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.featured__actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+
+  @include breakpoint($bp-lg) {
+    flex-direction: row;
+    justify-content: space-between;
+    gap: var(--space-sm);
+  }
+}
+
+.featured__contents {
+  @include body-sm-italic;
+  color: var(--text-secondary);
+}
+
+// ---------- Archive ----------
+
+.archive {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+  padding: var(--space-xl) 0 var(--space-md);
+  border-top: 1px solid var(--border-default);
+
+  @include breakpoint($bp-md) {
+    gap: var(--space-2xl);
+  }
+}
+
+.archive__intro {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+
+  @include breakpoint($bp-md) {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.archive__heading {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.archive__eyebrow {
+  @include label-base;
+  color: var(--text-secondary);
+}
+
+.archive__title {
+  @include display-md;
+  color: var(--text-primary);
+}
+
+.archive__note {
+  @include body-sm-italic;
+  color: var(--text-secondary);
+}
+
+.archive__layout {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+
+  @include breakpoint($bp-lg) {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 40px;
+  }
+}
+
+// ---------- Navigator (year + months) ----------
+
+// Stacked (below $bp-lg): year + month dropdowns, side by side from $bp-md.
+// At $bp-lg it becomes the Figma sidebar — year dropdown over a month list.
+.navigator {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-lg);
+  padding: var(--space-lg);
+  border-radius: var(--radius-base);
+  background-color: var(--background-muted);
+
+  @include breakpoint($bp-md) {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  @include breakpoint($bp-lg) {
+    display: flex;
+    flex-direction: column;
+    flex: 0 0 300px;
+    padding: var(--space-xl) var(--space-lg);
+  }
+}
+
+.navigator__field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+
+  @include breakpoint($bp-lg) {
+    gap: var(--space-lg);
+  }
+}
+
+.navigator__field--month {
+  @include breakpoint($bp-lg) {
+    display: none;
+  }
+}
+
+.navigator__months-label {
+  display: none;
+
+  @include breakpoint($bp-lg) {
+    display: block;
+  }
+}
+
+.navigator__label {
+  @include label-base;
+  color: var(--text-secondary);
+}
+
+.navigator__select-wrap {
+  position: relative;
+  display: block;
+}
+
+.navigator__select {
+  @include label-md;
+  width: 100%;
+  height: 38px;
+  padding-inline: var(--space-md) calc(var(--space-md) + 22px);
+  border: 1px solid var(--background-inverse);
+  border-radius: var(--radius-base);
+  background-color: transparent;
+  color: var(--text-primary);
+  box-sizing: border-box;
+  appearance: none;
+  cursor: pointer;
+}
+
+.navigator__select-chevron {
+  position: absolute;
+  top: 50%;
+  right: var(--space-md);
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-right: 1.5px solid var(--text-primary);
+  border-bottom: 1.5px solid var(--text-primary);
+  transform: translateY(-70%) rotate(45deg);
+  transition: transform 0.15s ease;
+  pointer-events: none;
+}
+
+.navigator__select-chevron--open {
+  transform: translateY(-30%) rotate(225deg);
+}
+
+.navigator__months {
+  display: none;
+
+  @include breakpoint($bp-lg) {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+  }
+}
+
+.navigator__month {
+  @include body-sm;
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  width: 100%;
+  padding: 10px var(--space-sm);
+  border-radius: var(--radius-base);
+  color: var(--text-primary);
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+
+  &:hover:not(:disabled):not(.navigator__month--selected) {
+    background-color: var(--background-page);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+}
+
+.navigator__month--selected {
+  background-color: var(--background-inverse);
+  color: var(--text-inverse);
+
+  .navigator__current {
+    border-color: var(--text-inverse);
+  }
+
+  .navigator__current-dot {
+    background-color: var(--text-inverse);
+  }
+}
+
+.navigator__current {
+  display: inline-flex;
+  flex-shrink: 0;
+  padding: 2px;
+  border: 1px solid var(--background-inverse-subtle);
+  border-radius: 9999px;
+}
+
+.navigator__current-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+  background-color: var(--background-inverse-subtle);
+}
+
+.navigator__sr-only {
+  @extend %sr-only;
+}
+
+// ---------- Selected month ----------
+
+.month {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+  flex: 1;
+  min-width: 0;
+}
+
+.month__card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding: var(--space-lg);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-base);
+  background-color: var(--background-surface);
+
+  @include breakpoint($bp-md) {
+    padding: var(--space-xl);
+  }
+}
+
+.month__label {
+  @include label-base;
+  color: var(--text-secondary);
+}
+
+.month__name {
+  @include display-lg;
+  color: var(--text-primary);
+}
+
+.month__theme {
+  @include body-md-italic;
+  color: var(--text-primary);
+}
+
+.month__heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-xs) var(--space-md);
+}
+
+.month__heading-title {
+  @include heading-md;
+  color: var(--text-primary);
+}
+
+.month__heading-note {
+  @include body-sm-italic;
+  color: var(--text-secondary);
+}
+
+// ---------- Sunday rows ----------
+
+.sundays {
+  display: flex;
+  flex-direction: column;
+}
+
+.sunday {
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.sunday__entry {
+  display: flex;
+  align-items: stretch;
+  gap: var(--space-2xs);
+  width: 100%;
+  min-height: 108px;
+  padding: var(--space-2xs);
+  text-align: left;
+  color: var(--text-primary);
+}
+
+.sunday__entry--link {
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: var(--background-surface);
+
+    .sunday__status {
+      color: var(--text-primary);
+    }
+  }
+}
+
+.sunday__date {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 60px;
+  border-radius: var(--radius-base);
+  background-color: var(--background-inverse-subtle);
+  color: var(--text-inverse);
+}
+
+.sunday__date-weekday,
+.sunday__date-month {
+  @include label-md;
+}
+
+.sunday__date-day {
+  @include heading-lg;
+}
+
+.sunday__sr-only {
+  @extend %sr-only;
+}
+
+.sunday__topic {
+  @include heading-md;
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+  padding: var(--space-xs) var(--space-sm);
+}
+
+.sunday__topic--pending {
+  color: var(--text-secondary);
+}
+
+.sunday__status {
+  @include body-sm-italic;
+  display: none;
+  align-self: center;
+  flex: 0 0 128px;
+  color: var(--text-secondary);
+  text-align: right;
+  transition: color 0.2s ease;
+
+  @include breakpoint($bp-sm) {
+    display: block;
+  }
+}

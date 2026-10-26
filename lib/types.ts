@@ -233,3 +233,25 @@ export interface SiteSettings {
   foundingYear?: string;
   diocese: string;
 }
+
+/** A Deepening the Faith monthly theme. `key` is "YYYY-MM". */
+export interface FaithMonth {
+  key: string;
+  year: number;
+  /** 1–12 */
+  month: number;
+  theme: string;
+}
+
+/** A Deepening the Faith weekly reflection. `date` is a Lagos "YYYY-MM-DD". */
+export interface FaithReflection {
+  slug: string;
+  date: string;
+  /** "YYYY-MM" of the referenced monthly theme. */
+  monthKey: string;
+  topic: string;
+  biblicalReferences: string[];
+  questions: string[];
+  teaching: PortableTextBlock[];
+  suggestedTask: string;
+}

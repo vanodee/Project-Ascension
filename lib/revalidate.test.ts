@@ -28,6 +28,13 @@ describe('pathsToRevalidate', () => {
     expect(pathsToRevalidate('homily', 'easter-vigil')).toEqual(['/', '/homilies']);
   });
 
+  it('refreshes the Deepening the Faith index for themes and reflections', () => {
+    expect(pathsToRevalidate('faithMonth')).toEqual(['/deepening-the-faith']);
+    expect(pathsToRevalidate('faithReflection', 'who-is-saint-francis')).toEqual([
+      '/deepening-the-faith',
+    ]);
+  });
+
   it('refreshes every page that dereferences a society', () => {
     expect(pathsToRevalidate('society')).toEqual([
       '/',
