@@ -7,7 +7,7 @@
 //   2. VERCEL_PROJECT_PRODUCTION_URL — Vercel's stable production domain (preview/build fallback)
 //   3. http://localhost:3000    — local dev / CI
 //
-// See CLAUDE.md → "Going live on a custom domain" for the switch-over checklist.
+// See CLAUDE.md → "Custom domain" for the switch-over checklist.
 function resolveSiteUrl(): string {
   const explicit = process.env.NEXT_PUBLIC_SITE_URL;
   if (explicit) return explicit.replace(/\/+$/, '');

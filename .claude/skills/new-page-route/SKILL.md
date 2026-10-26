@@ -28,7 +28,7 @@ When asked to create a new page or route (or when `/new-page-route` is invoked w
 5. **Wire up Sanity data fetching** if the page pulls from the CMS:
    - Add a GROQ query to `sanity/lib/queries.ts`.
    - Add a `get<Feature>()` fetch function to a `lib/<feature>.ts` helper, using the client from `sanity/lib/client.ts` and resolving images via `sanity/lib/image.ts`'s `imageUrl()`.
-   - For ISR pages, use the page-level `export const revalidate = N`. SSG pages instead rely on the on-publish webhook (`app/api/revalidate/route.ts`) for freshness — check whether the new document type needs a `case` added there, and remember the webhook's own GROQ `Filter` (dashboard-only, sanity.io/manage) needs the type added too.
+   - For ISR pages, use the page-level `export const revalidate = N`. SSG pages instead rely on the on-publish webhook (`app/api/revalidate/route.ts`) for freshness — check whether the new document type needs a `case` added to `pathsToRevalidate` in `lib/revalidate.ts` (covered by `lib/revalidate.test.ts`), and remember the webhook's own GROQ `Filter` (dashboard-only, sanity.io/manage) needs the type added too.
 
 6. **Add the route to the sitemap** — for a new static route, append it to `STATIC_ROUTES` in `app/sitemap.ts`. Dynamic `[slug]` routes are picked up automatically if their `get<Feature>()` helper is added to the `Promise.all` there.
 

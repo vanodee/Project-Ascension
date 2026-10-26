@@ -107,7 +107,7 @@ SANITY_WEBHOOK_SECRET=
 NEXT_PUBLIC_YOUTUBE_CHANNEL_ID=
 # Canonical production origin. Production value: https://www.ccoaikeja.org
 # (falls back to the Vercel production URL when unset, e.g. preview builds).
-# See CLAUDE.md → "Going live on a custom domain".
+# See CLAUDE.md → "Custom domain".
 NEXT_PUBLIC_SITE_URL=
 ```
 

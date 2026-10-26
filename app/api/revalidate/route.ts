@@ -1,6 +1,7 @@
 import { revalidatePath } from 'next/cache';
 import { parseBody } from 'next-sanity/webhook';
 import { type NextRequest, NextResponse } from 'next/server';
+import { pathsToRevalidate } from '@/lib/revalidate';
 
 interface WebhookPayload {
   _type: string;
@@ -39,38 +40,5 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   } catch (err) {
     console.error('Revalidation error:', err);
     return NextResponse.json({ message: 'Error revalidating' }, { status: 500 });
-  }
-}
-
-function pathsToRevalidate(type: string, slug?: string): string[] {
-  switch (type) {
-    case 'announcement':
-      // Announcements render in a modal on '/' and '/announcements' — no dedicated
-      // detail route to revalidate per-slug.
-      return ['/', '/announcements'];
-    case 'homily':
-      // Homilies play inline from the archive via a sticky player — no dedicated
-      // detail route to revalidate per-slug.
-      return ['/', '/homilies'];
-    case 'galleryAlbum':
-      return ['/', '/gallery', ...(slug ? [`/gallery/${slug}`] : [])];
-    case 'sacramentPage':
-      return ['/sacraments', ...(slug ? [`/sacraments/${slug}`] : [])];
-    case 'clergyMember':
-      // Homily pages show the author's name via a resolved reference.
-      return ['/', '/clergy', '/homilies'];
-    case 'society':
-      // Society name/logo is embedded via dereference on announcement & gallery cards,
-      // and listed directly on the Societies page.
-      return ['/', '/announcements', '/gallery', '/societies'];
-    case 'recurringEvent':
-    case 'parishEvent':
-      // Mass/Confession times are derived from the schedule on the home, contact,
-      // and livestream pages too.
-      return ['/schedule', '/', '/contact', '/livestream'];
-    case 'aboutPage':
-      return ['/about'];
-    default:
-      return [];
   }
 }

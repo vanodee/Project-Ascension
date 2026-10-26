@@ -10,7 +10,7 @@ Catholic Church of the Ascension parish website — a greenfield Next.js project
 
 - **Framework:** Next.js (App Router)
 - **Styling:** SCSS Modules
-- **CMS:** Sanity. The Studio is **hosted by Sanity** at `ascension-parish.sanity.studio` (deployed via `npx sanity deploy`) — it is not embedded in the Next app. `sanity` + `@sanity/vision` are devDependencies (CLI/typegen tooling); `sanity.config.ts` and `sanity.cli.ts` are loaded only by the Sanity CLI. Redeploy the Studio after any schema or `sanity.config.ts` change; its bundle otherwise auto-updates.
+- **CMS:** Sanity. The Studio is **hosted by Sanity** at `ascension-parish.sanity.studio` (deployed via `npx sanity deploy`) — it is not embedded in the Next app. `sanity` + `@sanity/vision` are devDependencies (CLI tooling only — there is no typegen; document types are hand-written in `lib/types.ts`, GROQ in `sanity/lib/queries.ts`); `sanity.config.ts` and `sanity.cli.ts` are loaded only by the Sanity CLI. Redeploy the Studio after any schema or `sanity.config.ts` change; its bundle otherwise auto-updates.
 - **Media:** Sanity native asset pipeline (images, audio via `cdn.sanity.io`); YouTube (embedded video)
 - **Calendar:** Parish schedule managed in Sanity (`recurringEvent` + `parishEvent`, expanded to occurrences in `lib/calendar.ts`)
 - **Readings:** Universalis API (no auth required)
@@ -30,16 +30,21 @@ Catholic Church of the Ascension parish website — a greenfield Next.js project
 | Announcements, Homilies, Gallery, Societies (detail) | ISR | 10 minutes |
 | Home, Contact | ISR | 10 min / 1 h; Mass-times blocks turn over at next Lagos midnight |
 | Parish Schedule | ISR | Next Lagos midnight (1 h backstop) |
-| Daily Readings (Universalis) | ISR | Next midnight |
+| Daily Readings (Universalis) | ISR | Next Lagos midnight (1 h backstop) |
 | Livestream | ISR | 1 minute; Mass-times block turns over at next Lagos midnight |
 
 ## Coding Conventions
 
-- **TypeScript:** Strict mode — no `any` types, full null checks required
+- **TypeScript:** Strict mode plus `noUncheckedIndexedAccess` — no `any` types, full null checks (indexed access is `T | undefined`). Import alias `@/*` → repo root.
 - **SCSS:** BEM naming inside CSS Modules (`block__element--modifier`)
+- **SCSS tokens:** `styles/_tokens.scss` + `styles/_mixins.scss`, pulled into modules with a relative `@use '../../styles/tokens' as *;` (no Sass loadPaths/alias).
+- **Lagos time:** use the helpers in `lib/format.ts` (`LAGOS_TZ`, `lagosNow`, `secondsUntilMidnight`) — never server-local time.
 - **Components:** Default to Server Components; only add `'use client'` when required (event handlers, hooks, browser APIs)
 - **CSS:** Mobile-first — base styles target mobile, use `min-width` media queries for larger breakpoints
 - **Lint:** `next lint` was removed in Next 16 — linting runs through the ESLint CLI (`npm run lint` → `eslint .`, flat config in `eslint.config.mjs`, `eslint-config-next/core-web-vitals`). `eslint` is pinned to v9 (v10 breaks the bundled React plugin). Run `npm run typecheck` / `npm run lint` / `npm test` before a commit.
+- **Tests:** Vitest, node env, only `lib/**/*.test.ts` is collected — tests placed elsewhere silently won't run.
+- **Installs:** `.npmrc` sets `legacy-peer-deps=true`; keep `eslint-config-next` on the same major as `next` (v14 has no flat config and breaks lint).
+- **Seeding:** `npm run seed` (`scripts/seed.ts`) must stay `createIfNotExists` — never `createOrReplace`, which would overwrite live parish content.
 
 ## App-Level Files (`app/`)
 
@@ -56,7 +61,7 @@ Catholic Church of the Ascension parish website — a greenfield Next.js project
 
 - **Every route's `metadata` / `generateMetadata` goes through `buildPageMetadata()` in `lib/metadata.ts`.** It sets a self-referential `alternates.canonical` plus a complete per-route `openGraph` / `twitter` block. Next merges these wholesale parent→child, so a route that sets only `title` inherits the parent's canonical and OG title — hence the helper. Home passes `absoluteTitle: true`.
 - Structured data (JSON-LD) builders live in `lib/structuredData.ts`, rendered by `components/seo/JsonLd.tsx`. Sitewide `Church` + `WebSite` in `(site)/layout.tsx`; `BreadcrumbList` on the three detail routes; `ContactPage` on `/contact`. Nodes cross-reference by `@id` (`#parish`, `#website`).
-- `api/revalidate/route.ts` — Sanity on-publish webhook → on-demand ISR.
+- `api/revalidate/route.ts` — Sanity on-publish webhook → on-demand ISR. A new document type needs both a `case` in `lib/revalidate.ts` (`pathsToRevalidate`) **and** adding to the webhook's GROQ filter in the Sanity dashboard (not in code — tell the user).
 
 ## Sanity Schema Document Types
 
@@ -90,11 +95,12 @@ whether the pushed commits touch `sanity/**`, `sanity.config.ts`, or
 `content-manager-guide.md` (repo root, **git-ignored**) is a plain-language manual
 for the non-technical parish content manager, covering every Sanity document type,
 how to manage it, and its gotchas. Because it is git-ignored it will not show in
-`git status` — check it deliberately.
+`git status` — check it deliberately. If it's missing from the checkout, tell the
+user rather than creating one from scratch.
 
 **On every "commit and push" request, check whether the pushed commits touch
 `sanity/schemas/**`, `sanity.config.ts`, `sanity/lib/queries.ts`, `lib/calendar.ts`,
-or `app/api/revalidate/route.ts`; if so, update the matching section of
+`app/api/revalidate/route.ts`, or `lib/revalidate.ts`; if so, update the matching section of
 `content-manager-guide.md` in the same commit** (schema field add/remove/rename,
 dropdown option changes, validation changes, Studio menu/singleton changes, query
 filters that hide content or change ordering, schedule-expansion changes, or
@@ -108,7 +114,7 @@ revalidation-timing changes). Note the update in the commit message.
 | Tally.so | Embed ID | Client-side embed |
 | Parish schedule | None (Sanity content) | `lib/calendar.ts` |
 | YouTube (livestream) | None (public scrape + RSS) | Server-side fetch in `lib/livestream.ts` |
-| YouTube channel ID | Public | `NEXT_PUBLIC_YOUTUBE_CHANNEL_ID` |
+| YouTube channel ID | Public | `NEXT_PUBLIC_YOUTUBE_CHANNEL_ID` (livestream reads only this; `siteSettings.youtubeChannelId` feeds only JSON-LD `sameAs`) |
 | Sanity | Project ID + Dataset = public; Token = private | Token server-side only |
 | Sanity Webhook | Shared secret | Server-side Route Handler only (`/api/revalidate`) |
 
@@ -135,23 +141,13 @@ is resolved in `lib/siteUrl.ts`: `NEXT_PUBLIC_SITE_URL` → `VERCEL_PROJECT_PROD
 in Vercel (Production) and `.env.local`; preview deployments fall through to the
 Vercel URL, which is correct for them.
 
-**Platform-side setup (done outside the codebase — see the go-live checklist the
-dev handed over):** Vercel Domains (add `www` + apex, apex→www 308), DNS records
-at the registrar, Sanity CORS origin + webhook target URL, Google Search Console
-property + sitemap submission, `siteSettings` and any parish URL references in
-Sanity, and a deployed-page check that `metadataBase` / OG tags resolve to
-`https://www.ccoaikeja.org`.
+Domain, DNS, Sanity CORS/webhook URL, and Search Console are configured outside
+the codebase.
 
 ## Out of Scope (v1.0)
 
 No member portal, no login, no seat booking, no confession scheduling, no multilingual support, no native mobile app, no e-commerce, no online giving / donations, no automated social media cross-posting.
 
-<!-- BEGIN:nextjs-agent-rules -->
-
-# This is NOT the Next.js you know
+## This is NOT the Next.js you know
 
 This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
-
-This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
-
-<!-- END:nextjs-agent-rules -->
