@@ -13,7 +13,7 @@ Catholic Church of the Ascension parish website — a greenfield Next.js project
 - **CMS:** Sanity. The Studio is **hosted by Sanity** at `ascension-parish.sanity.studio` (deployed via `npx sanity deploy`) — it is not embedded in the Next app. `sanity` + `@sanity/vision` are devDependencies (CLI tooling only — there is no typegen; document types are hand-written in `lib/types.ts`, GROQ in `sanity/lib/queries.ts`); `sanity.config.ts` and `sanity.cli.ts` are loaded only by the Sanity CLI. Redeploy the Studio after any schema or `sanity.config.ts` change; its bundle otherwise auto-updates.
 - **Media:** Sanity native asset pipeline (images, audio via `cdn.sanity.io`); YouTube (embedded video)
 - **Calendar:** Parish schedule managed in Sanity (`recurringEvent` + `parishEvent`, expanded to occurrences in `lib/calendar.ts`)
-- **Readings:** Universalis API (no auth required)
+- **Readings:** Universalis JSONP feed (no auth). Universalis only permits it to be loaded by visitors' browsers and 403s server-side fetches, so it loads client-side (`components/readings/useDailyReadings.ts` → `<script>` + `window.universalisCallback`); `lib/readings.ts` holds only pure parsing/liturgical helpers. Don't move it back server-side.
 - **Forms:** Tally.so (embed only, no backend)
 - **Livestream:** Keyless YouTube (server-side scrape of the channel `/live` page + `videos.xml` RSS feed; no Google Cloud project / API key)
 - **Hosting:** Vercel
@@ -30,7 +30,7 @@ Catholic Church of the Ascension parish website — a greenfield Next.js project
 | Announcements, Homilies, Gallery, Societies (detail) | ISR | 10 minutes |
 | Home, Contact | ISR | 10 min / 1 h; Mass-times blocks turn over at next Lagos midnight |
 | Parish Schedule | ISR | Next Lagos midnight (1 h backstop) |
-| Daily Readings (Universalis) | ISR | Next Lagos midnight (1 h backstop) |
+| Daily Readings | ISR shell | 1 hour; readings load client-side from Universalis (browser swaps in its own Lagos date) |
 | Deepening the Faith | ISR | Next Lagos midnight (1 h backstop) — a reflection appears on its own date |
 | Livestream | ISR | 1 minute; Mass-times block turns over at next Lagos midnight |
 
@@ -113,7 +113,7 @@ revalidation-timing changes). Note the update in the commit message.
 
 | Service | Key Type | Location |
 |---|---|---|
-| Universalis | None | Server-side fetch |
+| Universalis | None | Client-side JSONP `<script>` (browser only) |
 | Tally.so | Embed ID | Client-side embed |
 | Parish schedule | None (Sanity content) | `lib/calendar.ts` |
 | YouTube (livestream) | None (public scrape + RSS) | Server-side fetch in `lib/livestream.ts` |

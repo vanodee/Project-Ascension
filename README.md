@@ -15,7 +15,7 @@ A modern, content-driven parish website providing parishioners with easy access 
 | CMS | Sanity (Studio + API) |
 | Media | Sanity CDN (images, audio) |
 | Calendar | Parish schedule managed in Sanity |
-| Daily Readings | Universalis API |
+| Daily Readings | Universalis JSONP (loaded in the browser) |
 | Forms | Tally.so (embed) |
 | Livestream | YouTube (keyless — `/live` scrape + RSS) |
 | Hosting | Vercel |
@@ -35,7 +35,7 @@ A modern, content-driven parish website providing parishioners with easy access 
 | `/societies` | Parish societies directory, searchable with a type filter | SSG |
 | `/societies/[slug]` | Single society (hero, description, slogan, key info) | ISR (10 min) |
 | `/schedule` | Mass & event schedule (Sanity `recurringEvent` + `parishEvent`) | ISR (next Lagos midnight, 1 h backstop) |
-| `/readings` | Daily liturgical readings | ISR (next midnight) |
+| `/readings` | Daily liturgical readings | ISR shell (1 h); readings load client-side |
 | `/livestream` | Parish livestream (keyless YouTube) | ISR (1 min) |
 
 `robots.txt` and `sitemap.xml` are generated from `app/robots.ts` and

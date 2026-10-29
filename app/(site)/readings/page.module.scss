@@ -185,6 +185,51 @@
   margin-top: var(--space-md);
 }
 
+// ---------- Loading placeholder (readings load in the browser) ----------
+
+.readings__skeleton {
+  display: block;
+  height: 1em;
+  border-radius: var(--radius-base);
+  background: var(--background-muted);
+  animation: readings-pulse 1.4s ease-in-out infinite;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+.readings__skeleton--short {
+  width: 30%;
+}
+
+.readings__skeleton--medium {
+  width: 60%;
+}
+
+.readings__skeleton--full {
+  width: 100%;
+}
+
+.readings__skeleton--heading {
+  height: 1.75em;
+}
+
+@keyframes readings-pulse {
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.readings__sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
 .readings__attribution {
   @include body-sm-italic;
   padding-bottom: var(--space-xl);

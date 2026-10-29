@@ -64,6 +64,11 @@ export function dateBlockParts(iso: string): { weekday: string; day: string; mon
   };
 }
 
+/** Today's Lagos calendar date as "YYYY-MM-DD" — safe on the server and in the browser. */
+export function lagosToday(): string {
+  return new Date().toLocaleDateString('en-CA', { timeZone: LAGOS_TZ });
+}
+
 /** A Date whose UTC fields read as the current Lagos wall-clock (UTC+1, no DST). */
 function lagosNow(): Date {
   return new Date(Date.now() + 60 * 60 * 1000);

@@ -167,13 +167,19 @@ export interface Reading {
   psalmLines?: PsalmLine[];
 }
 
-export interface DailyReadings {
+/** Computed locally from the date (`lib/liturgical.ts`) — renders on the server. */
+export interface LiturgicalDay {
+  /** Lagos calendar date, "YYYY-MM-DD". */
   date: string;
-  /** Primary day + any optional memorials, each as its own string (Universalis "or" separators split out). */
-  celebrations: string[];
   lectionaryYear: string;
   season: LiturgicalSeason;
   colourVar: string;
+}
+
+/** Mapped from the Universalis JSONP payload — loaded in the visitor's browser. */
+export interface DayReadings {
+  /** Primary day + any optional memorials, each as its own string (Universalis "or" separators split out). */
+  celebrations: string[];
   copyright: string;
   readings: Reading[];
 }

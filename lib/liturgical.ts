@@ -83,9 +83,10 @@ export function getSundayCycle(date: Date): SundayCycle {
   return 'C';
 }
 
-// Weekday lectionary cycle: odd calendar years = I, even = II.
+// Weekday lectionary cycle, keyed (like the Sunday cycle) to the liturgical year:
+// odd = I, even = II. Advent 2026 therefore opens Year I.
 export function getWeekdayCycle(date: Date): WeekdayCycle {
-  return date.getUTCFullYear() % 2 === 1 ? 'I' : 'II';
+  return liturgicalYear(date) % 2 === 1 ? 'I' : 'II';
 }
 
 // CSS custom-property name for the liturgical colour token defined in _tokens.scss.
